@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastGood - Ta faim n'attend pas.</title>
+    <title>FastGood - L'Excellence Sans Attente</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
             theme: { 
                 extend: { 
-                    colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', gold: '#FFD700' },
+                    colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', premium: '#1a1a1a' },
                     animation: {
-                        'blob': 'blob 7s infinite',
-                        'marquee': 'marquee 25s linear infinite',
+                        'marquee': 'marquee 30s linear infinite',
+                        'kenburns': 'kenburns 20s ease-out infinite alternate',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
-                        },
                         marquee: {
                             '0%': { transform: 'translateX(0%)' },
                             '100%': { transform: 'translateX(-100%)' },
+                        },
+                        kenburns: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.1)' },
                         }
                     }
                 } 
@@ -31,39 +29,31 @@
         }
     </script>
     <style>
-        /* Effet de brillance VIP */
-        .vip-card { position: relative; overflow: hidden; }
-        .vip-card::after {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-            transform: rotate(30deg); transition: all 0.5s; opacity: 0;
-        }
-        .vip-card:hover::after { opacity: 1; transform: rotate(30deg) translate(50%, 50%); }
+        .glass-panel { background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .text-glow { text-shadow: 0 0 20px rgba(255,0,85,0.5); }
     </style>
 </head>
 <body class="bg-dark text-white font-sans antialiased relative overflow-x-hidden">
 
-    <!-- NAVBAR GLASSMORPHISM -->
-    <nav class="fixed w-full bg-dark/80 backdrop-blur-lg border-b border-white/10 z-50 transition-all duration-300">
+    <!-- NAVBAR -->
+    <nav class="fixed w-full glass-panel z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
-                <div class="flex items-center gap-2 cursor-pointer group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                    <div class="w-10 h-10 bg-neon rounded-xl flex items-center justify-center transform group-hover:rotate-12 transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">
-                        <span class="text-2xl">🍔</span>
-                    </div>
-                    <span class="text-3xl font-black tracking-tighter text-white ml-2">FAST<span class="text-neon">GOOD</span></span>
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                    <div class="w-8 h-8 bg-neon flex items-center justify-center font-black text-dark tracking-tighter">FG</div>
+                    <span class="text-2xl font-black tracking-tighter text-white">FAST<span class="text-neon">GOOD</span></span>
                 </div>
-                <div class="hidden md:flex space-x-8 items-center font-bold">
-                    <a href="#menu-section" class="text-gray-300 hover:text-white transition">La Carte</a>
-                    <a href="#concept-section" class="text-gray-300 hover:text-white transition">Le Concept</a>
+                <div class="hidden md:flex space-x-8 items-center font-bold text-sm uppercase tracking-wide">
+                    <a href="#menu-section" class="text-gray-400 hover:text-white transition">La Carte</a>
+                    <a href="#concept-section" class="text-gray-400 hover:text-white transition">Le Concept</a>
                     
-                    <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
+                    <div id="auth-buttons" class="flex gap-4 border-l border-white/10 pl-8">
                         <button onclick="toggleAuthModal('login')" class="text-white hover:text-neon transition">Connexion</button>
-                        <button onclick="toggleAuthModal('register')" class="bg-neon text-white px-6 py-2 rounded-full hover:bg-white hover:text-dark transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">S'inscrire</button>
+                        <button onclick="toggleAuthModal('register')" class="bg-white text-dark px-6 py-2 rounded hover:bg-neon hover:text-white transition">S'inscrire</button>
                     </div>
-                    <div id="user-menu" class="hidden flex gap-4 border-l border-white/20 pl-8 items-center">
-                        <span id="user-email" class="text-sm font-bold text-white bg-white/10 px-4 py-2 rounded-full"></span>
-                        <button onclick="logout()" class="text-gray-400 hover:text-neon transition text-sm">Quitter</button>
+                    <div id="user-menu" class="hidden flex gap-4 border-l border-white/10 pl-8 items-center">
+                        <span id="user-email" class="text-gray-300 font-bold"></span>
+                        <button onclick="logout()" class="text-gray-500 hover:text-neon transition">Déconnexion</button>
                     </div>
                 </div>
             </div>
@@ -71,160 +61,148 @@
     </nav>
 
     <!-- MODAL AUTH -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-darker/90 backdrop-blur-md z-[60] flex items-center justify-center p-4 transition-opacity">
-        <div class="bg-dark border border-white/10 p-8 rounded-3xl w-full max-w-md relative shadow-2xl shadow-neon/20">
-            <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white font-black text-xl transition">X</button>
-            <h2 id="modal-title" class="text-4xl font-black mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Connexion</h2>
-            <div class="space-y-5">
+    <div id="auth-modal" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+        <div class="bg-premium border border-white/5 p-10 w-full max-w-md relative shadow-2xl">
+            <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-600 hover:text-white font-black text-xl transition">X</button>
+            <h2 id="modal-title" class="text-3xl font-black mb-8 text-center uppercase tracking-wide">Connexion</h2>
+            <div class="space-y-4">
                 <div id="register-fields" class="hidden flex gap-4">
-                    <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-darker border border-white/10 rounded-xl px-5 py-4 outline-none focus:border-neon transition">
-                    <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-darker border border-white/10 rounded-xl px-5 py-4 outline-none focus:border-neon transition">
+                    <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
+                    <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
                 </div>
-                <input type="email" id="auth-email" placeholder="Adresse Email" class="w-full bg-darker border border-white/10 rounded-xl px-5 py-4 outline-none focus:border-neon transition">
-                <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-darker border border-white/10 rounded-xl px-5 py-4 outline-none focus:border-neon transition">
-                <button onclick="handleAuth()" class="w-full bg-neon text-white font-black py-4 rounded-xl hover:bg-white hover:text-neon transition text-lg shadow-[0_0_20px_rgba(255,0,85,0.4)]">VALIDER</button>
-                <p id="auth-error" class="text-red-500 text-sm text-center hidden font-bold"></p>
+                <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
+                <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
+                <button onclick="handleAuth()" class="w-full bg-neon text-white font-black py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition mt-4">Valider</button>
+                <p id="auth-error" class="text-neon text-sm text-center hidden font-bold mt-4"></p>
             </div>
         </div>
     </div>
 
-    <!-- HERO SECTION AVEC VIDÉO BACKGROUND -->
-    <div class="relative h-screen flex items-center justify-center overflow-hidden">
-        <!-- Vidéo libre de droits Pixabay (Cuisson Burger/Fromage) -->
-        <video autoplay loop muted playsinline class="absolute z-0 w-auto min-w-full min-h-full max-w-none object-cover opacity-50 scale-105">
-            <source src="https://cdn.pixabay.com/video/2023/10/22/186001-876686172_large.mp4" type="video/mp4" />
-        </video>
-        <!-- Overlay Gradient -->
-        <div class="absolute inset-0 z-10 bg-gradient-to-b from-darker/80 via-darker/60 to-dark"></div>
+    <!-- HERO SECTION (Image HD Unsplash + Ken Burns) -->
+    <div class="relative h-screen flex items-center justify-center overflow-hidden bg-darker">
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-40 animate-kenburns"></div>
+        <div class="absolute inset-0 z-10 bg-gradient-to-t from-darker via-darker/60 to-transparent"></div>
         
-        <!-- Contenu Hero -->
         <div class="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
-            <div class="inline-block bg-neon/20 border border-neon/50 text-neon px-4 py-1 rounded-full text-sm font-bold mb-6 backdrop-blur-sm animate-pulse">🔥 Le cheddar n'attend pas. Toi non plus.</div>
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-tight">
-                BURGER PREMIUM.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-orange-500">VITESSE MAXIMUM.</span>
+            <div class="inline-block border border-white/20 text-gray-300 px-6 py-2 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md">Premium Smash Burgers</div>
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-tight uppercase">
+                L'Excellence.<br>
+                <span class="text-neon text-glow">Sans Attente.</span>
             </h1>
-            <p class="mt-6 text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto font-medium mb-10">
-                Commande sur la borne. Déguste l'excellence en moins de 3 minutes. Rejoins le club FidGood et gagne des couronnes à chaque bouchée.
+            <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-medium mb-10 leading-relaxed">
+                Des viandes caramélisées, un cheddar affiné, une exécution millimétrée. Commandez en borne, dégustez instantanément.
             </p>
-            <a href="#menu-section" class="inline-block bg-white text-dark font-black px-10 py-5 rounded-full text-xl hover:bg-neon hover:text-white transition transform hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.3)]">
-                VOIR LA CARTE
+            <a href="#menu-section" class="inline-block bg-white text-dark font-black uppercase tracking-widest px-10 py-4 hover:bg-neon hover:text-white transition duration-300">
+                Découvrir la carte
             </a>
         </div>
     </div>
 
-    <!-- BANDEAU DÉFILANT -->
-    <div class="bg-neon text-white py-3 overflow-hidden border-y border-white/20 whitespace-nowrap flex relative z-30">
-        <div class="animate-marquee inline-block font-black text-xl tracking-widest uppercase space-x-8">
-            <span>🔥 SMASH BURGERS</span> <span>⚡ SERVICE ÉCLAIR</span> <span>👑 PROGRAMME FIDGOOD</span> <span>🧀 CHEDDAR AFFINÉ</span> <span>🔥 SMASH BURGERS</span> <span>⚡ SERVICE ÉCLAIR</span> <span>👑 PROGRAMME FIDGOOD</span> <span>🧀 CHEDDAR AFFINÉ</span>
+    <!-- BANDEAU DÉFILANT CLEAN -->
+    <div class="bg-neon text-dark py-4 overflow-hidden border-y border-neon flex relative z-30">
+        <div class="animate-marquee inline-block font-black text-sm tracking-widest uppercase space-x-12">
+            <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span> <span>•</span> <span>PROGRAMME FIDGOOD</span> <span>•</span> <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span>
         </div>
     </div>
 
     <!-- ESPACE CLIENT FIDGOOD VIP -->
     <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-20">
-        <!-- Blobs décoratifs animés -->
-        <div class="absolute top-0 -left-4 w-72 h-72 bg-neon rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div class="absolute top-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="mb-12 border-b border-white/10 pb-6 flex justify-between items-end">
+            <div>
+                <h2 class="text-4xl font-black uppercase tracking-tighter">Espace <span class="text-neon">FidGood</span></h2>
+                <p class="text-gray-500 mt-2">Client <span id="client-number" class="font-bold text-white">...</span></p>
+            </div>
+            <div class="text-right">
+                <div class="text-gray-500 text-xs uppercase tracking-widest mb-1">Solde Couronnes</div>
+                <div class="text-3xl font-black text-white"><span id="client-points" class="text-neon">0</span> Cts</div>
+            </div>
+        </div>
         
-        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <!-- Carte VIP -->
-            <div class="vip-card bg-gradient-to-br from-gray-900 via-dark to-black p-8 rounded-3xl border border-white/10 shadow-2xl flex flex-col justify-between h-full">
-                <div class="flex justify-between items-start mb-8">
-                    <div>
-                        <div class="text-gold font-black tracking-widest text-sm uppercase mb-1">Membre VIP</div>
-                        <h2 class="text-3xl font-black text-white">Fid<span class="text-neon">Good</span></h2>
-                    </div>
-                    <span class="text-4xl">👑</span>
-                </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Commandes -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- En cours -->
                 <div>
-                    <div class="text-gray-400 text-sm mb-1">Couronnes disponibles</div>
-                    <div class="text-6xl font-black text-white mb-4"><span id="client-points" class="text-gold">0</span></div>
-                    <div class="bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-gray-400 flex justify-between items-center">
-                        <span>Client N° <strong id="client-number" class="text-white">...</strong></span>
-                        <span class="text-neon font-bold">1€ = 2👑</span>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">En Préparation</h3>
+                        <button onclick="loadOrders()" class="text-xs text-white hover:text-neon uppercase tracking-widest transition">Actualiser</button>
                     </div>
+                    <div id="orders-encours" class="space-y-4"></div>
+                </div>
+
+                <!-- Historique -->
+                <div>
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Historique</h3>
+                    <div id="orders-historique" class="space-y-2"></div>
                 </div>
             </div>
 
-            <!-- Commandes -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Commandes en cours -->
-                <div class="bg-darker p-8 rounded-3xl border border-white/5 shadow-xl">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-black text-white flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> En cuisine</h3>
-                        <button onclick="loadOrders()" class="text-sm bg-white/5 hover:bg-white/10 border border-white/10 text-white px-4 py-2 rounded-full transition">Rafraîchir</button>
+            <!-- Avantages / Code Promo -->
+            <div class="space-y-8">
+                <div class="glass-panel p-8 border border-white/5">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Ajouter un Code</h3>
+                    <div class="flex flex-col gap-4">
+                        <input type="text" id="promo-input" placeholder="CODE PROMO" class="bg-darker border border-white/10 px-4 py-3 outline-none uppercase font-bold text-white focus:border-neon transition text-sm">
+                        <button onclick="savePromo()" class="bg-white text-dark font-black py-3 uppercase tracking-widest hover:bg-neon hover:text-white transition">Valider</button>
                     </div>
-                    <div id="orders-encours" class="space-y-4 max-h-60 overflow-y-auto pr-2"></div>
+                    <p id="promo-msg" class="text-sm mt-4 font-bold h-5"></p>
                 </div>
 
-                <!-- Code Promo & Historique -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-neon/10 p-6 rounded-3xl border border-neon/20">
-                        <h3 class="text-lg font-black text-neon mb-4">Ajouter un Code</h3>
-                        <div class="flex gap-2 mb-2">
-                            <input type="text" id="promo-input" placeholder="CODE" class="bg-dark border border-neon/30 rounded-xl px-4 py-3 outline-none uppercase w-full font-bold text-white focus:border-neon">
-                            <button onclick="savePromo()" class="bg-neon text-white font-black px-6 py-3 rounded-xl hover:bg-white hover:text-neon transition">GO</button>
-                        </div>
-                        <p id="promo-msg" class="text-sm font-bold h-5"></p>
-                        <div id="my-promos" class="mt-4 text-sm text-gray-400"></div>
-                    </div>
-                    
-                    <div class="bg-darker p-6 rounded-3xl border border-white/5">
-                        <h3 class="text-lg font-black text-gray-400 mb-4">Historique</h3>
-                        <div id="orders-historique" class="space-y-3 max-h-32 overflow-y-auto pr-2"></div>
-                    </div>
+                <div class="glass-panel p-8 border border-white/5">
+                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Codes Disponibles</h3>
+                    <div id="my-promos" class="text-sm text-gray-500 font-medium"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SECTION CONCEPT (Remplissage Visuel) -->
-    <div id="concept-section" class="py-20 bg-darker border-y border-white/5">
+    <!-- SECTION CONCEPT (Images HD Unsplash) -->
+    <div id="concept-section" class="py-24 bg-darker border-y border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-                <div>
-                    <img src="https://media.giphy.com/media/l2SpONdE0Yg1JXXz2/giphy.gif" alt="Burger Flip" class="w-full h-48 object-cover rounded-2xl mb-6 grayscale hover:grayscale-0 transition duration-500 border border-white/10">
-                    <h3 class="text-2xl font-black mb-2">Qualité Smash</h3>
-                    <p class="text-gray-400">Une viande caramélisée à la perfection, écrasée sur une plaque brûlante pour un maximum de goût.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="group">
+                    <div class="h-64 mb-6 overflow-hidden bg-premium">
+                        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=800" alt="Burger Smash" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">La Maîtrise Smash</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Une viande sélectionnée, écrasée sur une plaque à très haute température pour caraméliser les sucs et développer une croûte pleine de saveurs.</p>
                 </div>
-                <div>
-                    <img src="https://media.giphy.com/media/xT0xeMA62E1XIlupxe/giphy.gif" alt="Cheese Melt" class="w-full h-48 object-cover rounded-2xl mb-6 grayscale hover:grayscale-0 transition duration-500 border border-white/10">
-                    <h3 class="text-2xl font-black mb-2">Cheddar Affiné</h3>
-                    <p class="text-gray-400">Oublie le plastique. On fond un véritable cheddar anglais sur chaque steak dès la sortie du grill.</p>
+                <div class="group">
+                    <div class="h-64 mb-6 overflow-hidden bg-premium">
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800" alt="Cheddar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Art du Fromage</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Nous n'utilisons aucun substitut. Chaque burger est nappé d'un cheddar affiné, fondu à la perfection directement sur la viande.</p>
                 </div>
-                <div>
-                    <img src="https://media.giphy.com/media/3o7aD2saal6gU54VyM/giphy.gif" alt="Fast" class="w-full h-48 object-cover rounded-2xl mb-6 grayscale hover:grayscale-0 transition duration-500 border border-white/10">
-                    <h3 class="text-2xl font-black mb-2">Vitesse Absolue</h3>
-                    <p class="text-gray-400">Commande à la borne, récupère au comptoir. Notre process est optimisé à la seconde près.</p>
+                <div class="group">
+                    <div class="h-64 mb-6 overflow-hidden bg-premium">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800" alt="Restaurant rapide" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Efficacité</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Une architecture de cuisine pensée pour la performance. Commandez, et recevez votre plateau en un temps record.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- MENU SECTION -->
-    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-20 relative">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-white/10 pb-6">
+    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16">
             <div>
-                <h2 class="text-5xl font-black tracking-tighter mb-2">LA CARTE.</h2>
-                <p class="text-gray-400">Pas de chichis. Que des classiques maîtrisés.</p>
+                <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">La Carte.</h2>
+                <p class="text-gray-500 font-medium">L'essentiel, exécuté à la perfection.</p>
             </div>
-            <span class="text-neon font-bold text-sm bg-neon/10 px-4 py-2 rounded-full mt-4 md:mt-0">En direct des cuisines</span>
         </div>
         
-        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Loader visuel -->
-            <div class="col-span-full text-center py-20">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-neon mx-auto mb-4"></div>
-                <p class="text-gray-500 font-bold">Chargement des dingueries...</p>
-            </div>
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Chargement de la carte...</div>
         </div>
     </div>
 
     <!-- FOOTER -->
-    <footer class="bg-darker border-t border-white/5 py-12 text-center text-gray-500 text-sm">
+    <footer class="bg-darker border-t border-white/5 py-12 text-center">
         <div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div>
-        <p>© 2026 FastGood France. La faim n'attend pas.</p>
+        <p class="text-gray-600 text-xs uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p>
     </footer>
 
     <!-- SCRIPT APPLICATION -->
@@ -240,8 +218,6 @@
                 document.getElementById('auth-error').classList.add('hidden');
                 document.getElementById('register-fields').classList.toggle('hidden', mode !== 'register');
                 document.getElementById('auth-modal').classList.remove('hidden');
-                // Animation d'entrée
-                setTimeout(() => document.getElementById('auth-modal').firstElementChild.classList.add('scale-100', 'opacity-100'), 10);
             } else { 
                 document.getElementById('auth-modal').classList.add('hidden'); 
             }
@@ -261,7 +237,9 @@
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 userId = session.user.id;
-                document.getElementById('auth-buttons').classList.add('hidden'); document.getElementById('user-menu').classList.remove('hidden'); document.getElementById('fidgood-section').classList.remove('hidden');
+                document.getElementById('auth-buttons').classList.add('hidden'); 
+                document.getElementById('user-menu').classList.remove('hidden'); 
+                document.getElementById('fidgood-section').classList.remove('hidden');
                 
                 const { data: prof } = await supabase.from('profiles').select('*').eq('id', userId).single();
                 if (prof) {
@@ -280,28 +258,35 @@
 
             const renderEncours = (o) => {
                 const isReady = o.status === 'prete';
-                return `<div class="flex justify-between items-center bg-black/50 p-5 rounded-2xl border ${isReady ? 'border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.3)]' : 'border-white/10'} transition-all">
-                    <div>
-                        <div class="text-neon font-black text-sm mb-1">COMMANDE #${o.id.substring(0,6).toUpperCase()}</div>
-                        <div class="text-xs text-gray-400 max-w-xs truncate">${o.items?o.items.map(i=>i.name).join(' • '):''}</div>
-                        <div class="font-black text-xl mt-2">${o.total_price.toFixed(2)} €</div>
+                return `<div class="glass-panel p-6 border ${isReady ? 'border-neon shadow-[0_0_15px_rgba(255,0,85,0.2)]' : 'border-white/5'} transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="text-white font-black text-lg">#${o.id.substring(0,6).toUpperCase()}</div>
+                            <div class="text-sm text-gray-400 mt-1">${o.items?o.items.map(i=>i.name).join(' • '):''}</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="${isReady ? 'text-neon border-neon' : 'text-gray-400 border-gray-600'} border px-3 py-1 text-xs font-bold uppercase tracking-widest">${o.status.replace('_', ' ')}</span>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <span class="${isReady ? 'bg-green-500 text-white' : 'bg-yellow-500 text-black'} px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider block mb-2 shadow-lg">${o.status.replace('_', ' ')}</span>
-                        <div class="text-xs text-gray-500">Attente: ${o.estimated_time}s</div>
+                    <div class="flex justify-between items-end border-t border-white/5 pt-4">
+                        <span class="text-xs text-gray-500 uppercase tracking-widest">Attente estimée: ${o.estimated_time}s</span>
+                        <span class="font-black text-xl">${o.total_price.toFixed(2)} €</span>
                     </div>
                 </div>`;
             };
 
-            const renderHisto = (o) => `<div class="flex justify-between bg-black/30 p-4 rounded-xl border border-white/5">
-                <div><div class="text-gray-400 font-bold text-xs">#${o.id.substring(0,6).toUpperCase()}</div><div class="font-bold text-sm">${o.total_price.toFixed(2)} €</div></div>
-                <div class="text-right"><div class="text-xs text-gray-600">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div></div>
+            const renderHisto = (o) => `<div class="flex justify-between items-center bg-premium p-4 border border-white/5 hover:bg-white/5 transition">
+                <div>
+                    <div class="text-gray-300 font-bold text-sm">#${o.id.substring(0,6).toUpperCase()}</div>
+                    <div class="text-xs text-gray-600 mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                </div>
+                <div class="font-bold text-gray-400">${o.total_price.toFixed(2)} €</div>
             </div>`;
 
             const encours = data.filter(o => o.status !== 'terminee');
             const histo = data.filter(o => o.status === 'terminee');
-            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-center py-10 bg-black/20 rounded-2xl border border-white/5 font-medium">Aucune commande en préparation.</div>';
-            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<p class="text-gray-500 text-sm">Rien pour le moment.</p>';
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucune commande en cours.</div>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucun historique.</div>';
         };
 
         window.savePromo = async function() {
@@ -309,45 +294,49 @@
             if(!code) return;
 
             const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
-            if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-sm mt-2 font-bold text-red-500"; return; }
+            if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-sm mt-4 font-bold text-neon"; return; }
 
             const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
-            if(exist) { msg.innerText = "Code déjà dans la liste !"; msg.className = "text-sm mt-2 font-bold text-yellow-500"; return; }
+            if(exist) { msg.innerText = "Code déjà utilisé."; msg.className = "text-sm mt-4 font-bold text-gray-400"; return; }
 
             if (promo.discount_type === 'points') {
                 const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
                 await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
-                msg.innerText = `👑 BAM ! +${promo.discount_value} couronnes !`; msg.className = "text-sm mt-2 font-bold text-gold";
+                msg.innerText = `+${promo.discount_value} couronnes créditées.`; msg.className = "text-sm mt-4 font-bold text-white";
             } else {
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
-                msg.innerText = "Code ajouté ! Utilisable en borne."; msg.className = "text-sm mt-2 font-bold text-green-400";
+                msg.innerText = "Code enregistré pour la borne."; msg.className = "text-sm mt-4 font-bold text-white";
             }
             document.getElementById('promo-input').value = ""; checkUser();
         };
 
         async function loadPromos() {
             const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
-            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'line-through text-gray-600 border-gray-600':'text-neon border-neon/50 bg-neon/10'} border px-3 py-1 rounded-lg mr-2 mb-2 inline-block font-bold">${p.code}</span>`).join('') : "Aucun code.";
+            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through border-gray-800':'text-white border-white/20'} border px-3 py-1 mr-2 mb-2 inline-block font-bold text-xs uppercase tracking-widest">${p.code}</span>`).join('') : "Aucun code enregistré.";
         }
 
         async function loadMenu() {
             const { data } = await supabase.from('products').select('*');
-            document.getElementById('menu-container').innerHTML = data ? data.map(p => `
-                <div class="bg-darker border border-white/5 rounded-3xl p-6 hover:border-neon/50 transition-all duration-300 group hover:shadow-[0_0_30px_rgba(255,0,85,0.15)] flex flex-col h-full">
-                    <div class="h-48 bg-gradient-to-br from-gray-900 to-black rounded-2xl mb-6 flex items-center justify-center text-7xl group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                        ${p.image_url||'🍔'}
+            document.getElementById('menu-container').innerHTML = data ? data.map(p => {
+                // Si l'utilisateur a mis une URL, on affiche l'image. Sinon on affiche juste la première lettre en grand pour faire un design épuré
+                const visual = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-6xl font-black text-gray-800">${p.name.substring(0,1).toUpperCase()}</div>`;
+                
+                return `
+                <div class="bg-premium border border-white/5 p-6 hover:border-white/20 transition duration-300 group flex flex-col h-full">
+                    <div class="h-48 bg-darker mb-6 overflow-hidden flex items-center justify-center">
+                        ${visual}
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-2xl font-black mb-2 leading-tight">${p.name}</h3>
-                        <p class="text-gray-500 text-sm mb-6 flex items-center gap-2">⏱️ Prêt en ${p.prep_time}s</p>
+                        <h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3>
+                        <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-6">⏱️ ${p.prep_time}s</p>
                     </div>
-                    <div class="flex justify-between items-end border-t border-white/10 pt-4 mt-auto">
-                        <span class="text-gray-400 text-sm font-bold">PRIX</span>
-                        <span class="text-3xl font-black text-white">${p.price.toFixed(2)} <span class="text-neon">€</span></span>
+                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-auto">
+                        <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Prix</span>
+                        <span class="text-2xl font-black text-white">${p.price.toFixed(2)} €</span>
                     </div>
                 </div>
-            `).join('') : '';
+            `}).join('') : '';
         }
 
         checkUser(); loadMenu();
