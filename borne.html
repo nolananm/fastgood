@@ -13,41 +13,40 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased h-screen flex flex-col overflow-hidden">
 
-    <!-- En-tête Borne -->
     <header class="bg-darker border-b border-white/10 p-4 flex justify-between items-center">
-        <div class="text-xl font-black">FAST<span class="text-neon">GOOD</span> <span class="text-gray-500 text-sm ml-2">CAISSE 01 - MONTPELLIER</span></div>
+        <div class="text-xl font-black">FAST<span class="text-neon">GOOD</span> <span class="text-gray-500 text-sm ml-2">CAISSE 01</span></div>
     </header>
 
     <div class="flex flex-1 overflow-hidden">
         
         <!-- Prise de commande -->
         <div class="flex-1 p-4 overflow-y-auto bg-dark border-r border-white/10">
-            <!-- Saisie Numéro Client -->
-            <div class="bg-darker p-4 rounded-xl border border-white/20 mb-6 flex gap-4">
-                <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres) ou Code PromoGood" class="bg-dark border border-white/10 rounded-lg px-4 py-3 flex-1 text-lg uppercase focus:border-neon outline-none">
-                <button class="bg-white text-dark px-6 py-3 rounded-lg font-bold">Valider</button>
+            <!-- Recherche Client -->
+            <div class="bg-darker p-4 rounded-xl border border-white/20 mb-6">
+                <div class="flex gap-4">
+                    <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres)" class="bg-dark border border-white/10 rounded-lg px-4 py-3 flex-1 text-lg uppercase focus:border-neon outline-none">
+                    <button onclick="searchClient()" class="bg-white text-dark px-6 py-3 rounded-lg font-bold hover:bg-gray-200 transition">Valider</button>
+                </div>
+                <div id="client-info"></div> <!-- Affichage statut client -->
             </div>
 
             <h2 class="text-xl font-bold mb-4">Produits</h2>
-            
-            <!-- Grille Produits (Générée par le JS) -->
             <div id="borne-menu-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <p class="text-gray-500">Chargement des produits...</p>
+                <p class="text-gray-500">Chargement...</p>
             </div>
         </div>
 
-        <!-- Ticket de caisse / Récapitulatif à droite -->
+        <!-- Ticket de caisse -->
         <div class="w-96 bg-darker flex flex-col">
             <div class="p-4 border-b border-white/10">
                 <h2 class="font-black text-xl mb-1">Commande en cours</h2>
             </div>
             
-            <!-- Liste des produits ajoutés -->
             <div id="cart-container" class="flex-1 p-4 overflow-y-auto space-y-4">
                 <p class="text-gray-500 text-sm text-center mt-10">La commande est vide.</p>
             </div>
 
-            <!-- Bloc Paiement -->
+            <!-- Paiement -->
             <div class="p-4 bg-dark border-t border-white/10">
                 <div class="flex justify-between items-end mb-4">
                     <span class="text-gray-400 font-bold">Total TTC</span>
@@ -57,34 +56,23 @@
                 <button id="btn-encaissement" class="w-full bg-neon text-white py-5 rounded-xl font-black text-xl hover:bg-white hover:text-neon transition">
                     ENCAISSER & ENVOYER
                 </button>
-                
-                <div class="text-center mt-3 text-gray-500 text-sm">
-                    Temps prépa estimé : <strong class="text-white" id="total-time">0 sec</strong>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Script de logique de la borne -->
+    <!-- Script Borne -->
     <script type="module">
         import { supabase } from './db.js';
 
         let cart = [];
         let allProducts = [];
+        let currentClient = null; // Stocke le client identifié
 
-        // 1. Charger les produits pour la borne
+        // 1. Charger le menu
         async function loadBorneMenu() {
-            const container = document.getElementById('borne-menu-container');
-            const { data: products, error } = await supabase.from('products').select('*');
-
-            if (error) {
-                container.innerHTML = `<p class="text-red-500">Erreur de connexion.</p>`;
-                return;
-            }
-
-            allProducts = products;
-
-            container.innerHTML = products.map(p => `
+            const { data: products } = await supabase.from('products').select('*');
+            allProducts = products || [];
+            document.getElementById('borne-menu-container').innerHTML = allProducts.map(p => `
                 <button onclick="window.addToCart('${p.id}')" class="bg-darker border border-white/10 p-4 rounded-xl text-left hover:border-neon active:bg-neon/20 h-32 flex flex-col justify-between transition">
                     <span class="font-bold text-lg leading-tight flex items-center gap-2">${p.image_url} ${p.name}</span>
                     <span class="text-neon font-black">${p.price.toFixed(2)} €</span>
@@ -92,101 +80,90 @@
             `).join('');
         }
 
-        // 2. Ajouter au panier
-        window.addToCart = function(productId) {
-            const product = allProducts.find(p => p.id === productId);
-            if(product) {
-                cart.push(product);
-                updateCartUI();
+        // 2. Chercher le client
+        window.searchClient = async function() {
+            const clientNum = document.getElementById('client-id-input').value;
+            if (!clientNum) return;
+
+            const { data, error } = await supabase.from('profiles').select('*').eq('client_number', clientNum).single();
+            const infoDiv = document.getElementById('client-info');
+
+            if (data) {
+                currentClient = data;
+                infoDiv.innerHTML = `<div class="text-sm text-green-400 bg-green-400/10 inline-block px-2 py-1 rounded mt-3 font-bold">✅ Client N° ${data.client_number} connecté (${data.fidgood_points} pts)</div>`;
+            } else {
+                currentClient = null;
+                infoDiv.innerHTML = `<div class="text-sm text-red-500 bg-red-500/10 inline-block px-2 py-1 rounded mt-3 font-bold">❌ Client introuvable</div>`;
             }
         };
 
-        // 3. Mettre à jour l'affichage du ticket de caisse
+        // 3. Gestion Panier
+        window.addToCart = function(id) { cart.push(allProducts.find(p => p.id === id)); updateCartUI(); };
+        window.removeFromCart = function(index) { cart.splice(index, 1); updateCartUI(); };
+
         function updateCartUI() {
-            const cartContainer = document.getElementById('cart-container');
-            const totalPriceEl = document.getElementById('total-price');
-            const totalTimeEl = document.getElementById('total-time');
+            const container = document.getElementById('cart-container');
+            const totalEl = document.getElementById('total-price');
 
             if(cart.length === 0) {
-                cartContainer.innerHTML = `<p class="text-gray-500 text-sm text-center mt-10">La commande est vide.</p>`;
-                totalPriceEl.innerText = "0.00 €";
-                totalTimeEl.innerText = "0 sec";
+                container.innerHTML = `<p class="text-gray-500 text-sm text-center mt-10">La commande est vide.</p>`;
+                totalEl.innerText = "0.00 €";
                 return;
             }
 
-            // Calculs
             let totalPrix = 0;
-            let totalTemps = 0;
-            
-            cartContainer.innerHTML = cart.map((item, index) => {
+            container.innerHTML = cart.map((item, i) => {
                 totalPrix += item.price;
-                totalTemps += item.prep_time;
                 return `
-                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
-                        <div>
-                            <div class="font-bold text-sm">${item.name}</div>
-                            <div class="text-xs text-gray-500">+ Temps prépa : ${item.prep_time}s</div>
-                        </div>
+                    <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg border border-white/5">
+                        <div class="font-bold text-sm">${item.name}</div>
                         <div class="flex items-center gap-4">
                             <div class="font-bold text-neon">${item.price.toFixed(2)} €</div>
-                            <button onclick="window.removeFromCart(${index})" class="text-red-500 text-xs font-bold hover:text-white">X</button>
+                            <button onclick="window.removeFromCart(${i})" class="text-red-500 hover:text-white font-bold">X</button>
                         </div>
                     </div>
                 `;
             }).join('');
-
-            totalPriceEl.innerText = `${totalPrix.toFixed(2)} €`;
-            totalTimeEl.innerText = `${totalTemps} sec`;
+            totalEl.innerText = `${totalPrix.toFixed(2)} €`;
         }
 
-        // 4. Retirer un produit du panier
-        window.removeFromCart = function(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        };
-
-        // 5. Envoyer la commande dans Supabase
+        // 4. Encaissement (Commande + Points)
         document.getElementById('btn-encaissement').addEventListener('click', async () => {
-            if(cart.length === 0) {
-                alert("La commande est vide !");
-                return;
-            }
-
+            if(cart.length === 0) return alert("Commande vide !");
+            
             const btn = document.getElementById('btn-encaissement');
-            btn.innerText = "ENVOI EN COURS...";
-            btn.disabled = true;
+            btn.innerText = "ENVOI..."; btn.disabled = true;
 
             let totalPrix = cart.reduce((acc, item) => acc + item.price, 0);
             let totalTemps = cart.reduce((acc, item) => acc + item.prep_time, 0);
 
-            // Insertion dans la table orders
-            const { data, error } = await supabase
-                .from('orders')
-                .insert([
-                    { 
-                        total_price: totalPrix, 
-                        status: 'en_preparation', 
-                        estimated_time: totalTemps,
-                        payment_method: 'carte'
-                    }
-                ]);
+            // A. Envoyer la commande
+            await supabase.from('orders').insert([{ 
+                client_id: currentClient ? currentClient.id : null,
+                total_price: totalPrix, 
+                estimated_time: totalTemps,
+                status: 'en_preparation'
+            }]);
 
-            if (error) {
-                console.error("Erreur commande:", error);
-                alert("Erreur lors de l'envoi de la commande !");
-                btn.innerText = "ENCAISSER & ENVOYER";
-                btn.disabled = false;
-                return;
+            // B. Ajouter les points FidGood (1€ = 2 pts)
+            if (currentClient) {
+                const pointsGagnes = Math.floor(totalPrix) * 2;
+                await supabase.from('profiles')
+                    .update({ fidgood_points: currentClient.fidgood_points + pointsGagnes })
+                    .eq('id', currentClient.id);
             }
 
-            alert("Commande validée et envoyée en cuisine !");
-            cart = []; // Vider le panier
+            alert(currentClient ? `Commande validée ! + ${Math.floor(totalPrix) * 2} pts ajoutés.` : "Commande validée !");
+            
+            // Réinitialiser
+            cart = []; 
+            currentClient = null;
+            document.getElementById('client-id-input').value = "";
+            document.getElementById('client-info').innerHTML = "";
             updateCartUI();
-            btn.innerText = "ENCAISSER & ENVOYER";
-            btn.disabled = false;
+            btn.innerText = "ENCAISSER & ENVOYER"; btn.disabled = false;
         });
 
-        // Démarrage
         loadBorneMenu();
     </script>
 </body>
