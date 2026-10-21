@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastGood - Mode Gestion (Staff)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505' } } }
+        }
+    </script>
+</head>
+<body class="bg-dark text-white font-sans antialiased flex h-screen overflow-hidden">
+
+    <!-- Sidebar Admin -->
+    <aside class="w-64 bg-darker border-r border-white/10 flex flex-col">
+        <div class="h-20 flex items-center px-6 border-b border-white/10">
+            <span class="text-xl font-black text-white">STAFF<span class="text-neon">GOOD</span></span>
+        </div>
+        <nav class="flex-1 p-4 space-y-2">
+            <a href="#" class="block px-4 py-3 bg-neon/10 text-neon rounded-xl font-bold">🍔 Gestion Carte & Stocks</a>
+            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">🎟️ Codes PromoGood</a>
+            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">✉️ Mails (Nous contacter)</a>
+            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">🏪 Restaurants</a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+            <button class="w-full text-left px-4 py-2 text-sm text-gray-500 hover:text-white">Se déconnecter</button>
+        </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="flex-1 overflow-y-auto p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-black">Gestion de la Carte</h1>
+            <button class="bg-white text-dark px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition">+ Nouveau Plat</button>
+        </div>
+
+        <!-- Section des catégories -->
+        <div class="bg-darker border border-white/10 rounded-2xl p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4">Catégories</h2>
+            <div class="flex gap-2">
+                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Burgers</span>
+                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Boissons</span>
+                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Desserts</span>
+                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Snacks</span>
+                <button class="border border-white/20 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white">+</button>
+            </div>
+        </div>
+
+        <!-- Tableau des plats (Simulation) -->
+        <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+            <table class="w-full text-left">
+                <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                    <tr>
+                        <th class="p-4">Produit</th>
+                        <th class="p-4">Catégorie</th>
+                        <th class="p-4">Prix</th>
+                        <th class="p-4">Quota Jour</th>
+                        <th class="p-4">Statut</th>
+                        <th class="p-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="p-4 font-bold">Le Good Smash</td>
+                        <td class="p-4 text-gray-400">Burger</td>
+                        <td class="p-4">8.90 €</td>
+                        <td class="p-4"><input type="number" value="150" class="bg-dark border border-white/20 rounded p-1 w-20 text-center"></td>
+                        <td class="p-4"><span class="text-green-400 text-xs font-bold bg-green-400/10 px-2 py-1 rounded">En stock</span></td>
+                        <td class="p-4 text-sm text-neon cursor-pointer">Modifier</td>
+                    </tr>
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="p-4 font-bold">Milkshake Vanille</td>
+                        <td class="p-4 text-gray-400">Dessert</td>
+                        <td class="p-4">3.90 €</td>
+                        <td class="p-4"><input type="number" value="50" class="bg-dark border border-white/20 rounded p-1 w-20 text-center"></td>
+                        <td class="p-4">
+                            <!-- Toggle Rupture manuelle -->
+                            <button class="text-red-500 text-xs font-bold bg-red-500/10 px-2 py-1 rounded border border-red-500/20">Passer en rupture</button>
+                        </td>
+                        <td class="p-4 text-sm text-neon cursor-pointer">Modifier</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
