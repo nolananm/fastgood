@@ -1,4 +1,170 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastGood - Mode Gestion (Staff)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505' } } } }
+    </script>
+</head>
+<body class="bg-dark text-white font-sans antialiased h-screen flex overflow-hidden relative">
+
+    <!-- ECRAN 1 : VERROUILLAGE / LOGIN STAFF -->
+    <div id="auth-screen" class="fixed inset-0 bg-darker z-50 flex items-center justify-center">
+        <div class="bg-dark border border-white/10 p-8 rounded-2xl w-full max-w-md">
+            <div class="text-3xl font-black mb-6 text-center">GESTION <span class="text-neon">STAFF</span></div>
+            <div class="space-y-4">
+                <input type="email" id="staff-email" placeholder="Email Admin" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none">
+                <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none">
+                <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-neon transition">CONNEXION</button>
+                <p id="auth-error" class="text-red-500 text-sm text-center hidden"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : AJOUTER UNE CATÉGORIE -->
+    <div id="add-category-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="toggleModal('add-category-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
+            <h2 class="text-2xl font-black mb-6">Nouvelle Catégorie</h2>
+            <div class="space-y-4">
+                <input type="text" id="cat-name" placeholder="Nom (Ex: Burgers, Salades...)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                <button onclick="submitCategory()" id="btn-submit-cat" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER LA CATÉGORIE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : AJOUTER UN PRODUIT -->
+    <div id="add-product-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="toggleModal('add-product-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
+            <h2 class="text-2xl font-black mb-6">Nouveau Plat</h2>
+            <div class="space-y-4">
+                <input type="text" id="prod-name" placeholder="Nom (Ex: Maxi Cheese)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                <div class="flex gap-4">
+                    <input type="number" step="0.10" id="prod-price" placeholder="Prix (€)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                    <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                </div>
+                <select id="prod-category" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none appearance-none">
+                    <!-- Rempli par JS -->
+                </select>
+                <input type="text" id="prod-image" placeholder="Image (URL courte ou texte)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                <button onclick="submitProduct()" id="btn-submit-prod" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER LE PLAT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL : AJOUTER UN CODE PROMO -->
+    <div id="add-promo-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="toggleModal('add-promo-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
+            <h2 class="text-2xl font-black mb-6">Nouveau Code PromoGood</h2>
+            <div class="space-y-4">
+                <input type="text" id="promo-code" placeholder="Code (Ex: GOOD10)" class="w-full uppercase bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                <select id="promo-type" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none appearance-none">
+                    <option value="percent">Remise en Pourcentage (%)</option>
+                    <option value="amount">Remise Fixe (€)</option>
+                    <option value="points">Points FidGood Offerts</option>
+                </select>
+                <div class="flex gap-4">
+                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur (Ex: 10)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                    <input type="number" id="promo-max" placeholder="Utilisations Max" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                </div>
+                <button onclick="submitPromo()" id="btn-submit-promo" class="w-full bg-neon text-white font-black py-3 rounded-xl mt-4 hover:bg-white hover:text-neon transition">CRÉER LE CODE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ECRAN 2 : APPLICATION STAFF -->
+    <div id="app-screen" class="hidden flex-1 flex h-full">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-darker border-r border-white/10 flex flex-col">
+            <div class="h-20 flex items-center px-6 border-b border-white/10 justify-between">
+                <span class="text-xl font-black text-white">STAFF<span class="text-neon">GOOD</span></span>
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <button onclick="switchTab('sec-carte')" id="tab-sec-carte" class="w-full text-left px-4 py-3 bg-neon/10 text-neon rounded-xl font-bold transition tab-btn">Gestion Carte</button>
+                <button onclick="switchTab('sec-commandes')" id="tab-sec-commandes" class="w-full text-left px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition tab-btn">Commandes Live</button>
+                <button onclick="switchTab('sec-promo')" id="tab-sec-promo" class="w-full text-left px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition tab-btn">Codes PromoGood</button>
+                <button onclick="switchTab('sec-mails')" id="tab-sec-mails" class="w-full text-left px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition tab-btn">Mails (Contact)</button>
+            </nav>
+            <div class="p-4 border-t border-white/10">
+                <button onclick="logout()" class="w-full text-left px-4 py-2 text-sm text-red-500 hover:text-white font-bold">Verrouiller</button>
+            </div>
+        </aside>
+
+        <!-- Contenu principal -->
+        <main class="flex-1 overflow-y-auto p-8 relative">
+            <button onclick="loadStaffData()" class="absolute top-8 right-8 border border-white/20 px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">Rafraîchir</button>
+
+            <!-- SECTION : CARTE -->
+            <div id="sec-carte" class="tab-content block">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-black">Carte Actuelle</h1>
+                    <div class="flex gap-4">
+                        <button onclick="toggleModal('add-category-modal', true)" class="border border-white/20 text-white px-4 py-2 rounded-full font-bold hover:bg-white/10 transition">+ Catégorie</button>
+                        <button onclick="toggleModal('add-product-modal', true)" class="bg-white text-dark px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition">+ Nouveau Plat</button>
+                    </div>
+                </div>
+                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                            <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4">Temps</th><th class="p-4">Statut</th></tr>
+                        </thead>
+                        <tbody id="products-list" class="divide-y divide-white/10"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION : COMMANDES -->
+            <div id="sec-commandes" class="tab-content hidden">
+                <h1 class="text-3xl font-black text-neon mb-6">Commandes en cuisine</h1>
+                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                            <tr><th class="p-4">N° Commande</th><th class="p-4">Total</th><th class="p-4">Temps Estimé</th><th class="p-4">Statut</th></tr>
+                        </thead>
+                        <tbody id="orders-list" class="divide-y divide-white/10"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION : PROMO -->
+            <div id="sec-promo" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-3xl font-black">Codes PromoGood</h1>
+                    <button onclick="toggleModal('add-promo-modal', true)" class="bg-neon text-white px-4 py-2 rounded-full font-bold hover:bg-white hover:text-neon transition">+ Nouveau Code</button>
+                </div>
+                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                            <tr><th class="p-4">Code</th><th class="p-4">Type</th><th class="p-4">Valeur</th><th class="p-4">Utilisations</th></tr>
+                        </thead>
+                        <tbody id="promo-list" class="divide-y divide-white/10"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECTION : MAILS -->
+            <div id="sec-mails" class="tab-content hidden">
+                <h1 class="text-3xl font-black mb-6">Messages de contact</h1>
+                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                            <tr><th class="p-4">Date</th><th class="p-4">Email</th><th class="p-4">Message</th><th class="p-4">Statut</th></tr>
+                        </thead>
+                        <tbody id="mails-list" class="divide-y divide-white/10"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT APPLICATION STAFF -->
+    <script type="module">
         import { supabase } from './db.js';
 
         // --- NAVIGATION ONGLETS ---
@@ -49,25 +215,34 @@
             else modal.classList.add('hidden');
         };
 
-        // --- CHARGEMENT ---
+        // --- CHARGEMENT DES DONNÉES ---
         window.loadStaffData = async function() {
+            // Produits
             const { data: products } = await supabase.from('products').select('*, categories(name)').order('created_at', { ascending: false });
             document.getElementById('products-list').innerHTML = products?.length ? products.map(p => `
                 <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold">${p.image_url || ''} ${p.name} <span class="text-xs text-gray-500 font-normal block">${p.categories?.name || 'Sans catégorie'}</span></td><td class="p-4">${p.price.toFixed(2)} €</td><td class="p-4">${p.prep_time}s</td><td class="p-4"><span class="text-green-400 bg-green-400/10 px-2 py-1 rounded text-xs font-bold">En ligne</span></td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun produit.</td></tr>';
 
+            // Commandes
             const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
             document.getElementById('orders-list').innerHTML = orders?.length ? orders.map(o => `
                 <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold text-neon">#${o.id.substring(0,6).toUpperCase()}</td><td class="p-4">${o.total_price.toFixed(2)} €</td><td class="p-4">${o.estimated_time}s</td><td class="p-4"><span class="text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded text-xs font-bold">${o.status.toUpperCase()}</span></td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucune commande.</td></tr>';
 
+            // Codes Promo
             const { data: promos } = await supabase.from('promocodes').select('*');
             document.getElementById('promo-list').innerHTML = promos?.length ? promos.map(p => `
                 <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} / ${p.max_uses || '∞'}</td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun code.</td></tr>';
+
+            // Mails
+            const { data: mails } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
+            document.getElementById('mails-list').innerHTML = mails?.length ? mails.map(m => `
+                <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 text-sm text-gray-400">${new Date(m.created_at).toLocaleDateString('fr-FR')}</td><td class="p-4 font-bold">${m.email}</td><td class="p-4 text-sm">${m.message}</td><td class="p-4"><span class="text-blue-400 bg-blue-400/10 px-2 py-1 rounded text-xs font-bold">Non lu</span></td></tr>
+            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun message.</td></tr>';
         };
 
-        // --- SOUMISSIONS AVEC GESTION DES ERREURS ---
+        // --- SOUMISSIONS ---
         async function loadCategories() {
             const { data } = await supabase.from('categories').select('*');
             document.getElementById('prod-category').innerHTML = data && data.length > 0 
@@ -139,3 +314,5 @@
 
         checkAuthStatus();
     </script>
+</body>
+</html>
