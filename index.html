@@ -7,43 +7,62 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        neon: '#FF0055',
-                        dark: '#0a0a0a',
-                        darker: '#050505'
-                    }
-                }
-            }
+            theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505' } } }
         }
     </script>
 </head>
-<body class="bg-dark text-white font-sans antialiased">
+<body class="bg-dark text-white font-sans antialiased relative">
 
     <!-- Navbar -->
-    <nav class="fixed w-full bg-darker/90 backdrop-blur-md border-b border-white/10 z-50">
+    <nav class="fixed w-full bg-darker/90 backdrop-blur-md border-b border-white/10 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center gap-2">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
                     <span class="text-3xl font-black tracking-tighter text-white">FAST<span class="text-neon">GOOD</span></span>
                 </div>
                 
                 <!-- Liens -->
                 <div class="hidden md:flex space-x-8 items-center font-bold">
-                    <a href="#" class="text-white hover:text-neon transition">Menu</a>
+                    <a href="#menu-section" class="text-white hover:text-neon transition">Menu</a>
                     <a href="#" class="text-white hover:text-neon transition">Nous contacter</a>
                     
-                    <!-- Espace Compte / Auth -->
-                    <div class="flex gap-4 border-l border-white/20 pl-8">
-                        <button class="text-white hover:text-neon transition">Se connecter</button>
-                        <button class="bg-neon text-white px-6 py-2 rounded-full hover:bg-white hover:text-neon transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">S'inscrire</button>
+                    <!-- Espace Compte / Auth (Dynamique) -->
+                    <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
+                        <button onclick="toggleAuthModal('login')" class="text-white hover:text-neon transition">Se connecter</button>
+                        <button onclick="toggleAuthModal('register')" class="bg-neon text-white px-6 py-2 rounded-full hover:bg-white hover:text-neon transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">S'inscrire</button>
+                    </div>
+
+                    <!-- Menu Utilisateur Connecté (Caché par défaut) -->
+                    <div id="user-menu" class="hidden flex gap-4 border-l border-white/20 pl-8 items-center">
+                        <span id="user-email" class="text-sm text-gray-400"></span>
+                        <button onclick="logout()" class="text-red-500 hover:text-white transition text-sm">Déconnexion</button>
                     </div>
                 </div>
             </div>
         </div>
     </nav>
+
+    <!-- Modal d'Authentification (Cachée par défaut) -->
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
+            <h2 id="modal-title" class="text-3xl font-black mb-6 text-center">Connexion</h2>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-bold mb-1">Email</label>
+                    <input type="email" id="auth-email" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-1">Mot de passe</label>
+                    <input type="password" id="auth-password" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
+                </div>
+                <button id="auth-submit" onclick="handleAuth()" class="w-full bg-neon text-white font-black py-3 rounded-xl mt-4 hover:bg-white hover:text-neon transition">VALIDER</button>
+                <p id="auth-error" class="text-red-500 text-sm text-center hidden"></p>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <div class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 overflow-hidden">
@@ -52,104 +71,157 @@
                 PAS LE TEMPS DE NIAISER.<br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple-500">JUSTE DE SAVOURER.</span>
             </h1>
-            <p class="mt-4 text-xl text-gray-400 max-w-2xl mx-auto font-medium">
-                Des burgers explosifs, préparés en un temps record. Commande en restaurant, on s'occupe du reste.
-            </p>
         </div>
     </div>
 
-    <!-- Menu Section (Temps Réel) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="flex justify-between items-end mb-8">
-            <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4">À la carte</h2>
-            <span class="text-gray-400 text-sm flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                Stocks mis à jour en direct
-            </span>
-        </div>
-
-        <!-- Conteneur vide : le JavaScript va injecter les plats de Supabase ici -->
-        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Chargement en cours... -->
-            <p class="text-gray-500 col-span-full">Chargement du menu...</p>
-        </div>
-    </div>
-
-    <!-- Espace FidGood Demo (Visible quand connecté) -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Espace FidGood Demo (Caché par défaut, visible si connecté) -->
+    <div id="fidgood-section" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-gradient-to-r from-darker to-gray-900 rounded-3xl p-8 border border-white/10 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-neon/10 rounded-full blur-3xl"></div>
             
             <h2 class="text-2xl font-black mb-2 flex items-center gap-3">
                 Ton compte <span class="bg-neon text-white px-3 py-1 rounded-lg text-sm">FidGood</span>
             </h2>
-            <p class="text-gray-400 mb-6">Client N° <strong>482910</strong></p>
+            <p class="text-gray-400 mb-6">Client N° <strong id="client-number" class="text-white">...</strong></p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-dark p-6 rounded-2xl border border-white/5">
                     <div class="text-gray-400 text-sm mb-1">Points disponibles</div>
-                    <div class="text-4xl font-black text-neon">140 pts</div>
+                    <div class="text-4xl font-black text-neon"><span id="client-points">0</span> pts</div>
                     <div class="text-xs text-gray-500 mt-2">1€ = 2 points en restaurant</div>
                 </div>
                 
-                <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-2">
-                    <div class="text-gray-400 text-sm mb-4">Commande en cours (FastGood Montpellier)</div>
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <div class="text-2xl font-bold">Menu Smash + Tenders</div>
-                            <div class="text-neon font-bold text-sm mt-1">N° Commande : 84</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-3xl font-black">~ 1 min 20</div>
-                            <div class="text-sm text-gray-400">Temps estimé</div>
-                        </div>
-                    </div>
-                    <!-- Barre de progression -->
-                    <div class="w-full bg-gray-800 rounded-full h-2 mt-4 overflow-hidden">
-                        <div class="bg-neon h-2 rounded-full w-2/3 animate-pulse"></div>
-                    </div>
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-2 flex items-center justify-center">
+                    <p class="text-gray-500">Aucune commande en cours.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Script de connexion à Supabase -->
+    <!-- Menu Section -->
+    <div id="menu-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4 mb-8">À la carte</h2>
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <p class="text-gray-500 col-span-full">Chargement du menu...</p>
+        </div>
+    </div>
+
+    <!-- Script Application -->
     <script type="module">
         import { supabase } from './db.js';
 
-        async function loadMenu() {
-            const container = document.getElementById('menu-container');
+        let currentAuthMode = 'login'; // 'login' ou 'register'
+
+        // 1. Gérer l'affichage de la modal
+        window.toggleAuthModal = function(mode) {
+            const modal = document.getElementById('auth-modal');
+            const title = document.getElementById('modal-title');
+            const errorEl = document.getElementById('auth-error');
             
-            // Récupérer les produits depuis Supabase
-            const { data: products, error } = await supabase.from('products').select('*');
+            if (mode) {
+                currentAuthMode = mode;
+                title.innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
+                errorEl.classList.add('hidden');
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden'); // Fermer
+            }
+        }
+
+        // 2. Traiter l'inscription / connexion
+        window.handleAuth = async function() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const errorEl = document.getElementById('auth-error');
+            const btn = document.getElementById('auth-submit');
+
+            if (!email || !password) {
+                errorEl.innerText = "Remplissez tous les champs.";
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            btn.innerText = "Veuillez patienter...";
+            errorEl.classList.add('hidden');
+
+            let error = null;
+
+            if (currentAuthMode === 'register') {
+                const { error: signUpError } = await supabase.auth.signUp({ email, password });
+                error = signUpError;
+            } else {
+                const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+                error = signInError;
+            }
+
+            btn.innerText = "VALIDER";
 
             if (error) {
-                console.error("Erreur de chargement:", error);
-                container.innerHTML = `<p class="text-red-500 col-span-full">Erreur de connexion à la base de données.</p>`;
-                return;
+                errorEl.innerText = error.message;
+                errorEl.classList.remove('hidden');
+            } else {
+                toggleAuthModal(); // Fermer la modal
+                checkUser(); // Mettre à jour l'interface
             }
+        }
 
-            if (!products || products.length === 0) {
-                container.innerHTML = `<p class="text-gray-500 col-span-full">Aucun produit disponible pour le moment.</p>`;
-                return;
+        // 3. Déconnexion
+        window.logout = async function() {
+            await supabase.auth.signOut();
+            checkUser();
+        }
+
+        // 4. Vérifier si un utilisateur est connecté et adapter l'affichage
+        async function checkUser() {
+            const { data: { session } } = await supabase.auth.getSession();
+            const authButtons = document.getElementById('auth-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const fidgoodSection = document.getElementById('fidgood-section');
+
+            if (session) {
+                // Utilisateur connecté
+                authButtons.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                document.getElementById('user-email').innerText = session.user.email;
+                
+                fidgoodSection.classList.remove('hidden');
+                
+                // Récupérer les infos du profil (Points, N° Client) depuis Supabase
+                const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
+                if (profile) {
+                    document.getElementById('client-number').innerText = profile.client_number || 'En création...';
+                    document.getElementById('client-points').innerText = profile.fidgood_points;
+                }
+
+            } else {
+                // Utilisateur déconnecté
+                authButtons.classList.remove('hidden');
+                userMenu.classList.add('hidden');
+                fidgoodSection.classList.add('hidden');
             }
+        }
 
-            // Générer le code HTML pour chaque produit
+        // 5. Charger le menu de la base de données
+        async function loadMenu() {
+            const container = document.getElementById('menu-container');
+            const { data: products, error } = await supabase.from('products').select('*');
+            if (error || !products) return;
+
             container.innerHTML = products.map(p => `
-                <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition group">
-                    <div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition">
+                <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition">
+                    <div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl">
                         ${p.image_url}
                     </div>
                     <h3 class="text-xl font-bold mb-1">${p.name}</h3>
-                    <p class="text-gray-400 text-sm mb-4">Temps de prépa : ${p.prep_time}s</p>
-                    <div class="flex justify-between items-center">
+                    <div class="flex justify-between items-center mt-4">
                         <span class="text-xl font-black text-neon">${p.price.toFixed(2)} €</span>
-                        <span class="text-xs font-bold bg-white/10 px-3 py-1 rounded-full text-green-400">En stock</span>
                     </div>
                 </div>
             `).join('');
         }
 
+        // Initialisation au chargement de la page
+        checkUser();
         loadMenu();
     </script>
 </body>
