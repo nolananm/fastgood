@@ -11,7 +11,6 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased relative">
 
-    <!-- Navbar -->
     <nav class="fixed w-full bg-darker/90 backdrop-blur-md border-b border-white/10 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -20,13 +19,10 @@
                 </div>
                 <div class="hidden md:flex space-x-8 items-center font-bold">
                     <a href="#menu-section" class="text-white hover:text-neon transition">Menu</a>
-                    <a href="#" class="text-white hover:text-neon transition">Nous contacter</a>
-                    
                     <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
                         <button onclick="toggleAuthModal('login')" class="text-white hover:text-neon transition">Se connecter</button>
                         <button onclick="toggleAuthModal('register')" class="bg-neon text-white px-6 py-2 rounded-full hover:bg-white hover:text-neon transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">S'inscrire</button>
                     </div>
-
                     <div id="user-menu" class="hidden flex gap-4 border-l border-white/20 pl-8 items-center">
                         <span id="user-email" class="text-sm text-gray-400"></span>
                         <button onclick="logout()" class="text-red-500 hover:text-white transition text-sm">Déconnexion</button>
@@ -41,75 +37,57 @@
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
             <h2 id="modal-title" class="text-3xl font-black mb-6 text-center">Connexion</h2>
-            
             <div class="space-y-4">
                 <div id="register-fields" class="hidden flex gap-4">
-                    <div class="flex-1">
-                        <label class="block text-sm font-bold mb-1">Prénom</label>
-                        <input type="text" id="auth-firstname" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
-                    </div>
-                    <div class="flex-1">
-                        <label class="block text-sm font-bold mb-1">Nom</label>
-                        <input type="text" id="auth-lastname" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
-                    </div>
+                    <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                    <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
                 </div>
-                <div>
-                    <label class="block text-sm font-bold mb-1">Email</label>
-                    <input type="email" id="auth-email" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold mb-1">Mot de passe</label>
-                    <input type="password" id="auth-password" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
-                </div>
-                <button id="auth-submit" onclick="handleAuth()" class="w-full bg-neon text-white font-black py-3 rounded-xl mt-4 hover:bg-white hover:text-neon transition">VALIDER</button>
+                <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                <button id="auth-submit" onclick="handleAuth()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-neon transition">VALIDER</button>
                 <p id="auth-error" class="text-red-500 text-sm text-center hidden"></p>
             </div>
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <div class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6">
-                PAS LE TEMPS DE NIAISER.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple-500">JUSTE DE SAVOURER.</span>
-            </h1>
-            <p class="mt-4 text-xl text-gray-400 max-w-2xl mx-auto font-medium">
-                Des burgers explosifs, préparés en un temps record. Commande en restaurant, on s'occupe du reste.
-            </p>
-        </div>
+    <!-- Hero -->
+    <div class="relative pt-32 pb-20 overflow-hidden text-center">
+        <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6">
+            PAS LE TEMPS DE NIAISER.<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple-500">JUSTE DE SAVOURER.</span>
+        </h1>
     </div>
 
-    <!-- Espace FidGood Demo -->
-    <div id="fidgood-section" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Espace FidGood -->
+    <div id="fidgood-section" class="hidden max-w-7xl mx-auto px-4 py-12">
         <div class="bg-gradient-to-r from-darker to-gray-900 rounded-3xl p-8 border border-white/10 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-neon/10 rounded-full blur-3xl"></div>
             
-            <h2 class="text-2xl font-black mb-2 flex items-center gap-3">
-                Ton compte <span class="bg-neon text-white px-3 py-1 rounded-lg text-sm">FidGood</span>
-            </h2>
+            <h2 class="text-2xl font-black mb-2 flex items-center gap-3">Ton compte <span class="bg-neon text-white px-3 py-1 rounded-lg text-sm">FidGood</span></h2>
             <p class="text-gray-400 mb-6">Client N° <strong id="client-number" class="text-white">...</strong></p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-dark p-6 rounded-2xl border border-white/5 flex flex-col justify-center">
-                    <div class="text-gray-400 text-sm mb-1">Points disponibles</div>
-                    <div class="text-4xl font-black text-neon"><span id="client-points">0</span> pts</div>
-                    <div class="text-xs text-gray-500 mt-2">1€ = 2 points en restaurant</div>
+                    <div class="text-gray-400 text-sm mb-1">Solde actuel</div>
+                    <div class="text-4xl font-black text-neon">👑 <span id="client-points">0</span></div>
+                    <div class="text-xs text-gray-500 mt-2">1€ dépensé = 2 couronnes</div>
                 </div>
                 
-                <!-- Commandes en cours du client -->
                 <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-2">
                     <div class="flex justify-between items-center mb-4">
                         <div class="text-gray-400 text-sm font-bold">Commandes en cours</div>
                         <button onclick="loadClientOrders()" class="text-xs border border-white/20 text-white px-3 py-1 rounded-full hover:bg-white/10 transition">Actualiser</button>
                     </div>
-                    <div id="client-orders-container" class="space-y-3 max-h-40 overflow-y-auto">
-                        <p class="text-gray-500 text-sm text-center py-4">Aucune commande en cours.</p>
-                    </div>
+                    <div id="client-orders-container" class="space-y-3 max-h-40 overflow-y-auto"></div>
+                </div>
+
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-3 mt-4">
+                    <div class="text-gray-400 text-sm font-bold mb-4">Historique des commandes terminées</div>
+                    <div id="client-history-container" class="space-y-3 max-h-40 overflow-y-auto"></div>
                 </div>
             </div>
 
-            <!-- Espace d'ajout de code promo -->
+            <!-- Code Promo -->
             <div class="mt-6 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center gap-4 relative z-10">
                 <div class="flex-1 w-full">
                     <p class="text-sm font-bold mb-2">Ajouter un code PromoGood</p>
@@ -119,68 +97,47 @@
                     </div>
                     <p id="promo-message" class="text-sm mt-2 font-bold"></p>
                 </div>
-                <div id="my-promos" class="flex-1 w-full bg-dark p-4 rounded-xl border border-white/5 text-sm text-gray-400">
-                    Vos codes sauvegardés apparaîtront ici.
-                </div>
+                <div id="my-promos" class="flex-1 w-full bg-dark p-4 rounded-xl border border-white/5 text-sm text-gray-400">Vos codes sauvegardés apparaîtront ici.</div>
             </div>
         </div>
     </div>
 
-    <!-- Menu Section -->
-    <div id="menu-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="flex justify-between items-end mb-8">
-            <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4">À la carte</h2>
-            <span class="text-gray-400 text-sm flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Stocks mis à jour en direct
-            </span>
-        </div>
-        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <p class="text-gray-500 col-span-full">Chargement du menu...</p>
-        </div>
+    <!-- Menu -->
+    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-12">
+        <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4 mb-8">À la carte</h2>
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
-    <!-- Script Application -->
     <script type="module">
         import { supabase } from './db.js';
 
         let currentAuthMode = 'login'; 
         let currentUserId = null;
 
-        // Affichage Modal Auth
         window.toggleAuthModal = function(mode) {
             const modal = document.getElementById('auth-modal');
-            const title = document.getElementById('modal-title');
-            const errorEl = document.getElementById('auth-error');
             const regFields = document.getElementById('register-fields');
-            
             if (mode) {
                 currentAuthMode = mode;
-                title.innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
-                errorEl.classList.add('hidden');
-                
-                if(mode === 'register') regFields.classList.remove('hidden');
-                else regFields.classList.add('hidden');
-                
+                document.getElementById('modal-title').innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
+                document.getElementById('auth-error').classList.add('hidden');
+                if(mode === 'register') regFields.classList.remove('hidden'); else regFields.classList.add('hidden');
                 modal.classList.remove('hidden');
             } else { modal.classList.add('hidden'); }
-        }
+        };
 
-        // Inscription / Connexion
         window.handleAuth = async function() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const firstName = document.getElementById('auth-firstname').value;
             const lastName = document.getElementById('auth-lastname').value;
             const errorEl = document.getElementById('auth-error');
-            const btn = document.getElementById('auth-submit');
 
             if (!email || !password || (currentAuthMode === 'register' && (!firstName || !lastName))) {
                 errorEl.innerText = "Remplissez tous les champs."; errorEl.classList.remove('hidden'); return;
             }
 
-            btn.innerText = "Veuillez patienter..."; errorEl.classList.add('hidden');
             let error = null;
-
             if (currentAuthMode === 'register') {
                 const { error: signUpError } = await supabase.auth.signUp({ email, password, options: { data: { first_name: firstName, last_name: lastName } } });
                 error = signUpError;
@@ -189,115 +146,113 @@
                 error = signInError;
             }
 
-            btn.innerText = "VALIDER";
+            if (error) { errorEl.innerText = error.message; errorEl.classList.remove('hidden'); } 
+            else { toggleAuthModal(); checkUser(); }
+        };
 
-            if (error) {
-                errorEl.innerText = error.message; errorEl.classList.remove('hidden');
-            } else { toggleAuthModal(); checkUser(); }
-        }
+        window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); };
 
-        window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); }
-
-        // --- CHARGEMENT DES COMMANDES DU CLIENT ---
-        window.loadClientOrders = async function() {
-            if(!currentUserId) return;
-            const container = document.getElementById('client-orders-container');
-            const { data: orders } = await supabase.from('orders')
-                .select('*')
-                .eq('client_id', currentUserId)
-                .neq('status', 'terminee')
-                .order('created_at', { ascending: false });
-
-            if (orders && orders.length > 0) {
-                container.innerHTML = orders.map(o => {
-                    const isReady = o.status === 'prete';
-                    return `
-                        <div class="flex items-center justify-between bg-white/5 p-4 rounded-xl border ${isReady ? 'border-green-400/50' : 'border-white/10'}">
-                            <div>
-                                <div class="text-neon font-bold text-sm">Commande #${o.id.substring(0,6).toUpperCase()}</div>
-                                <div class="text-lg font-bold">${o.total_price.toFixed(2)} €</div>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-xs text-gray-400 mb-2">Attente : ${o.estimated_time}s</div>
-                                <span class="${isReady ? 'text-green-400 bg-green-400/10 border-green-400/50 animate-pulse' : 'text-yellow-400 bg-yellow-400/10 border-yellow-400/20'} border px-3 py-1 rounded-full text-xs font-bold uppercase">
-                                    ${o.status.replace('_', ' ')}
-                                </span>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } else {
-                container.innerHTML = `<p class="text-gray-500 text-sm text-center py-4">Aucune commande en cours.</p>`;
-            }
-        }
-
-        // Vérif Utilisateur
         async function checkUser() {
             const { data: { session } } = await supabase.auth.getSession();
-            const authButtons = document.getElementById('auth-buttons');
-            const userMenu = document.getElementById('user-menu');
-            const fidgoodSection = document.getElementById('fidgood-section');
-
             if (session) {
                 currentUserId = session.user.id;
-                authButtons.classList.add('hidden'); userMenu.classList.remove('hidden'); fidgoodSection.classList.remove('hidden');
+                document.getElementById('auth-buttons').classList.add('hidden'); 
+                document.getElementById('user-menu').classList.remove('hidden'); 
+                document.getElementById('fidgood-section').classList.remove('hidden');
                 
                 const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
                 if (profile) {
                     document.getElementById('user-email').innerText = profile.first_name ? `Salut ${profile.first_name}` : session.user.email;
-                    document.getElementById('client-number').innerText = profile.client_number || 'En création...';
+                    document.getElementById('client-number').innerText = profile.client_number || '...';
                     document.getElementById('client-points').innerText = profile.fidgood_points;
                 }
-                loadSavedPromos();
-                loadClientOrders(); // Charge les commandes en cours
-
+                loadSavedPromos(); loadClientOrders();
             } else {
                 currentUserId = null;
-                authButtons.classList.remove('hidden'); userMenu.classList.add('hidden'); fidgoodSection.classList.add('hidden');
+                document.getElementById('auth-buttons').classList.remove('hidden'); 
+                document.getElementById('user-menu').classList.add('hidden'); 
+                document.getElementById('fidgood-section').classList.add('hidden');
             }
         }
 
-        // Gestion Promo
+        window.loadClientOrders = async function() {
+            if(!currentUserId) return;
+            const { data: orders } = await supabase.from('orders').select('*').eq('client_id', currentUserId).order('created_at', { ascending: false });
+            if (!orders) return;
+
+            const enCours = orders.filter(o => o.status !== 'terminee');
+            const historique = orders.filter(o => o.status === 'terminee');
+
+            const renderOrder = (o) => {
+                const isReady = o.status === 'prete';
+                const plats = o.items && o.items.length > 0 ? o.items.map(i => i.name).join(', ') : '';
+                return `<div class="flex items-center justify-between bg-white/5 p-4 rounded-xl border ${isReady ? 'border-green-400/50' : 'border-white/10'}">
+                    <div>
+                        <div class="text-neon font-bold text-sm">Commande #${o.id.substring(0,6).toUpperCase()}</div>
+                        <div class="text-xs text-gray-400 my-1">${plats}</div>
+                        <div class="text-lg font-bold">${o.total_price.toFixed(2)} €</div>
+                    </div>
+                    <div class="text-right">
+                        <span class="${isReady ? 'text-green-400 bg-green-400/10 animate-pulse' : (o.status === 'terminee' ? 'text-gray-500 bg-white/5' : 'text-yellow-400 bg-yellow-400/10')} border px-3 py-1 rounded-full text-xs font-bold uppercase block mb-1">${o.status.replace('_', ' ')}</span>
+                        <div class="text-xs text-gray-500">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                </div>`;
+            };
+
+            document.getElementById('client-orders-container').innerHTML = enCours.length ? enCours.map(renderOrder).join('') : `<p class="text-gray-500 text-sm text-center">Aucune commande en cours.</p>`;
+            document.getElementById('client-history-container').innerHTML = historique.length ? historique.map(renderOrder).join('') : `<p class="text-gray-500 text-sm text-center">Aucun historique.</p>`;
+        };
+
         window.savePromoCode = async function() {
             const codeInput = document.getElementById('client-promo-input').value.toUpperCase();
             const msgEl = document.getElementById('promo-message');
             if(!codeInput) return;
 
             const { data: promo } = await supabase.from('promocodes').select('*').eq('code', codeInput).single();
-            if(!promo) { msgEl.innerText = "Code invalide ou expiré."; msgEl.className = "text-sm mt-2 font-bold text-red-500"; return; }
+            if(!promo) { msgEl.innerText = "Code invalide."; msgEl.className = "text-sm mt-2 font-bold text-red-500"; return; }
 
-            const { error } = await supabase.from('user_promocodes').insert([{ client_id: currentUserId, code: promo.code }]);
-            if(error) { msgEl.innerText = "Code déjà ajouté !"; msgEl.className = "text-sm mt-2 font-bold text-yellow-500";
-            } else { msgEl.innerText = "Code ajouté !"; msgEl.className = "text-sm mt-2 font-bold text-green-400"; document.getElementById('client-promo-input').value = ""; loadSavedPromos(); }
-        }
+            const { data: existing } = await supabase.from('user_promocodes').select('*').eq('client_id', currentUserId).eq('code', codeInput).single();
+            if(existing) { msgEl.innerText = "Code déjà utilisé ou ajouté !"; msgEl.className = "text-sm mt-2 font-bold text-yellow-500"; return; }
+
+            if (promo.discount_type === 'points') {
+                // Ajout immédiat des couronnes !
+                const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', currentUserId).single();
+                await supabase.from('profiles').update({ fidgood_points: (prof.fidgood_points || 0) + promo.discount_value }).eq('id', currentUserId);
+                await supabase.from('user_promocodes').insert([{ client_id: currentUserId, code: promo.code, is_used: true }]);
+                msgEl.innerText = `👑 Merveilleux ! ${promo.discount_value} couronnes ajoutées !`;
+                msgEl.className = "text-sm mt-2 font-bold text-green-400";
+            } else {
+                // Code de réduction sauvegardé pour la borne
+                await supabase.from('user_promocodes').insert([{ client_id: currentUserId, code: promo.code, is_used: false }]);
+                msgEl.innerText = "Code ajouté ! Utilisable sur la borne.";
+                msgEl.className = "text-sm mt-2 font-bold text-green-400";
+            }
+            document.getElementById('client-promo-input').value = "";
+            checkUser(); // Rafraichir l'affichage
+        };
 
         async function loadSavedPromos() {
             if(!currentUserId) return;
             const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', currentUserId);
             const container = document.getElementById('my-promos');
             if(data && data.length > 0) {
-                container.innerHTML = `<p class="font-bold mb-2 text-white">Vos codes actifs :</p> ` + data.map(p => `<span class="${p.is_used ? 'line-through text-gray-500' : 'text-neon font-black'} bg-white/5 px-3 py-1 rounded mr-2 mb-2 inline-block">${p.code}</span>`).join('');
+                container.innerHTML = `<p class="font-bold mb-2 text-white">Vos codes actuels :</p> ` + data.map(p => `<span class="${p.is_used ? 'line-through text-gray-500' : 'text-neon font-black'} bg-white/5 px-3 py-1 rounded mr-2 mb-2 inline-block">${p.code}</span>`).join('');
             } else { container.innerHTML = "Vos codes sauvegardés apparaîtront ici."; }
         }
 
-        // Menu
         async function loadMenu() {
-            const container = document.getElementById('menu-container');
-            const { data: products, error } = await supabase.from('products').select('*');
-            if (error || !products || products.length === 0) { container.innerHTML = `<p class="text-gray-500 col-span-full">Aucun produit.</p>`; return; }
-
-            container.innerHTML = products.map(p => `
+            const { data: products } = await supabase.from('products').select('*');
+            document.getElementById('menu-container').innerHTML = products ? products.map(p => `
                 <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition group">
                     <div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition">${p.image_url || ''}</div>
                     <h3 class="text-xl font-bold mb-1">${p.name}</h3>
-                    <p class="text-gray-400 text-sm mb-4">Temps estimé : ${p.prep_time}s</p>
-                    <div class="flex justify-between items-center"><span class="text-xl font-black text-neon">${p.price.toFixed(2)} €</span><span class="text-xs font-bold bg-white/10 px-3 py-1 rounded-full text-green-400">En stock</span></div>
+                    <p class="text-gray-400 text-sm mb-4">Préparation : ${p.prep_time}s</p>
+                    <div class="flex justify-between items-center"><span class="text-xl font-black text-neon">${p.price.toFixed(2)} €</span></div>
                 </div>
-            `).join('');
+            `).join('') : '<p>Aucun produit.</p>';
         }
 
-        checkUser();
-        loadMenu();
+        checkUser(); loadMenu();
     </script>
 </body>
 </html>
