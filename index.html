@@ -43,13 +43,24 @@
         </div>
     </nav>
 
-    <!-- Modal d'Authentification (Cachée par défaut) -->
+    <!-- Modal d'Authentification -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
             <h2 id="modal-title" class="text-3xl font-black mb-6 text-center">Connexion</h2>
             
             <div class="space-y-4">
+                <!-- Champs Prénom / Nom visibles uniquement à l'inscription -->
+                <div id="register-fields" class="hidden flex gap-4">
+                    <div class="flex-1">
+                        <label class="block text-sm font-bold mb-1">Prénom</label>
+                        <input type="text" id="auth-firstname" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-bold mb-1">Nom</label>
+                        <input type="text" id="auth-lastname" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
+                    </div>
+                </div>
                 <div>
                     <label class="block text-sm font-bold mb-1">Email</label>
                     <input type="email" id="auth-email" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 focus:border-neon outline-none text-white">
@@ -71,10 +82,13 @@
                 PAS LE TEMPS DE NIAISER.<br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple-500">JUSTE DE SAVOURER.</span>
             </h1>
+            <p class="mt-4 text-xl text-gray-400 max-w-2xl mx-auto font-medium">
+                Des burgers explosifs, préparés en un temps record. Commande en restaurant, on s'occupe du reste.
+            </p>
         </div>
     </div>
 
-    <!-- Espace FidGood Demo (Caché par défaut, visible si connecté) -->
+    <!-- Espace FidGood Demo (Visible quand connecté) -->
     <div id="fidgood-section" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="bg-gradient-to-r from-darker to-gray-900 rounded-3xl p-8 border border-white/10 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-64 h-64 bg-neon/10 rounded-full blur-3xl"></div>
@@ -85,7 +99,7 @@
             <p class="text-gray-400 mb-6">Client N° <strong id="client-number" class="text-white">...</strong></p>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-dark p-6 rounded-2xl border border-white/5">
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 flex flex-col justify-center">
                     <div class="text-gray-400 text-sm mb-1">Points disponibles</div>
                     <div class="text-4xl font-black text-neon"><span id="client-points">0</span> pts</div>
                     <div class="text-xs text-gray-500 mt-2">1€ = 2 points en restaurant</div>
@@ -95,12 +109,34 @@
                     <p class="text-gray-500">Aucune commande en cours.</p>
                 </div>
             </div>
+
+            <!-- Espace d'ajout de code promo -->
+            <div class="mt-6 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+                <div class="flex-1 w-full">
+                    <p class="text-sm font-bold mb-2">Ajouter un code PromoGood</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="client-promo-input" placeholder="Ex: GOOD10" class="bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none uppercase w-full max-w-xs">
+                        <button onclick="savePromoCode()" class="bg-white text-dark font-bold px-6 py-2 rounded-lg hover:bg-neon hover:text-white transition">Ajouter</button>
+                    </div>
+                    <p id="promo-message" class="text-sm mt-2 font-bold"></p>
+                </div>
+                <div id="my-promos" class="flex-1 w-full bg-dark p-4 rounded-xl border border-white/5 text-sm text-gray-400">
+                    Vos codes sauvegardés apparaîtront ici.
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Menu Section -->
+    <!-- Menu Section (Temps Réel) -->
     <div id="menu-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4 mb-8">À la carte</h2>
+        <div class="flex justify-between items-end mb-8">
+            <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4">À la carte</h2>
+            <span class="text-gray-400 text-sm flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Stocks mis à jour en direct
+            </span>
+        </div>
+
         <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <p class="text-gray-500 col-span-full">Chargement du menu...</p>
         </div>
@@ -110,21 +146,27 @@
     <script type="module">
         import { supabase } from './db.js';
 
-        let currentAuthMode = 'login'; // 'login' ou 'register'
+        let currentAuthMode = 'login'; 
+        let currentUserId = null;
 
         // 1. Gérer l'affichage de la modal
         window.toggleAuthModal = function(mode) {
             const modal = document.getElementById('auth-modal');
             const title = document.getElementById('modal-title');
             const errorEl = document.getElementById('auth-error');
+            const regFields = document.getElementById('register-fields');
             
             if (mode) {
                 currentAuthMode = mode;
                 title.innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
                 errorEl.classList.add('hidden');
+                
+                if(mode === 'register') regFields.classList.remove('hidden');
+                else regFields.classList.add('hidden');
+                
                 modal.classList.remove('hidden');
             } else {
-                modal.classList.add('hidden'); // Fermer
+                modal.classList.add('hidden');
             }
         }
 
@@ -132,10 +174,12 @@
         window.handleAuth = async function() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
+            const firstName = document.getElementById('auth-firstname').value;
+            const lastName = document.getElementById('auth-lastname').value;
             const errorEl = document.getElementById('auth-error');
             const btn = document.getElementById('auth-submit');
 
-            if (!email || !password) {
+            if (!email || !password || (currentAuthMode === 'register' && (!firstName || !lastName))) {
                 errorEl.innerText = "Remplissez tous les champs.";
                 errorEl.classList.remove('hidden');
                 return;
@@ -143,11 +187,13 @@
 
             btn.innerText = "Veuillez patienter...";
             errorEl.classList.add('hidden');
-
             let error = null;
 
             if (currentAuthMode === 'register') {
-                const { error: signUpError } = await supabase.auth.signUp({ email, password });
+                const { error: signUpError } = await supabase.auth.signUp({ 
+                    email, password, 
+                    options: { data: { first_name: firstName, last_name: lastName } } 
+                });
                 error = signUpError;
             } else {
                 const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -160,18 +206,18 @@
                 errorEl.innerText = error.message;
                 errorEl.classList.remove('hidden');
             } else {
-                toggleAuthModal(); // Fermer la modal
-                checkUser(); // Mettre à jour l'interface
+                toggleAuthModal(); 
+                checkUser(); 
             }
         }
 
         // 3. Déconnexion
         window.logout = async function() {
             await supabase.auth.signOut();
-            checkUser();
+            window.location.reload();
         }
 
-        // 4. Vérifier si un utilisateur est connecté et adapter l'affichage
+        // 4. Vérifier l'utilisateur connecté
         async function checkUser() {
             const { data: { session } } = await supabase.auth.getSession();
             const authButtons = document.getElementById('auth-buttons');
@@ -179,48 +225,92 @@
             const fidgoodSection = document.getElementById('fidgood-section');
 
             if (session) {
-                // Utilisateur connecté
+                currentUserId = session.user.id;
                 authButtons.classList.add('hidden');
                 userMenu.classList.remove('hidden');
-                document.getElementById('user-email').innerText = session.user.email;
-                
                 fidgoodSection.classList.remove('hidden');
                 
-                // Récupérer les infos du profil (Points, N° Client) depuis Supabase
                 const { data: profile } = await supabase.from('profiles').select('*').eq('id', session.user.id).single();
                 if (profile) {
+                    document.getElementById('user-email').innerText = profile.first_name ? `Salut ${profile.first_name}` : session.user.email;
                     document.getElementById('client-number').innerText = profile.client_number || 'En création...';
                     document.getElementById('client-points').innerText = profile.fidgood_points;
                 }
+                loadSavedPromos();
 
             } else {
-                // Utilisateur déconnecté
+                currentUserId = null;
                 authButtons.classList.remove('hidden');
                 userMenu.classList.add('hidden');
                 fidgoodSection.classList.add('hidden');
             }
         }
 
-        // 5. Charger le menu de la base de données
+        // 5. Gestion des Codes Promo
+        window.savePromoCode = async function() {
+            const codeInput = document.getElementById('client-promo-input').value.toUpperCase();
+            const msgEl = document.getElementById('promo-message');
+            
+            if(!codeInput) return;
+
+            const { data: promo } = await supabase.from('promocodes').select('*').eq('code', codeInput).single();
+            if(!promo) {
+                msgEl.innerText = "Code invalide ou expiré.";
+                msgEl.className = "text-sm mt-2 font-bold text-red-500";
+                return;
+            }
+
+            const { error } = await supabase.from('user_promocodes').insert([{ client_id: currentUserId, code: promo.code }]);
+            if(error) {
+                msgEl.innerText = "Code déjà ajouté à votre compte !";
+                msgEl.className = "text-sm mt-2 font-bold text-yellow-500";
+            } else {
+                msgEl.innerText = "Code ajouté avec succès !";
+                msgEl.className = "text-sm mt-2 font-bold text-green-400";
+                document.getElementById('client-promo-input').value = "";
+                loadSavedPromos();
+            }
+        }
+
+        async function loadSavedPromos() {
+            if(!currentUserId) return;
+            const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', currentUserId);
+            const container = document.getElementById('my-promos');
+            
+            if(data && data.length > 0) {
+                container.innerHTML = `<p class="font-bold mb-2 text-white">Vos codes actifs :</p> ` + data.map(p => 
+                    `<span class="${p.is_used ? 'line-through text-gray-500' : 'text-neon font-black'} bg-white/5 px-3 py-1 rounded mr-2 mb-2 inline-block">${p.code}</span>`
+                ).join('');
+            } else {
+                container.innerHTML = "Vos codes sauvegardés apparaîtront ici.";
+            }
+        }
+
+        // 6. Charger le menu depuis Supabase
         async function loadMenu() {
             const container = document.getElementById('menu-container');
             const { data: products, error } = await supabase.from('products').select('*');
-            if (error || !products) return;
+
+            if (error || !products || products.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 col-span-full">Aucun produit disponible pour le moment.</p>`;
+                return;
+            }
 
             container.innerHTML = products.map(p => `
-                <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition">
-                    <div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl">
-                        ${p.image_url}
+                <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition group">
+                    <div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition">
+                        ${p.image_url || ''}
                     </div>
                     <h3 class="text-xl font-bold mb-1">${p.name}</h3>
-                    <div class="flex justify-between items-center mt-4">
+                    <p class="text-gray-400 text-sm mb-4">Temps estimé : ${p.prep_time}s</p>
+                    <div class="flex justify-between items-center">
                         <span class="text-xl font-black text-neon">${p.price.toFixed(2)} €</span>
+                        <span class="text-xs font-bold bg-white/10 px-3 py-1 rounded-full text-green-400">En stock</span>
                     </div>
                 </div>
             `).join('');
         }
 
-        // Initialisation au chargement de la page
         checkUser();
         loadMenu();
     </script>
