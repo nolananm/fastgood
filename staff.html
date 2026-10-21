@@ -11,7 +11,7 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased h-screen flex overflow-hidden relative">
 
-    <!-- ECRAN 1 : VERROUILLAGE / LOGIN STAFF -->
+    <!-- ECRAN AUTHENTIFICATION -->
     <div id="auth-screen" class="fixed inset-0 bg-darker z-50 flex items-center justify-center">
         <div class="bg-dark border border-white/10 p-8 rounded-2xl w-full max-w-md">
             <div class="text-3xl font-black mb-6 text-center">GESTION <span class="text-neon">STAFF</span></div>
@@ -24,19 +24,18 @@
         </div>
     </div>
 
-    <!-- MODAL : AJOUTER UNE CATÉGORIE -->
+    <!-- MODALS (Catégorie, Produit, Promo) -->
     <div id="add-category-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleModal('add-category-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
             <h2 class="text-2xl font-black mb-6">Nouvelle Catégorie</h2>
             <div class="space-y-4">
                 <input type="text" id="cat-name" placeholder="Nom (Ex: Burgers, Salades...)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
-                <button onclick="submitCategory()" id="btn-submit-cat" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER LA CATÉGORIE</button>
+                <button onclick="submitCategory()" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL : AJOUTER UN PRODUIT -->
     <div id="add-product-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleModal('add-product-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
@@ -47,16 +46,13 @@
                     <input type="number" step="0.10" id="prod-price" placeholder="Prix (€)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                     <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                 </div>
-                <select id="prod-category" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none appearance-none">
-                    <!-- Rempli par JS -->
-                </select>
+                <select id="prod-category" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none appearance-none"></select>
                 <input type="text" id="prod-image" placeholder="Image (URL courte ou texte)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                <button onclick="submitProduct()" id="btn-submit-prod" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER LE PLAT</button>
+                <button onclick="submitProduct()" class="w-full bg-white text-dark font-black py-3 rounded-xl mt-4 hover:bg-neon hover:text-white transition">CRÉER LE PLAT</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL : AJOUTER UN CODE PROMO -->
     <div id="add-promo-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleModal('add-promo-modal', false)" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
@@ -69,19 +65,19 @@
                     <option value="points">Points FidGood Offerts</option>
                 </select>
                 <div class="flex gap-4">
-                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur (Ex: 10)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                     <input type="number" id="promo-max" placeholder="Utilisations Max" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                 </div>
-                <button onclick="submitPromo()" id="btn-submit-promo" class="w-full bg-neon text-white font-black py-3 rounded-xl mt-4 hover:bg-white hover:text-neon transition">CRÉER LE CODE</button>
+                <button onclick="submitPromo()" class="w-full bg-neon text-white font-black py-3 rounded-xl mt-4 hover:bg-white hover:text-neon transition">CRÉER LE CODE</button>
             </div>
         </div>
     </div>
 
-    <!-- ECRAN 2 : APPLICATION STAFF -->
+    <!-- APPLICATION STAFF -->
     <div id="app-screen" class="hidden flex-1 flex h-full">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar -->
         <aside class="w-64 bg-darker border-r border-white/10 flex flex-col">
-            <div class="h-20 flex items-center px-6 border-b border-white/10 justify-between">
+            <div class="h-20 flex items-center px-6 border-b border-white/10">
                 <span class="text-xl font-black text-white">STAFF<span class="text-neon">GOOD</span></span>
             </div>
             <nav class="flex-1 p-4 space-y-2">
@@ -95,11 +91,11 @@
             </div>
         </aside>
 
-        <!-- Contenu principal -->
+        <!-- Contenu -->
         <main class="flex-1 overflow-y-auto p-8 relative">
             <button onclick="loadStaffData()" class="absolute top-8 right-8 border border-white/20 px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">Rafraîchir</button>
 
-            <!-- SECTION : CARTE -->
+            <!-- CARTE -->
             <div id="sec-carte" class="tab-content block">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-3xl font-black">Carte Actuelle</h1>
@@ -109,78 +105,55 @@
                     </div>
                 </div>
                 <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
-                            <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4">Temps</th><th class="p-4">Statut</th></tr>
-                        </thead>
-                        <tbody id="products-list" class="divide-y divide-white/10"></tbody>
-                    </table>
+                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4">Temps</th><th class="p-4">Statut</th></tr></thead><tbody id="products-list" class="divide-y divide-white/10"></tbody></table>
                 </div>
             </div>
 
-            <!-- SECTION : COMMANDES -->
+            <!-- COMMANDES (AVEC GESTION DES STATUTS) -->
             <div id="sec-commandes" class="tab-content hidden">
                 <h1 class="text-3xl font-black text-neon mb-6">Commandes en cuisine</h1>
                 <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
-                            <tr><th class="p-4">N° Commande</th><th class="p-4">Total</th><th class="p-4">Temps Estimé</th><th class="p-4">Statut</th></tr>
-                        </thead>
-                        <tbody id="orders-list" class="divide-y divide-white/10"></tbody>
-                    </table>
+                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">N° Commande</th><th class="p-4">Total</th><th class="p-4">Temps</th><th class="p-4">Statut</th></tr></thead><tbody id="orders-list" class="divide-y divide-white/10"></tbody></table>
                 </div>
             </div>
 
-            <!-- SECTION : PROMO -->
+            <!-- PROMO -->
             <div id="sec-promo" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-3xl font-black">Codes PromoGood</h1>
                     <button onclick="toggleModal('add-promo-modal', true)" class="bg-neon text-white px-4 py-2 rounded-full font-bold hover:bg-white hover:text-neon transition">+ Nouveau Code</button>
                 </div>
                 <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
-                            <tr><th class="p-4">Code</th><th class="p-4">Type</th><th class="p-4">Valeur</th><th class="p-4">Utilisations</th></tr>
-                        </thead>
-                        <tbody id="promo-list" class="divide-y divide-white/10"></tbody>
-                    </table>
+                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Code</th><th class="p-4">Type</th><th class="p-4">Valeur</th><th class="p-4">Utilisations</th></tr></thead><tbody id="promo-list" class="divide-y divide-white/10"></tbody></table>
                 </div>
             </div>
 
-            <!-- SECTION : MAILS -->
+            <!-- MAILS -->
             <div id="sec-mails" class="tab-content hidden">
                 <h1 class="text-3xl font-black mb-6">Messages de contact</h1>
                 <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left">
-                        <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
-                            <tr><th class="p-4">Date</th><th class="p-4">Email</th><th class="p-4">Message</th><th class="p-4">Statut</th></tr>
-                        </thead>
-                        <tbody id="mails-list" class="divide-y divide-white/10"></tbody>
-                    </table>
+                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Date</th><th class="p-4">Email</th><th class="p-4">Message</th><th class="p-4">Statut</th></tr></thead><tbody id="mails-list" class="divide-y divide-white/10"></tbody></table>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- SCRIPT APPLICATION STAFF -->
+    <!-- SCRIPT -->
     <script type="module">
         import { supabase } from './db.js';
 
-        // --- NAVIGATION ONGLETS ---
+        // Navigation
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(tabId).classList.remove('hidden');
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-neon/10', 'text-neon');
-                btn.classList.add('text-gray-400');
+                btn.classList.remove('bg-neon/10', 'text-neon'); btn.classList.add('text-gray-400');
             });
             const activeBtn = document.getElementById('tab-' + tabId);
-            activeBtn.classList.remove('text-gray-400');
-            activeBtn.classList.add('bg-neon/10', 'text-neon');
+            activeBtn.classList.remove('text-gray-400'); activeBtn.classList.add('bg-neon/10', 'text-neon');
         };
 
-        // --- AUTHENTIFICATION ---
+        // Auth
         window.loginStaff = async function() {
             const email = document.getElementById('staff-email').value;
             const password = document.getElementById('staff-password').value;
@@ -188,34 +161,31 @@
             if (error) {
                 document.getElementById('auth-error').innerText = "Identifiants incorrects.";
                 document.getElementById('auth-error').classList.remove('hidden');
-            } else {
-                window.location.reload(); 
-            }
+            } else { window.location.reload(); }
         };
-
-        window.logout = async function() {
-            await supabase.auth.signOut();
-            window.location.reload();
-        };
+        window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); };
 
         async function checkAuthStatus() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
-                loadStaffData();
-                loadCategories();
+                loadStaffData(); loadCategories();
             }
         }
 
-        // --- MODALS ---
         window.toggleModal = function(modalId, show) {
             const modal = document.getElementById(modalId);
-            if(show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+            if(show) modal.classList.remove('hidden'); else modal.classList.add('hidden');
         };
 
-        // --- CHARGEMENT DES DONNÉES ---
+        // --- GESTION DU STATUT DES COMMANDES ---
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            await supabase.from('orders').update({ status: newStatus }).eq('id', orderId);
+            loadStaffData();
+        };
+
+        // Chargement Données
         window.loadStaffData = async function() {
             // Produits
             const { data: products } = await supabase.from('products').select('*, categories(name)').order('created_at', { ascending: false });
@@ -223,47 +193,38 @@
                 <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold">${p.image_url || ''} ${p.name} <span class="text-xs text-gray-500 font-normal block">${p.categories?.name || 'Sans catégorie'}</span></td><td class="p-4">${p.price.toFixed(2)} €</td><td class="p-4">${p.prep_time}s</td><td class="p-4"><span class="text-green-400 bg-green-400/10 px-2 py-1 rounded text-xs font-bold">En ligne</span></td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun produit.</td></tr>';
 
-            // Commandes
+            // Commandes (AVEC BOUTONS)
             const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-            document.getElementById('orders-list').innerHTML = orders?.length ? orders.map(o => `
-                <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold text-neon">#${o.id.substring(0,6).toUpperCase()}</td><td class="p-4">${o.total_price.toFixed(2)} €</td><td class="p-4">${o.estimated_time}s</td><td class="p-4"><span class="text-yellow-400 bg-yellow-400/10 px-2 py-1 rounded text-xs font-bold">${o.status.toUpperCase()}</span></td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucune commande.</td></tr>';
+            document.getElementById('orders-list').innerHTML = orders?.length ? orders.map(o => {
+                let btnStr = '';
+                if (o.status === 'en_preparation') btnStr = `<button onclick="updateOrderStatus('${o.id}', 'prete')" class="bg-yellow-500 text-dark px-2 py-1 rounded text-xs font-bold hover:bg-white ml-2 transition">✅ Prête</button>`;
+                else if (o.status === 'prete') btnStr = `<button onclick="updateOrderStatus('${o.id}', 'terminee')" class="bg-green-500 text-white px-2 py-1 rounded text-xs font-bold hover:bg-white hover:text-dark ml-2 transition">🏁 Terminée</button>`;
+                
+                let statusColor = o.status === 'terminee' ? 'text-gray-400 bg-white/5' : (o.status === 'prete' ? 'text-green-400 bg-green-400/10' : 'text-yellow-400 bg-yellow-400/10');
 
-            // Codes Promo
+                return `<tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold text-neon">#${o.id.substring(0,6).toUpperCase()}</td><td class="p-4">${o.total_price.toFixed(2)} €</td><td class="p-4">${o.estimated_time}s</td><td class="p-4 flex items-center"><span class="${statusColor} px-2 py-1 rounded text-xs font-bold uppercase">${o.status.replace('_', ' ')}</span> ${btnStr}</td></tr>`;
+            }).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucune commande.</td></tr>';
+
+            // Promos & Mails
             const { data: promos } = await supabase.from('promocodes').select('*');
-            document.getElementById('promo-list').innerHTML = promos?.length ? promos.map(p => `
-                <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} / ${p.max_uses || '∞'}</td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun code.</td></tr>';
+            document.getElementById('promo-list').innerHTML = promos?.length ? promos.map(p => `<tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} / ${p.max_uses || '∞'}</td></tr>`).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun code.</td></tr>';
 
-            // Mails
             const { data: mails } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
-            document.getElementById('mails-list').innerHTML = mails?.length ? mails.map(m => `
-                <tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 text-sm text-gray-400">${new Date(m.created_at).toLocaleDateString('fr-FR')}</td><td class="p-4 font-bold">${m.email}</td><td class="p-4 text-sm">${m.message}</td><td class="p-4"><span class="text-blue-400 bg-blue-400/10 px-2 py-1 rounded text-xs font-bold">Non lu</span></td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun message.</td></tr>';
+            document.getElementById('mails-list').innerHTML = mails?.length ? mails.map(m => `<tr class="hover:bg-white/5 border-b border-white/5"><td class="p-4 text-sm text-gray-400">${new Date(m.created_at).toLocaleDateString('fr-FR')}</td><td class="p-4 font-bold">${m.email}</td><td class="p-4 text-sm">${m.message}</td><td class="p-4"><span class="text-blue-400 bg-blue-400/10 px-2 py-1 rounded text-xs font-bold">Non lu</span></td></tr>`).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun message.</td></tr>';
         };
 
-        // --- SOUMISSIONS ---
+        // Soumissions
         async function loadCategories() {
             const { data } = await supabase.from('categories').select('*');
-            document.getElementById('prod-category').innerHTML = data && data.length > 0 
-                ? data.map(c => `<option value="${c.id}">${c.name}</option>`).join('') 
-                : '<option value="">Aucune catégorie disponible</option>';
+            document.getElementById('prod-category').innerHTML = data && data.length > 0 ? data.map(c => `<option value="${c.id}">${c.name}</option>`).join('') : '<option value="">Aucune catégorie disponible</option>';
         }
 
         window.submitCategory = async function() {
             const name = document.getElementById('cat-name').value;
-            if(!name) return alert("Renseignez un nom de catégorie.");
-            
-            const { error } = await supabase.from('categories').insert([{ name }]);
-            if (error) {
-                alert("Erreur: " + error.message);
-                return;
-            }
-            
-            toggleModal('add-category-modal', false);
-            document.getElementById('cat-name').value = '';
+            if(!name) return alert("Renseignez un nom.");
+            await supabase.from('categories').insert([{ name }]);
+            toggleModal('add-category-modal', false); document.getElementById('cat-name').value = '';
             loadCategories();
-            alert("Catégorie créée !");
         };
 
         window.submitProduct = async function() {
@@ -273,21 +234,11 @@
             const category_id = document.getElementById('prod-category').value;
             const image_url = document.getElementById('prod-image').value;
 
-            if(!name || isNaN(price) || isNaN(prep_time)) return alert("Remplissez le nom, le prix et le temps.");
-            if(!category_id) return alert("Vous devez d'abord créer une catégorie !");
-            
-            const { error } = await supabase.from('products').insert([{ name, price, prep_time, category_id, image_url }]);
-            
-            if (error) {
-                alert("Erreur lors de la création : " + error.message);
-                return;
-            }
-
+            if(!name || isNaN(price) || isNaN(prep_time)) return alert("Remplissez nom, prix et temps.");
+            if(!category_id) return alert("Créez d'abord une catégorie !");
+            await supabase.from('products').insert([{ name, price, prep_time, category_id, image_url }]);
             toggleModal('add-product-modal', false);
-            document.getElementById('prod-name').value = '';
-            document.getElementById('prod-price').value = '';
-            document.getElementById('prod-time').value = '';
-            document.getElementById('prod-image').value = '';
+            document.getElementById('prod-name').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-time').value = ''; document.getElementById('prod-image').value = '';
             loadStaffData();
         };
 
@@ -296,19 +247,10 @@
             const discount_type = document.getElementById('promo-type').value;
             const discount_value = parseFloat(document.getElementById('promo-value').value);
             const max_uses = parseInt(document.getElementById('promo-max').value);
-
-            if(!code || isNaN(discount_value)) return alert("Remplissez le code et la valeur.");
-
-            const { error } = await supabase.from('promocodes').insert([{ code, discount_type, discount_value, max_uses: isNaN(max_uses) ? null : max_uses }]);
-            if (error) {
-                alert("Erreur: " + error.message);
-                return;
-            }
-
+            if(!code || isNaN(discount_value)) return alert("Remplissez code et valeur.");
+            await supabase.from('promocodes').insert([{ code, discount_type, discount_value, max_uses: isNaN(max_uses) ? null : max_uses }]);
             toggleModal('add-promo-modal', false);
-            document.getElementById('promo-code').value = '';
-            document.getElementById('promo-value').value = '';
-            document.getElementById('promo-max').value = '';
+            document.getElementById('promo-code').value = ''; document.getElementById('promo-value').value = ''; document.getElementById('promo-max').value = '';
             loadStaffData();
         };
 
