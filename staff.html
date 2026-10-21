@@ -19,71 +19,106 @@
             <span class="text-xl font-black text-white">STAFF<span class="text-neon">GOOD</span></span>
         </div>
         <nav class="flex-1 p-4 space-y-2">
-            <a href="#" class="block px-4 py-3 bg-neon/10 text-neon rounded-xl font-bold">🍔 Gestion Carte & Stocks</a>
-            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">🎟️ Codes PromoGood</a>
-            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">✉️ Mails (Nous contacter)</a>
-            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">🏪 Restaurants</a>
+            <a href="#" class="block px-4 py-3 bg-neon/10 text-neon rounded-xl font-bold">🍔 Gestion Carte</a>
+            <a href="#" class="block px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition">👨‍🍳 Commandes en cours</a>
         </nav>
-        <div class="p-4 border-t border-white/10">
-            <button class="w-full text-left px-4 py-2 text-sm text-gray-500 hover:text-white">Se déconnecter</button>
-        </div>
     </aside>
 
     <!-- Contenu principal -->
-    <main class="flex-1 overflow-y-auto p-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-black">Gestion de la Carte</h1>
-            <button class="bg-white text-dark px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition">+ Nouveau Plat</button>
-        </div>
-
-        <!-- Section des catégories -->
-        <div class="bg-darker border border-white/10 rounded-2xl p-6 mb-8">
-            <h2 class="text-xl font-bold mb-4">Catégories</h2>
-            <div class="flex gap-2">
-                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Burgers</span>
-                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Boissons</span>
-                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Desserts</span>
-                <span class="bg-white/10 px-4 py-2 rounded-lg text-sm font-bold">Snacks</span>
-                <button class="border border-white/20 px-4 py-2 rounded-lg text-sm text-gray-400 hover:text-white">+</button>
+    <main class="flex-1 overflow-y-auto p-8 space-y-12">
+        
+        <!-- Section Commandes Live -->
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-black text-neon">Commandes en cuisine</h1>
+                <button onclick="loadStaffData()" class="border border-white/20 px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">🔄 Rafraîchir</button>
+            </div>
+            <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                        <tr>
+                            <th class="p-4">N° Commande (ID)</th>
+                            <th class="p-4">Total</th>
+                            <th class="p-4">Temps Estimé</th>
+                            <th class="p-4">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-list" class="divide-y divide-white/10">
+                        <tr><td colspan="4" class="p-4 text-center text-gray-500">Chargement des commandes...</td></tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Tableau des plats (Simulation) -->
-        <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
-                    <tr>
-                        <th class="p-4">Produit</th>
-                        <th class="p-4">Catégorie</th>
-                        <th class="p-4">Prix</th>
-                        <th class="p-4">Quota Jour</th>
-                        <th class="p-4">Statut</th>
-                        <th class="p-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-white/10">
-                    <tr class="hover:bg-white/5 transition">
-                        <td class="p-4 font-bold">Le Good Smash</td>
-                        <td class="p-4 text-gray-400">Burger</td>
-                        <td class="p-4">8.90 €</td>
-                        <td class="p-4"><input type="number" value="150" class="bg-dark border border-white/20 rounded p-1 w-20 text-center"></td>
-                        <td class="p-4"><span class="text-green-400 text-xs font-bold bg-green-400/10 px-2 py-1 rounded">En stock</span></td>
-                        <td class="p-4 text-sm text-neon cursor-pointer">Modifier</td>
-                    </tr>
-                    <tr class="hover:bg-white/5 transition">
-                        <td class="p-4 font-bold">Milkshake Vanille</td>
-                        <td class="p-4 text-gray-400">Dessert</td>
-                        <td class="p-4">3.90 €</td>
-                        <td class="p-4"><input type="number" value="50" class="bg-dark border border-white/20 rounded p-1 w-20 text-center"></td>
-                        <td class="p-4">
-                            <!-- Toggle Rupture manuelle -->
-                            <button class="text-red-500 text-xs font-bold bg-red-500/10 px-2 py-1 rounded border border-red-500/20">Passer en rupture</button>
-                        </td>
-                        <td class="p-4 text-sm text-neon cursor-pointer">Modifier</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Section Carte et Produits -->
+        <div>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-black">Carte Actuelle</h2>
+                <button class="bg-white text-dark px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition">+ Nouveau Plat</button>
+            </div>
+            <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm">
+                        <tr>
+                            <th class="p-4">Produit</th>
+                            <th class="p-4">Prix</th>
+                            <th class="p-4">Temps de prépa</th>
+                            <th class="p-4">Statut DB</th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-list" class="divide-y divide-white/10">
+                        <tr><td colspan="4" class="p-4 text-center text-gray-500">Chargement des produits...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </main>
+
+    <!-- Script de connexion à Supabase -->
+    <script type="module">
+        import { supabase } from './db.js';
+
+        window.loadStaffData = async function() {
+            // 1. Charger les produits
+            const { data: products } = await supabase.from('products').select('*');
+            const productsContainer = document.getElementById('products-list');
+            
+            if (products && products.length > 0) {
+                productsContainer.innerHTML = products.map(p => `
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="p-4 font-bold flex items-center gap-3"><span class="text-2xl">${p.image_url}</span> ${p.name}</td>
+                        <td class="p-4">${p.price.toFixed(2)} €</td>
+                        <td class="p-4">${p.prep_time} sec</td>
+                        <td class="p-4"><span class="text-green-400 text-xs font-bold bg-green-400/10 px-2 py-1 rounded">En ligne</span></td>
+                    </tr>
+                `).join('');
+            } else {
+                productsContainer.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-500">Aucun produit dans la base.</td></tr>';
+            }
+
+            // 2. Charger les commandes (les plus récentes en premier)
+            const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
+            const ordersContainer = document.getElementById('orders-list');
+
+            if (orders && orders.length > 0) {
+                ordersContainer.innerHTML = orders.map(o => `
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="p-4 font-bold text-neon">#${o.id.substring(0,8).toUpperCase()}</td>
+                        <td class="p-4">${o.total_price.toFixed(2)} €</td>
+                        <td class="p-4">${o.estimated_time} sec</td>
+                        <td class="p-4">
+                            <span class="text-yellow-400 text-xs font-bold bg-yellow-400/10 px-2 py-1 rounded border border-yellow-400/20">${o.status.replace('_', ' ').toUpperCase()}</span>
+                        </td>
+                    </tr>
+                `).join('');
+            } else {
+                ordersContainer.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-500">Aucune commande en cours.</td></tr>';
+            }
+        };
+
+        // Charger les données au démarrage
+        loadStaffData();
+    </script>
 </body>
 </html>
