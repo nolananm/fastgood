@@ -3,226 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastGood - Staff</title>
+    <title>FastGood - Ta faim n'attend pas.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>tailwind.config = { theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505' } } } }</script>
 </head>
-<body class="bg-dark text-white font-sans antialiased h-screen flex overflow-hidden">
+<body class="bg-dark text-white font-sans antialiased relative">
 
-    <!-- ECRAN 1 : CONNEXION -->
-    <div id="auth-screen" class="fixed inset-0 bg-darker z-50 flex items-center justify-center">
-        <div class="bg-dark border border-white/10 p-8 rounded-2xl w-full max-w-md text-center">
-            <div class="text-3xl font-black mb-6">GESTION <span class="text-neon">STAFF</span></div>
-            <div class="space-y-4">
-                <input type="email" id="staff-email" placeholder="Email Admin" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 outline-none">
-                <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 outline-none">
-                <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-neon transition">CONNEXION</button>
-                <p id="auth-error" class="text-red-500 text-sm hidden"></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODALS (Fixes et superposées correctement) -->
-    <div id="modal-category" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
-            <button onclick="toggleModal('modal-category', false)" class="absolute top-4 right-4 text-gray-400 font-bold text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6">Nouvelle Catégorie</h2>
-            <input type="text" id="cat-name" placeholder="Nom (Ex: Burgers)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 mb-4 outline-none">
-            <button onclick="submitCategory()" class="w-full bg-white text-dark font-black py-3 rounded-xl hover:bg-neon hover:text-white transition">CRÉER</button>
-        </div>
-    </div>
-
-    <div id="modal-product" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
-            <button onclick="toggleModal('modal-product', false)" class="absolute top-4 right-4 text-gray-400 font-bold text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6">Nouveau Plat</h2>
-            <div class="space-y-4">
-                <input type="text" id="prod-name" placeholder="Nom du plat" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                <div class="flex gap-4">
-                    <input type="number" step="0.10" id="prod-price" placeholder="Prix (€)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                    <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                </div>
-                <select id="prod-category" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none"></select>
-                <input type="text" id="prod-image" placeholder="Image (URL ou Emoji)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                <button onclick="submitProduct()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-dark transition">CRÉER LE PLAT</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-promo" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
-            <button onclick="toggleModal('modal-promo', false)" class="absolute top-4 right-4 text-gray-400 font-bold text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6">Code PromoGood</h2>
-            <div class="space-y-4">
-                <input type="text" id="promo-code" placeholder="Code (Ex: GOOD10)" class="w-full uppercase bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                <select id="promo-type" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                    <option value="percent">Remise (%)</option>
-                    <option value="amount">Remise Fixe (€)</option>
-                    <option value="points">Couronnes 👑</option>
-                </select>
-                <div class="flex gap-4">
-                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                    <input type="number" id="promo-max" placeholder="Utilisations Max" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
-                </div>
-                <button onclick="submitPromo()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-dark transition">CRÉER LE CODE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ECRAN 2 : APPLICATION -->
-    <div id="app-screen" class="hidden flex-1 flex h-full">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-darker border-r border-white/10 flex flex-col">
-            <div class="h-20 flex items-center px-6 border-b border-white/10 text-xl font-black">STAFF<span class="text-neon">GOOD</span></div>
-            <nav class="flex-1 p-4 space-y-2">
-                <button onclick="switchTab('sec-carte')" id="tab-sec-carte" class="w-full text-left px-4 py-3 bg-neon/10 text-neon rounded-xl font-bold tab-btn transition">🍔 Gestion Carte</button>
-                <button onclick="switchTab('sec-commandes')" id="tab-sec-commandes" class="w-full text-left px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl tab-btn transition">👨‍🍳 Commandes Live</button>
-                <button onclick="switchTab('sec-promo')" id="tab-sec-promo" class="w-full text-left px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl tab-btn transition">🎟️ Codes PromoGood</button>
-            </nav>
-            <button onclick="logout()" class="p-4 text-red-500 font-bold border-t border-white/10 text-left hover:text-white transition">Verrouiller</button>
-        </aside>
-
-        <!-- Contenu -->
-        <main class="flex-1 overflow-y-auto p-8 relative">
-            <button onclick="loadData()" class="absolute top-8 right-8 border border-white/20 px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">🔄 Rafraîchir</button>
-
-            <!-- ONGLET CARTE -->
-            <div id="sec-carte" class="tab-content block">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-black">Carte Actuelle</h1>
-                    <div class="flex gap-4">
-                        <button onclick="toggleModal('modal-category', true)" class="border border-white/20 text-white px-4 py-2 rounded-full font-bold hover:bg-white/10 transition">+ Catégorie</button>
-                        <button onclick="toggleModal('modal-product', true)" class="bg-white text-dark px-4 py-2 rounded-full font-bold hover:bg-gray-200 transition">+ Nouveau Plat</button>
+    <nav class="fixed w-full bg-darker/90 backdrop-blur-md border-b border-white/10 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)"><span class="text-3xl font-black tracking-tighter text-white">FAST<span class="text-neon">GOOD</span></span></div>
+                <div class="hidden md:flex space-x-8 items-center font-bold">
+                    <a href="#menu-section" class="text-white hover:text-neon transition">Menu</a>
+                    <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
+                        <button onclick="toggleAuthModal('login')" class="text-white hover:text-neon transition">Se connecter</button>
+                        <button onclick="toggleAuthModal('register')" class="bg-neon text-white px-6 py-2 rounded-full hover:bg-white hover:text-neon transition shadow-[0_0_15px_rgba(255,0,85,0.5)]">S'inscrire</button>
+                    </div>
+                    <div id="user-menu" class="hidden flex gap-4 border-l border-white/20 pl-8 items-center">
+                        <span id="user-email" class="text-sm text-gray-400"></span>
+                        <button onclick="logout()" class="text-red-500 hover:text-white transition text-sm">Déconnexion</button>
                     </div>
                 </div>
-                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4">Temps</th><th class="p-4">Actions</th></tr></thead><tbody id="list-products" class="divide-y divide-white/10"></tbody></table>
-                </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- ONGLET COMMANDES -->
-            <div id="sec-commandes" class="tab-content hidden">
-                <h1 class="text-3xl font-black text-neon mb-6">Commandes en cuisine</h1>
-                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Commande</th><th class="p-4">Total</th><th class="p-4">Statut / Actions</th></tr></thead><tbody id="list-orders" class="divide-y divide-white/10"></tbody></table>
+    <div id="auth-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
+            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-xl">X</button>
+            <h2 id="modal-title" class="text-3xl font-black mb-6 text-center">Connexion</h2>
+            <div class="space-y-4">
+                <div id="register-fields" class="hidden flex gap-4">
+                    <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                    <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
                 </div>
+                <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-3 outline-none">
+                <button onclick="handleAuth()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-neon transition">VALIDER</button>
+                <p id="auth-error" class="text-red-500 text-sm text-center hidden"></p>
             </div>
-
-            <!-- ONGLET PROMOS -->
-            <div id="sec-promo" class="tab-content hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-3xl font-black">Codes PromoGood</h1>
-                    <button onclick="toggleModal('modal-promo', true)" class="bg-neon text-white px-4 py-2 rounded-full font-bold hover:bg-white hover:text-dark transition">+ Nouveau Code</button>
-                </div>
-                <div class="bg-darker border border-white/10 rounded-2xl overflow-hidden">
-                    <table class="w-full text-left"><thead class="bg-white/5 border-b border-white/10 text-gray-400 text-sm"><tr><th class="p-4">Code</th><th class="p-4">Type</th><th class="p-4">Valeur</th><th class="p-4">Utilisations</th></tr></thead><tbody id="list-promos" class="divide-y divide-white/10"></tbody></table>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 
-    <!-- SCRIPT -->
+    <div class="relative pt-32 pb-20 overflow-hidden text-center">
+        <h1 class="text-5xl md:text-7xl font-black tracking-tight mb-6">PAS LE TEMPS DE NIAISER.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-neon to-purple-500">JUSTE DE SAVOURER.</span></h1>
+    </div>
+
+    <!-- ESPACE CLIENT FIDGOOD -->
+    <div id="fidgood-section" class="hidden max-w-7xl mx-auto px-4 py-12">
+        <div class="bg-gradient-to-r from-darker to-gray-900 rounded-3xl p-8 border border-white/10 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-neon/10 rounded-full blur-3xl"></div>
+            <h2 class="text-2xl font-black mb-2 flex items-center gap-3">Ton compte <span class="bg-neon text-white px-3 py-1 rounded-lg text-sm">FidGood</span></h2>
+            <p class="text-gray-400 mb-6">Client N° <strong id="client-number" class="text-white">...</strong></p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Solde -->
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 flex flex-col justify-center">
+                    <div class="text-gray-400 text-sm mb-1">Solde actuel</div>
+                    <div class="text-4xl font-black text-neon">👑 <span id="client-points">0</span></div>
+                    <div class="text-xs text-gray-500 mt-2">1€ dépensé = 2 couronnes</div>
+                </div>
+                <!-- Commandes en cours -->
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="text-gray-400 text-sm font-bold">Commandes en cours</div>
+                        <button onclick="loadOrders()" class="text-xs border border-white/20 text-white px-3 py-1 rounded-full hover:bg-white/10 transition">Actualiser</button>
+                    </div>
+                    <div id="orders-encours" class="space-y-3 max-h-40 overflow-y-auto"></div>
+                </div>
+                <!-- Historique -->
+                <div class="bg-dark p-6 rounded-2xl border border-white/5 md:col-span-3">
+                    <div class="text-gray-400 text-sm font-bold mb-4">Historique des commandes terminées</div>
+                    <div id="orders-historique" class="space-y-3 max-h-40 overflow-y-auto"></div>
+                </div>
+            </div>
+
+            <!-- Ajout Promo -->
+            <div class="mt-6 border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+                <div class="flex-1 w-full">
+                    <p class="text-sm font-bold mb-2">Ajouter un code PromoGood</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="promo-input" placeholder="Ex: GOOD10" class="bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none uppercase w-full max-w-xs">
+                        <button onclick="savePromo()" class="bg-white text-dark font-bold px-6 py-2 rounded-lg hover:bg-neon hover:text-white transition">Ajouter</button>
+                    </div>
+                    <p id="promo-msg" class="text-sm mt-2 font-bold"></p>
+                </div>
+                <div id="my-promos" class="flex-1 w-full bg-dark p-4 rounded-xl border border-white/5 text-sm text-gray-400">Vos codes apparaîtront ici.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-12">
+        <h2 class="text-3xl font-black uppercase tracking-wide border-l-4 border-neon pl-4 mb-8">À la carte</h2>
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+    </div>
+
     <script type="module">
         import { supabase } from './db.js';
 
-        // Interface globale
-        window.switchTab = function(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('bg-neon/10', 'text-neon'); b.classList.add('text-gray-400'); });
-            document.getElementById('tab-'+id).classList.add('bg-neon/10', 'text-neon');
+        let authMode = 'login'; let userId = null;
+
+        window.toggleAuthModal = function(mode) {
+            if(mode) {
+                authMode = mode; document.getElementById('modal-title').innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
+                document.getElementById('auth-error').classList.add('hidden');
+                document.getElementById('register-fields').classList.toggle('hidden', mode !== 'register');
+                document.getElementById('auth-modal').classList.remove('hidden');
+            } else document.getElementById('auth-modal').classList.add('hidden');
         };
 
-        window.toggleModal = function(id, show) { document.getElementById(id).classList.toggle('hidden', !show); };
-
-        // Authentification
-        window.loginStaff = async function() {
-            const email = document.getElementById('staff-email').value;
-            const password = document.getElementById('staff-password').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) { document.getElementById('auth-error').innerText = "Identifiants incorrects."; document.getElementById('auth-error').classList.remove('hidden'); } 
-            else { window.location.reload(); }
+        window.handleAuth = async function() {
+            const e = document.getElementById('auth-email').value, p = document.getElementById('auth-password').value, fn = document.getElementById('auth-firstname').value, ln = document.getElementById('auth-lastname').value;
+            if(!e || !p || (authMode === 'register' && (!fn || !ln))) return;
+            
+            const { error } = authMode === 'register' ? await supabase.auth.signUp({ email: e, password: p, options: { data: { first_name: fn, last_name: ln } } }) : await supabase.auth.signInWithPassword({ email: e, password: p });
+            if (error) { document.getElementById('auth-error').innerText = error.message; document.getElementById('auth-error').classList.remove('hidden'); } 
+            else { toggleAuthModal(); checkUser(); }
         };
         window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); };
 
-        async function checkAuth() {
+        async function checkUser() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('app-screen').classList.remove('hidden');
-                loadData(); loadCategoriesDropdown();
+                userId = session.user.id;
+                document.getElementById('auth-buttons').classList.add('hidden'); document.getElementById('user-menu').classList.remove('hidden'); document.getElementById('fidgood-section').classList.remove('hidden');
+                
+                const { data: prof } = await supabase.from('profiles').select('*').eq('id', userId).single();
+                if (prof) {
+                    document.getElementById('user-email').innerText = prof.first_name ? `Salut ${prof.first_name}` : session.user.email;
+                    document.getElementById('client-number').innerText = prof.client_number || '...';
+                    document.getElementById('client-points').innerText = prof.fidgood_points;
+                }
+                loadPromos(); loadOrders();
             }
         }
 
-        // Actions de données
-        window.updateOrderStatus = async function(id, status) { await supabase.from('orders').update({ status }).eq('id', id); loadData(); };
-        window.deleteProduct = async function(id) { if(confirm('Supprimer ce plat ?')) { await supabase.from('products').delete().eq('id', id); loadData(); } };
+        window.loadOrders = async function() {
+            if(!userId) return;
+            const { data } = await supabase.from('orders').select('*').eq('client_id', userId).order('created_at', { ascending: false });
+            if (!data) return;
 
-        // Chargement principal
-        window.loadData = async function() {
-            // Produits
-            const { data: products } = await supabase.from('products').select('*, categories(name)').order('created_at', { ascending: false });
-            document.getElementById('list-products').innerHTML = products?.length ? products.map(p => `
-                <tr class="hover:bg-white/5"><td class="p-4 font-bold">${p.image_url||''} ${p.name} <span class="block text-xs text-gray-500 font-normal">${p.categories?.name||'Sans catégorie'}</span></td><td class="p-4">${p.price.toFixed(2)} €</td><td class="p-4">${p.prep_time}s</td><td class="p-4"><button onclick="deleteProduct('${p.id}')" class="text-red-500 text-xs font-bold hover:text-white border border-red-500/50 px-2 py-1 rounded">Supprimer</button></td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun plat.</td></tr>';
+            const render = (o) => `<div class="flex justify-between bg-white/5 p-4 rounded-xl border ${o.status==='prete'?'border-green-400':'border-white/10'}">
+                <div><div class="text-neon font-bold text-sm">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-400 my-1">${o.items?o.items.map(i=>i.name).join(', '):''}</div><div class="font-bold">${o.total_price.toFixed(2)} €</div></div>
+                <div class="text-right"><span class="${o.status==='prete'?'text-green-400 bg-green-400/10 animate-pulse':(o.status==='terminee'?'text-gray-500 bg-white/5':'text-yellow-400 bg-yellow-400/10')} border px-3 py-1 rounded-full text-xs font-bold uppercase block mb-1">${o.status.replace('_', ' ')}</span><div class="text-xs text-gray-500">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div></div>
+            </div>`;
 
-            // Commandes
-            const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
-            document.getElementById('list-orders').innerHTML = orders?.length ? orders.map(o => {
-                let btn = o.status === 'en_preparation' ? `<button onclick="updateOrderStatus('${o.id}', 'prete')" class="bg-yellow-500 text-dark px-3 py-1 rounded-full text-xs font-bold hover:bg-white ml-3 transition">✅ Prête</button>` : 
-                          (o.status === 'prete' ? `<button onclick="updateOrderStatus('${o.id}', 'terminee')" class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-white hover:text-dark ml-3 transition">🏁 Terminée</button>` : '');
-                let color = o.status === 'terminee' ? 'text-gray-500' : 'text-neon';
-                let plats = o.items ? o.items.map(i=>i.name).join(', ') : 'Détails indisponibles';
-                return `<tr class="hover:bg-white/5"><td class="p-4"><div class="font-bold ${color}">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-400 mt-1">${plats}</div></td><td class="p-4 font-bold">${o.total_price.toFixed(2)} €</td><td class="p-4 flex items-center"><span class="text-xs font-bold uppercase ${o.status==='terminee'?'text-gray-500':'text-white'}">${o.status.replace('_',' ')}</span> ${btn}</td></tr>`;
-            }).join('') : '<tr><td colspan="3" class="p-4 text-center">Aucune commande.</td></tr>';
-
-            // Promos
-            const { data: promos } = await supabase.from('promocodes').select('*');
-            document.getElementById('list-promos').innerHTML = promos?.length ? promos.map(p => `
-                <tr class="hover:bg-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type==='points'?'Couronnes':p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} / ${p.max_uses||'∞'}</td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun code.</td></tr>';
+            const encours = data.filter(o => o.status !== 'terminee');
+            const histo = data.filter(o => o.status === 'terminee');
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(render).join('') : '<p class="text-gray-500 text-sm text-center">Rien en cours.</p>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(render).join('') : '<p class="text-gray-500 text-sm text-center">Aucun historique.</p>';
         };
 
-        // Soumissions
-        async function loadCategoriesDropdown() {
-            const { data } = await supabase.from('categories').select('*');
-            document.getElementById('prod-category').innerHTML = data?.length ? data.map(c => `<option value="${c.id}">${c.name}</option>`).join('') : '<option value="">Créer une catégorie d\'abord</option>';
+        window.savePromo = async function() {
+            const code = document.getElementById('promo-input').value.toUpperCase(); const msg = document.getElementById('promo-msg');
+            if(!code) return;
+
+            const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
+            if(!promo) { msg.innerText = "Code invalide."; msg.className = "text-sm mt-2 font-bold text-red-500"; return; }
+
+            const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
+            if(exist) { msg.innerText = "Code déjà utilisé !"; msg.className = "text-sm mt-2 font-bold text-yellow-500"; return; }
+
+            if (promo.discount_type === 'points') {
+                const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
+                await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
+                await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
+                msg.innerText = `👑 ${promo.discount_value} couronnes ajoutées !`; msg.className = "text-sm mt-2 font-bold text-green-400";
+            } else {
+                await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
+                msg.innerText = "Code ajouté ! Utilisable sur la borne."; msg.className = "text-sm mt-2 font-bold text-green-400";
+            }
+            document.getElementById('promo-input').value = ""; checkUser();
+        };
+
+        async function loadPromos() {
+            const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
+            document.getElementById('my-promos').innerHTML = data?.length ? `<p class="font-bold mb-2 text-white">Vos codes :</p>` + data.map(p => `<span class="${p.is_used?'line-through text-gray-500':'text-neon font-black'} bg-white/5 px-3 py-1 rounded mr-2 inline-block">${p.code}</span>`).join('') : "Vos codes apparaîtront ici.";
         }
 
-        window.submitCategory = async function() {
-            const name = document.getElementById('cat-name').value;
-            if(!name) return;
-            await supabase.from('categories').insert([{ name }]);
-            toggleModal('modal-category', false); document.getElementById('cat-name').value = ''; loadCategoriesDropdown();
-        };
+        async function loadMenu() {
+            const { data } = await supabase.from('products').select('*');
+            document.getElementById('menu-container').innerHTML = data ? data.map(p => `
+                <div class="bg-darker border border-white/10 rounded-2xl p-6 hover:border-neon transition group"><div class="h-40 bg-gray-800 rounded-xl mb-4 flex items-center justify-center text-6xl group-hover:scale-105 transition">${p.image_url||''}</div><h3 class="text-xl font-bold mb-1">${p.name}</h3><p class="text-gray-400 text-sm mb-4">Prépa : ${p.prep_time}s</p><div class="flex justify-between items-center"><span class="text-xl font-black text-neon">${p.price.toFixed(2)} €</span></div></div>
+            `).join('') : '';
+        }
 
-        window.submitProduct = async function() {
-            const name = document.getElementById('prod-name').value;
-            const price = parseFloat(document.getElementById('prod-price').value);
-            const prep_time = parseInt(document.getElementById('prod-time').value);
-            const category_id = document.getElementById('prod-category').value;
-            const image_url = document.getElementById('prod-image').value;
-            if(!name || isNaN(price) || !category_id) return alert("Infos manquantes.");
-            
-            await supabase.from('products').insert([{ name, price, prep_time, category_id, image_url }]);
-            toggleModal('modal-product', false);
-            document.getElementById('prod-name').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-image').value = '';
-            loadData();
-        };
-
-        window.submitPromo = async function() {
-            const code = document.getElementById('promo-code').value.toUpperCase();
-            const discount_type = document.getElementById('promo-type').value;
-            const discount_value = parseFloat(document.getElementById('promo-value').value);
-            const max_uses = parseInt(document.getElementById('promo-max').value);
-            if(!code || isNaN(discount_value)) return;
-            
-            await supabase.from('promocodes').insert([{ code, discount_type, discount_value, max_uses: isNaN(max_uses) ? null : max_uses }]);
-            toggleModal('modal-promo', false); document.getElementById('promo-code').value = '';
-            loadData();
-        };
-
-        checkAuth();
+        checkUser(); loadMenu();
     </script>
 </body>
 </html>
