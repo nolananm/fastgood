@@ -16,13 +16,13 @@
             <div class="space-y-4">
                 <input type="email" id="staff-email" placeholder="Email Admin" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 outline-none">
                 <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-darker border border-white/20 rounded-lg px-4 py-3 outline-none">
-                <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-neon transition">CONNEXION</button>
+                <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-dark transition">CONNEXION</button>
                 <p id="auth-error" class="text-red-500 text-sm hidden"></p>
             </div>
         </div>
     </div>
 
-    <!-- MODALS (Fixes et superposées correctement) -->
+    <!-- MODALS -->
     <div id="modal-category" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div class="bg-darker border border-white/10 p-8 rounded-2xl w-full max-w-md relative">
             <button onclick="toggleModal('modal-category', false)" class="absolute top-4 right-4 text-gray-400 font-bold text-xl hover:text-white">X</button>
@@ -43,7 +43,7 @@
                     <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                 </div>
                 <select id="prod-category" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none"></select>
-                <input type="text" id="prod-image" placeholder="Image (URL ou Emoji)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
+                <input type="text" id="prod-image" placeholder="Image (Lien URL HD)" class="w-full bg-dark border border-white/20 rounded-lg px-4 py-2 outline-none">
                 <button onclick="submitProduct()" class="w-full bg-neon text-white font-black py-3 rounded-xl hover:bg-white hover:text-dark transition">CRÉER LE PLAT</button>
             </div>
         </div>
@@ -125,7 +125,8 @@
     <script type="module">
         import { supabase } from './db.js';
 
-        // Interface globale
+        let categoriesMap = {}; 
+
         window.switchTab = function(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
@@ -135,7 +136,6 @@
 
         window.toggleModal = function(id, show) { document.getElementById(id).classList.toggle('hidden', !show); };
 
-        // Authentification
         window.loginStaff = async function() {
             const email = document.getElementById('staff-email').value;
             const password = document.getElementById('staff-password').value;
@@ -150,20 +150,21 @@
             if (session) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
-                loadData(); loadCategoriesDropdown();
+                await loadCategoriesDropdown();
+                loadData();
             }
         }
 
-        // Actions de données
         window.updateOrderStatus = async function(id, status) { await supabase.from('orders').update({ status }).eq('id', id); loadData(); };
         window.deleteProduct = async function(id) { if(confirm('Supprimer ce plat ?')) { await supabase.from('products').delete().eq('id', id); loadData(); } };
 
-        // Chargement principal
         window.loadData = async function() {
             // Produits
-            const { data: products } = await supabase.from('products').select('*, categories(name)').order('created_at', { ascending: false });
+            const { data: products, error: prodErr } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+            if(prodErr) console.error("Erreur plats:", prodErr);
+            
             document.getElementById('list-products').innerHTML = products?.length ? products.map(p => `
-                <tr class="hover:bg-white/5"><td class="p-4 font-bold">${p.image_url||''} ${p.name} <span class="block text-xs text-gray-500 font-normal">${p.categories?.name||'Sans catégorie'}</span></td><td class="p-4">${p.price.toFixed(2)} €</td><td class="p-4">${p.prep_time}s</td><td class="p-4"><button onclick="deleteProduct('${p.id}')" class="text-red-500 text-xs font-bold hover:text-white border border-red-500/50 px-2 py-1 rounded">Supprimer</button></td></tr>
+                <tr class="hover:bg-white/5"><td class="p-4 font-bold">${p.image_url ? `<img src="${p.image_url}" class="inline-block w-8 h-8 object-cover rounded-full mr-2">` : ''} ${p.name} <span class="block text-xs text-gray-500 font-normal">${categoriesMap[p.category_id] || 'Sans catégorie'}</span></td><td class="p-4">${p.price.toFixed(2)} €</td><td class="p-4">${p.prep_time}s</td><td class="p-4"><button onclick="deleteProduct('${p.id}')" class="text-red-500 text-xs font-bold hover:text-white border border-red-500/50 px-2 py-1 rounded">Supprimer</button></td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun plat.</td></tr>';
 
             // Commandes
@@ -172,27 +173,34 @@
                 let btn = o.status === 'en_preparation' ? `<button onclick="updateOrderStatus('${o.id}', 'prete')" class="bg-yellow-500 text-dark px-3 py-1 rounded-full text-xs font-bold hover:bg-white ml-3 transition">✅ Prête</button>` : 
                           (o.status === 'prete' ? `<button onclick="updateOrderStatus('${o.id}', 'terminee')" class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold hover:bg-white hover:text-dark ml-3 transition">🏁 Terminée</button>` : '');
                 let color = o.status === 'terminee' ? 'text-gray-500' : 'text-neon';
-                let plats = o.items ? o.items.map(i=>i.name).join(', ') : 'Détails indisponibles';
-                return `<tr class="hover:bg-white/5"><td class="p-4"><div class="font-bold ${color}">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-400 mt-1">${plats}</div></td><td class="p-4 font-bold">${o.total_price.toFixed(2)} €</td><td class="p-4 flex items-center"><span class="text-xs font-bold uppercase ${o.status==='terminee'?'text-gray-500':'text-white'}">${o.status.replace('_',' ')}</span> ${btn}</td></tr>`;
+                let plats = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-2 py-1 rounded mr-1">${i.name}</span>`).join('') : '<span class="text-gray-600">Aucun détail</span>';
+                
+                return `<tr class="hover:bg-white/5"><td class="p-4"><div class="font-bold ${color} mb-2">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-300 flex flex-wrap gap-1">${plats}</div></td><td class="p-4 font-bold">${o.total_price.toFixed(2)} €</td><td class="p-4 flex items-center"><span class="text-xs font-bold uppercase ${o.status==='terminee'?'text-gray-500':'text-white'}">${o.status.replace('_',' ')}</span>${btn}</td></tr>`;
             }).join('') : '<tr><td colspan="3" class="p-4 text-center">Aucune commande.</td></tr>';
 
             // Promos
             const { data: promos } = await supabase.from('promocodes').select('*');
             document.getElementById('list-promos').innerHTML = promos?.length ? promos.map(p => `
-                <tr class="hover:bg-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type==='points'?'Couronnes':p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} / ${p.max_uses||'∞'}</td></tr>
+                <tr class="hover:bg-white/5"><td class="p-4 font-bold uppercase">${p.code}</td><td class="p-4 text-gray-400">${p.discount_type==='points'?'Couronnes':p.discount_type}</td><td class="p-4 text-neon font-bold">${p.discount_value}</td><td class="p-4">${p.current_uses} /${p.max_uses||'∞'}</td></tr>
             `).join('') : '<tr><td colspan="4" class="p-4 text-center">Aucun code.</td></tr>';
         };
 
         // Soumissions
         async function loadCategoriesDropdown() {
             const { data } = await supabase.from('categories').select('*');
-            document.getElementById('prod-category').innerHTML = data?.length ? data.map(c => `<option value="${c.id}">${c.name}</option>`).join('') : '<option value="">Créer une catégorie d\'abord</option>';
+            if(data) {
+                data.forEach(c => categoriesMap[c.id] = c.name);
+                document.getElementById('prod-category').innerHTML = data.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            } else {
+                document.getElementById('prod-category').innerHTML = '<option value="">Créer une catégorie d\'abord</option>';
+            }
         }
 
         window.submitCategory = async function() {
             const name = document.getElementById('cat-name').value;
             if(!name) return;
-            await supabase.from('categories').insert([{ name }]);
+            const { error } = await supabase.from('categories').insert([{ name }]);
+            if(error) { alert("Erreur Catégorie : " + error.message); return; }
             toggleModal('modal-category', false); document.getElementById('cat-name').value = ''; loadCategoriesDropdown();
         };
 
@@ -204,7 +212,9 @@
             const image_url = document.getElementById('prod-image').value;
             if(!name || isNaN(price) || !category_id) return alert("Infos manquantes.");
             
-            await supabase.from('products').insert([{ name, price, prep_time, category_id, image_url }]);
+            const { error } = await supabase.from('products').insert([{ name, price, prep_time: isNaN(prep_time) ? 60 : prep_time, category_id, image_url }]);
+            if(error) { alert("Erreur Création Plat : " + error.message); return; }
+            
             toggleModal('modal-product', false);
             document.getElementById('prod-name').value = ''; document.getElementById('prod-price').value = ''; document.getElementById('prod-image').value = '';
             loadData();
@@ -215,9 +225,11 @@
             const discount_type = document.getElementById('promo-type').value;
             const discount_value = parseFloat(document.getElementById('promo-value').value);
             const max_uses = parseInt(document.getElementById('promo-max').value);
-            if(!code || isNaN(discount_value)) return;
+            if(!code || isNaN(discount_value)) return alert("Code ou valeur manquante");
             
-            await supabase.from('promocodes').insert([{ code, discount_type, discount_value, max_uses: isNaN(max_uses) ? null : max_uses }]);
+            const { error } = await supabase.from('promocodes').insert([{ code, discount_type, discount_value, max_uses: isNaN(max_uses) ? null : max_uses }]);
+            if(error) { alert("Erreur Création Promo : " + error.message); return; }
+
             toggleModal('modal-promo', false); document.getElementById('promo-code').value = '';
             loadData();
         };
