@@ -35,7 +35,6 @@
 
         <div class="flex flex-1 overflow-hidden">
             <div class="flex-1 p-8 overflow-y-auto bg-dark border-r border-white/5">
-                
                 <div class="bg-premium p-6 border border-white/5 mb-10 shadow-2xl relative overflow-hidden">
                     <div class="flex gap-4 relative z-10">
                         <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres)" class="bg-dark border border-white/10 px-6 py-4 flex-1 text-lg uppercase outline-none focus:border-neon transition font-bold tracking-widest text-center">
@@ -43,20 +42,18 @@
                     </div>
                     <div id="client-info" class="mt-6 relative z-10"></div>
                     <div id="loyalty-actions" class="hidden mt-6 pt-6 border-t border-white/5 flex flex-col gap-4 relative z-10">
-                        <select id="promo-select" class="bg-dark border border-white/10 px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-neon transition"><option value="">-- Aucun code promo --</option></select>
-                        <select id="reward-select" class="bg-dark border border-gold/30 text-gold px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-gold transition"><option value="">-- Utiliser des Couronnes 👑 --</option></select>
+                        <select id="promo-select" class="bg-dark border border-white/10 px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-neon transition" onchange="applyDiscounts()"><option value="">-- Aucun code promo --</option></select>
+                        <select id="reward-select" class="bg-dark border border-gold/30 text-gold px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-gold transition" onchange="applyDiscounts()"><option value="">-- Utiliser des Couronnes 👑 --</option></select>
                     </div>
                 </div>
 
-                <h2 class="text-xl font-black mb-6 uppercase tracking-widest text-white">La Carte</h2>
-                <div id="borne-menu-container" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                <div id="borne-menu-container" class="space-y-12"></div>
             </div>
 
-            <!-- TICKET DE CAISSE -->
+            <!-- TICKET -->
             <div class="w-96 bg-premium flex flex-col border-l border-white/5 shadow-2xl">
                 <div class="p-8 border-b border-white/5"><h2 class="font-black text-2xl uppercase tracking-widest">Commande</h2></div>
                 <div id="cart-container" class="flex-1 p-8 overflow-y-auto space-y-4"></div>
-                
                 <div class="p-8 bg-darker border-t border-white/5">
                     <div class="flex justify-between items-center text-gray-500 text-xs font-bold mb-3 uppercase tracking-widest"><span>Sous-total</span><span id="sub-price" class="text-white">0.00 €</span></div>
                     <div id="discount-line" class="hidden flex justify-between items-center text-neon text-xs font-black mb-6 bg-neon/10 px-4 py-3 border border-neon/20 uppercase tracking-widest"><span>Avantage</span><span id="discount-amount">- 0.00 €</span></div>
@@ -74,7 +71,7 @@
     <script type="module">
         import { supabase } from './db.js';
 
-        let cart = []; let allProducts = []; let currentClient = null; let availablePromos = []; let activeRestaurantId = null;
+        let cart = []; let allProducts = []; let categories = []; let currentClient = null; let availablePromos = []; let activeRestaurantId = null;
 
         const REWARDS = [
             { id: 'r30', points: 30, type: 'item', name: 'IceGood Mini / 33cL' },
@@ -87,8 +84,7 @@
         ];
 
         window.loginStaff = async function() {
-            const email = document.getElementById('staff-email').value;
-            const password = document.getElementById('staff-password').value;
+            const email = document.getElementById('staff-email').value, password = document.getElementById('staff-password').value;
             const { error } = await supabase.auth.signInWithPassword({ email, password });
             if (!error) checkAuth(); else alert("Identifiants incorrects");
         };
@@ -97,42 +93,49 @@
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('setup-screen').classList.remove('hidden');
+                document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('setup-screen').classList.remove('hidden');
                 const { data: restos } = await supabase.from('restaurants').select('*');
                 document.getElementById('restaurant-select').innerHTML = restos?.length ? restos.map(r => `<option value="${r.id}">${r.name}</option>`).join('') : '<option value="">Aucun resto configuré</option>';
             }
         }
 
         window.startBorne = function() {
-            const select = document.getElementById('restaurant-select');
-            activeRestaurantId = select.value;
+            const select = document.getElementById('restaurant-select'); activeRestaurantId = select.value;
             document.getElementById('active-restaurant-name').innerText = select.options[select.selectedIndex].text.toUpperCase();
-            document.getElementById('setup-screen').classList.add('hidden');
-            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('setup-screen').classList.add('hidden'); document.getElementById('app-screen').classList.remove('hidden');
             loadMenu();
         };
 
         async function loadMenu() {
-            const { data } = await supabase.from('products').select('*');
-            allProducts = data || [];
-            document.getElementById('borne-menu-container').innerHTML = allProducts.map(p => `
-                <button onclick="window.addToCart('${p.id}')" class="bg-darker border border-white/5 p-6 text-left hover:border-neon/50 transition-all flex flex-col justify-between h-full relative overflow-hidden group">
-                    <div class="absolute -right-4 -bottom-4 text-7xl font-black text-white/[0.02] group-hover:text-neon/[0.05] transition-colors pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
-                    <div class="z-10 w-full">
-                        <span class="font-black text-lg uppercase tracking-wide leading-tight block mb-2">${p.name}</span>
-                        <div class="w-6 h-1 bg-neon/30 mb-4 group-hover:w-full transition-all duration-300"></div>
-                    </div>
-                    <span class="text-white font-black text-2xl block mt-4 z-10">${p.price.toFixed(2)} €</span>
-                </button>
-            `).join('');
+            const { data: cats } = await supabase.from('categories').select('*'); categories = cats || [];
+            const { data: prods } = await supabase.from('products').select('*'); allProducts = prods || [];
+            
+            let htmlMenu = '';
+            categories.forEach(c => {
+                let catProds = allProducts.filter(p => p.category_id === c.id);
+                if(catProds.length > 0) {
+                    htmlMenu += `
+                    <div>
+                        <h2 class="text-xl font-black uppercase tracking-widest text-neon mb-6">${c.name}</h2>
+                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+                            ${catProds.map(p => `
+                                <button onclick="window.addToCart('${p.id}')" class="bg-darker border border-white/5 p-6 text-left hover:border-neon transition-all flex flex-col justify-between h-full relative overflow-hidden group">
+                                    <div class="absolute -right-4 -bottom-4 text-[100px] font-black text-white/[0.02] group-hover:text-neon/[0.05] transition-colors pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
+                                    <div class="z-10 w-full"><span class="font-black text-sm uppercase tracking-wide leading-tight block mb-2">${p.name}</span><div class="w-6 h-1 bg-neon/30 mb-4 group-hover:w-full transition-all duration-300"></div></div>
+                                    <span class="text-white font-black text-xl block mt-4 z-10">${p.price.toFixed(2)} €</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>`;
+                }
+            });
+            document.getElementById('borne-menu-container').innerHTML = htmlMenu || '<p class="text-gray-500">Carte vide</p>';
         }
 
         window.searchClient = async function() {
             const clientNum = document.getElementById('client-id-input').value;
             const { data } = await supabase.from('profiles').select('*').eq('client_number', clientNum).single();
-            const infoDiv = document.getElementById('client-info');
-            const loyActions = document.getElementById('loyalty-actions');
+            const infoDiv = document.getElementById('client-info'), loyActions = document.getElementById('loyalty-actions');
             
             if (data) {
                 currentClient = data;
@@ -144,9 +147,7 @@
                     const { data: fullPromos } = await supabase.from('promocodes').select('*').in('code', userPromos.map(u=>u.code)).neq('discount_type', 'points');
                     availablePromos = fullPromos || [];
                     document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code promo --</option>' + availablePromos.map(p => `<option value="${p.code}">${p.code} (-${p.discount_value}${p.discount_type==='percent'?'%':'€'})</option>`).join('');
-                } else {
-                    document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code promo --</option>'; availablePromos = [];
-                }
+                } else { document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code promo --</option>'; availablePromos = []; }
 
                 let rewardOptions = '<option value="">-- Choisir une Récompense 👑 --</option>';
                 REWARDS.forEach(r => {
@@ -170,11 +171,6 @@
             let sousTotal = cart.reduce((acc, item) => acc + item.price, 0); 
             let discountValueAmount = 0; let discountValuePercent = 0; let rewardItemHtml = '';
 
-            if(cart.length === 0) {
-                container.innerHTML = `<p class="text-gray-600 text-center py-10 font-bold uppercase tracking-widest text-xs">Panier vide.</p>`;
-                document.getElementById('total-price').innerText = "0.00 €"; document.getElementById('sub-price').innerText = "0.00 €"; document.getElementById('discount-line').classList.add('hidden'); return;
-            }
-
             const selCode = document.getElementById('promo-select')?.value;
             if (selCode) {
                 const promo = availablePromos.find(p => p.code === selCode);
@@ -189,6 +185,11 @@
                 if (r.type === 'item') rewardItemHtml = `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">${r.name}</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">OFFERT</span></div>`;
             }
 
+            if(cart.length === 0 && !selRewardId) {
+                container.innerHTML = `<p class="text-gray-600 text-center py-10 font-bold uppercase tracking-widest text-xs">Panier vide.</p>`;
+                document.getElementById('total-price').innerText = "0.00 €"; document.getElementById('sub-price').innerText = "0.00 €"; document.getElementById('discount-line').classList.add('hidden'); return;
+            }
+
             let totalDiscount = discountValueAmount + (sousTotal * (discountValuePercent / 100));
             let totalFinal = Math.max(0, sousTotal - totalDiscount);
 
@@ -196,24 +197,23 @@
             if(rewardItemHtml) container.innerHTML += rewardItemHtml;
 
             document.getElementById('sub-price').innerText = `${sousTotal.toFixed(2)} €`;
-            if (totalDiscount > 0) { document.getElementById('discount-line').classList.remove('hidden'); document.getElementById('discount-amount').innerText = `- ${totalDiscount.toFixed(2)} €`; } 
-            else { document.getElementById('discount-line').classList.add('hidden'); }
+            if (totalDiscount > 0) { document.getElementById('discount-line').classList.remove('hidden'); document.getElementById('discount-amount').innerText = `- ${totalDiscount.toFixed(2)} €`; } else { document.getElementById('discount-line').classList.add('hidden'); }
             document.getElementById('total-price').innerText = `${totalFinal.toFixed(2)} €`;
         };
 
         document.getElementById('btn-encaissement').addEventListener('click', async () => {
-            if(cart.length === 0) return;
-            const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "ENVOI...";
+            const selRewardId = document.getElementById('reward-select')?.value;
+            if(cart.length === 0 && !selRewardId) return;
 
+            const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "ENVOI...";
             let finalItems = [...cart]; let pointsToDeduct = 0;
             let totalTemps = cart.reduce((acc, item) => acc + item.prep_time, 0);
             let finalPrice = parseFloat(document.getElementById('total-price').innerText);
 
-            const selRewardId = document.getElementById('reward-select')?.value;
             if (selRewardId) {
                 const r = REWARDS.find(rw => rw.id === selRewardId);
                 pointsToDeduct = r.points;
-                if (r.type === 'item') finalItems.push({ name: r.name, price: 0, prep_time: 45 });
+                if (r.type === 'item') finalItems.push({ name: `🎁 ${r.name}`, price: 0, prep_time: 45 });
             }
 
             await supabase.from('orders').insert([{ client_id: currentClient?.id || null, restaurant_id: activeRestaurantId, total_price: finalPrice, estimated_time: totalTemps, status: 'en_preparation', items: finalItems }]);
