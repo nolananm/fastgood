@@ -67,6 +67,15 @@
         </div>
     </div>
 
+    <div id="modal-resto" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-premium border border-white/10 p-8 w-full max-w-md relative shadow-2xl">
+            <button onclick="toggleModal('modal-resto', false)" class="absolute top-4 right-4 text-gray-500 font-black text-xl hover:text-white">X</button>
+            <h2 class="text-2xl font-black mb-6 uppercase tracking-wide">Nouveau Restaurant</h2>
+            <input type="text" id="resto-name" placeholder="Nom (Ex: Paris Centre)" class="w-full bg-dark border border-white/10 px-4 py-3 mb-4 outline-none focus:border-neon transition">
+            <button onclick="submitResto()" class="w-full bg-white text-dark font-black py-3 uppercase tracking-widest hover:bg-neon hover:text-white transition">Créer</button>
+        </div>
+    </div>
+
     <!-- APPLICATION -->
     <div id="app-screen" class="hidden flex-1 flex h-full">
         <aside class="w-64 bg-darker border-r border-white/5 flex flex-col">
@@ -74,6 +83,7 @@
             <nav class="flex-1 p-4 space-y-2">
                 <button onclick="switchTab('sec-carte')" id="tab-sec-carte" class="w-full text-left px-4 py-3 bg-neon/10 text-neon rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Carte & Stocks</button>
                 <button onclick="switchTab('sec-commandes')" id="tab-sec-commandes" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Commandes Live</button>
+                <button onclick="switchTab('sec-restos')" id="tab-sec-restos" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Restaurants</button>
                 <button onclick="switchTab('sec-promo')" id="tab-sec-promo" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Promos</button>
             </nav>
             <button onclick="logout()" class="p-6 text-gray-600 hover:text-neon text-xs font-bold uppercase tracking-widest border-t border-white/5 text-left transition">Verrouiller</button>
@@ -82,9 +92,15 @@
         <main class="flex-1 overflow-y-auto p-10 relative bg-dark">
             <button onclick="loadData()" class="absolute top-10 right-10 border border-white/10 text-xs font-bold uppercase tracking-widest px-4 py-2 hover:bg-white/10 transition">Rafraîchir</button>
 
+            <!-- CARTE & STOCKS -->
             <div id="sec-carte" class="tab-content block">
                 <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
-                    <h1 class="text-3xl font-black uppercase tracking-wide">La Carte & Stocks</h1>
+                    <div>
+                        <h1 class="text-3xl font-black uppercase tracking-wide mb-2">La Carte & Stocks</h1>
+                        <select id="staff-stock-resto" onchange="loadData()" class="bg-darker border border-neon/50 text-neon px-4 py-2 rounded outline-none font-bold uppercase tracking-widest text-xs">
+                            <option value="">-- Sélectionnez un restaurant --</option>
+                        </select>
+                    </div>
                     <div class="flex gap-4">
                         <button onclick="toggleModal('modal-category', true)" class="text-xs font-bold uppercase tracking-widest border border-white/20 text-white px-4 py-2 hover:bg-white/10 transition">Catégorie +</button>
                         <button onclick="toggleModal('modal-product', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Plat</button>
@@ -93,11 +109,19 @@
                 <div id="list-products-container" class="space-y-8"></div>
             </div>
 
+            <!-- RESTAURANTS -->
+            <div id="sec-restos" class="tab-content hidden">
+                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Restaurants</h1><button onclick="toggleModal('modal-resto', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Resto</button></div>
+                <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">ID</th><th class="p-4">Nom</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-restos" class="divide-y divide-white/5 text-sm"></tbody></table></div>
+            </div>
+
+            <!-- COMMANDES -->
             <div id="sec-commandes" class="tab-content hidden">
                 <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Cuisine</h1></div>
                 <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">Commande</th><th class="p-4">Total</th><th class="p-4 text-right">Statut / Actions</th></tr></thead><tbody id="list-orders" class="divide-y divide-white/5 text-sm"></tbody></table></div>
             </div>
 
+            <!-- PROMOS -->
             <div id="sec-promo" class="tab-content hidden">
                 <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Codes Promo</h1><button onclick="toggleModal('modal-promo', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Code</button></div>
                 <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">Code</th><th class="p-4">Avantage</th><th class="p-4">Utilisations</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-promos" class="divide-y divide-white/5 text-sm"></tbody></table></div>
@@ -107,7 +131,7 @@
 
     <script type="module">
         import { supabase } from './db.js';
-        let categories = []; 
+        let categories = []; let restaurants = [];
 
         window.switchTab = function(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -120,7 +144,7 @@
         window.loginStaff = async function() {
             const email = document.getElementById('staff-email').value, password = document.getElementById('staff-password').value;
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) { document.getElementById('auth-error').innerText = "Identifiants incorrects."; document.getElementById('auth-error').classList.remove('hidden'); } else { window.location.reload(); }
+            if (!error) window.location.reload(); else alert("Identifiants incorrects.");
         };
         window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); };
 
@@ -129,6 +153,7 @@
             if (session) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('app-screen').classList.remove('hidden');
+                await loadRestaurantsDropdown();
                 await loadData();
             }
         }
@@ -136,24 +161,45 @@
         window.updateOrderStatus = async function(id, status) { await supabase.from('orders').update({ status }).eq('id', id); loadData(); };
         window.deleteProduct = async function(id) { if(confirm('Supprimer définitivement ce plat ?')) { await supabase.from('products').delete().eq('id', id); loadData(); } };
         window.deletePromo = async function(code) { if(confirm(`Supprimer le code ${code} ?`)) { await supabase.from('promocodes').delete().eq('code', code); loadData(); } };
-        
-        window.moveProduct = async function(id, currentIndex, direction) {
-            await supabase.from('products').update({ order_index: currentIndex + direction }).eq('id', id);
+        window.deleteResto = async function(id) { if(confirm(`Supprimer ce restaurant ?`)) { await supabase.from('restaurants').delete().eq('id', id); loadRestaurantsDropdown(); loadData(); } };
+        window.moveProduct = async function(id, currentIndex, direction) { await supabase.from('products').update({ order_index: currentIndex + direction }).eq('id', id); loadData(); };
+
+        // GESTION DU STOCK PAR RESTAURANT
+        window.toggleStock = async function(productId, isCurrentlyInStock) {
+            const restoId = document.getElementById('staff-stock-resto').value;
+            if(!restoId) return alert("Sélectionnez d'abord un restaurant dans le menu déroulant !");
+            
+            // On met à jour la table de liaison (upsert)
+            await supabase.from('restaurant_stock').upsert({ 
+                restaurant_id: restoId, 
+                product_id: productId, 
+                in_stock: !isCurrentlyInStock 
+            });
             loadData();
         };
 
-        // GESTION DU STOCK
-        window.toggleStock = async function(id, currentStock) {
-            await supabase.from('products').update({ in_stock: !currentStock }).eq('id', id);
-            loadData();
-        };
+        async function loadRestaurantsDropdown() {
+            const { data } = await supabase.from('restaurants').select('*');
+            restaurants = data || [];
+            document.getElementById('staff-stock-resto').innerHTML = '<option value="">-- Sélectionnez un restaurant --</option>' + restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            document.getElementById('list-restos').innerHTML = restaurants.map(r => `<tr class="hover:bg-white/5"><td class="p-4 text-gray-500 font-mono text-xs">${r.id.substring(0,8)}</td><td class="p-4 font-bold uppercase">${r.name}</td><td class="p-4 text-right"><button onclick="deleteResto('${r.id}')" class="text-gray-500 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition">Supprimer</button></td></tr>`).join('');
+        }
 
         window.loadData = async function() {
+            const activeRestoId = document.getElementById('staff-stock-resto').value;
+
             const { data: cats } = await supabase.from('categories').select('*'); categories = cats || [];
             document.getElementById('prod-category').innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
 
             const { data: products } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false });
             
+            // Récupération des stocks spécifiques pour le resto sélectionné
+            let stocks = [];
+            if(activeRestoId) {
+                const { data: st } = await supabase.from('restaurant_stock').select('*').eq('restaurant_id', activeRestoId);
+                stocks = st || [];
+            }
+
             let htmlCarte = '';
             categories.forEach(c => {
                 let prodsInCat = (products || []).filter(p => p.category_id === c.id);
@@ -164,18 +210,23 @@
                         <div class="bg-premium border border-white/5 rounded-xl overflow-hidden">
                             <table class="w-full text-left text-sm">
                                 <thead class="bg-white/5 text-gray-500 text-[10px] uppercase tracking-widest border-b border-white/5">
-                                    <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4 text-center">Stock</th><th class="p-4 text-right">Actions</th></tr>
+                                    <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4 text-center">Stock ${activeRestoId ? '(Ce Resto)' : ''}</th><th class="p-4 text-right">Actions</th></tr>
                                 </thead>
                                 <tbody class="divide-y divide-white/5">
                                     ${prodsInCat.map(p => {
-                                        const stockClass = p.in_stock !== false ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-red-500/20 text-red-500 border-red-500/30';
+                                        // Vérifier le stock spécifique. S'il n'y a pas d'entrée, c'est en stock (true) par défaut.
+                                        let prodStock = stocks.find(s => s.product_id === p.id);
+                                        let inStock = prodStock ? prodStock.in_stock : true;
+                                        
+                                        const stockClass = inStock ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-red-500/20 text-red-500 border-red-500/30';
+                                        
                                         return `
-                                        <tr class="hover:bg-white/5 transition ${p.in_stock === false ? 'opacity-50' : ''}">
+                                        <tr class="hover:bg-white/5 transition ${!inStock ? 'opacity-50' : ''}">
                                             <td class="p-4 font-bold uppercase tracking-wide">${p.name}</td>
                                             <td class="p-4 font-bold">${p.price.toFixed(2)} €</td>
                                             <td class="p-4 text-center">
-                                                <button onclick="toggleStock('${p.id}',${p.in_stock !== false})" class="border px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition ${stockClass}">
-                                                    ${p.in_stock !== false ? 'EN STOCK' : 'RUPTURE'}
+                                                <button onclick="toggleStock('${p.id}',${inStock})" class="border px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition ${stockClass}" ${!activeRestoId ? 'disabled title="Sélectionnez un resto en haut"' : ''}>
+                                                    ${inStock ? 'EN STOCK' : 'RUPTURE'}
                                                 </button>
                                             </td>
                                             <td class="p-4 text-right flex justify-end gap-3 items-center">
@@ -217,16 +268,22 @@
         window.submitProduct = async function() {
             const name = document.getElementById('prod-name').value, price = parseFloat(document.getElementById('prod-price').value), prep_time = parseInt(document.getElementById('prod-time').value), category_id = document.getElementById('prod-category').value;
             if(!name || isNaN(price) || !category_id) return alert("Infos manquantes.");
-            await supabase.from('products').insert([{ name, price, prep_time: isNaN(prep_time) ? 60 : prep_time, category_id, order_index: 0, in_stock: true }]);
+            await supabase.from('products').insert([{ name, price, prep_time: isNaN(prep_time) ? 60 : prep_time, category_id, order_index: 0 }]);
             toggleModal('modal-product', false); document.getElementById('prod-name').value = ''; document.getElementById('prod-price').value = ''; loadData();
         };
 
         window.submitPromo = async function() {
             const code = document.getElementById('promo-code').value.toUpperCase(), type = document.getElementById('promo-type').value, val = parseFloat(document.getElementById('promo-value').value), max = parseInt(document.getElementById('promo-max').value);
             if(!code || isNaN(val)) return alert("Veuillez remplir le code et la valeur.");
-            const { error } = await supabase.from('promocodes').insert([{ code: code, discount_type: type, discount_value: val, max_uses: isNaN(max) ? null : max }]);
-            if (error) alert("Erreur: " + error.message);
-            else { toggleModal('modal-promo', false); document.getElementById('promo-code').value = ''; loadData(); }
+            await supabase.from('promocodes').insert([{ code, discount_type: type, discount_value: val, max_uses: isNaN(max) ? null : max }]);
+            toggleModal('modal-promo', false); document.getElementById('promo-code').value = ''; loadData();
+        };
+        
+        window.submitResto = async function() {
+            const name = document.getElementById('resto-name').value;
+            if(!name) return;
+            await supabase.from('restaurants').insert([{ name }]);
+            toggleModal('modal-resto', false); document.getElementById('resto-name').value = ''; loadRestaurantsDropdown(); loadData();
         };
 
         checkAuth();
