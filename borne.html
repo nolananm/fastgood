@@ -108,7 +108,7 @@
 
         async function loadMenu() {
             const { data: cats } = await supabase.from('categories').select('*'); categories = cats || [];
-            const { data: prods } = await supabase.from('products').select('*'); allProducts = prods || [];
+            const { data: prods } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false }); allProducts = prods || [];
             
             let htmlMenu = '';
             categories.forEach(c => {
