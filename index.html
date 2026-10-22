@@ -3,303 +3,435 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Borne - FastGood</title>
+    <title>FastGood - L'Excellence Fondante</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
-            theme: { extend: { colors: { brand: '#FF0055', cheese: '#FFB800', melt: '#FF8A00', dark: '#0f0f13', card: '#1a1a24' } } } 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        brand: '#FF0055',    /* Néon FastGood */
+                        cheese: '#FFB800',   /* Jaune Cheddar */
+                        melt: '#FF8A00',     /* Orange fondu */
+                        dark: '#0f0f13',     /* Fond principal */
+                        card: '#1a1a24',     /* Fond des cartes */
+                    },
+                    animation: { 'marquee': 'marquee 20s linear infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
+                    keyframes: { marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } } },
+                    backgroundImage: {
+                        'cheese-gradient': 'linear-gradient(135deg, #FFB800 0%, #FF8A00 100%)',
+                    }
+                } 
+            } 
         }
     </script>
     <style>
+        body { background-color: #0f0f13; color: #ffffff; }
+        .glass-nav { background: rgba(15, 15, 19, 0.85); backdrop-filter: blur(16px); border-bottom: 2px solid #FFB800; }
         .cheese-shadow { box-shadow: 0 10px 40px -10px rgba(255, 184, 0, 0.4); }
         .neon-shadow { box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
+        
+        /* Forme dégoulinante CSS pour le header */
+        .drip-shape {
+            position: absolute; bottom: -2px; left: 0; width: 100%; overflow: hidden; line-height: 0;
+        }
+        .drip-shape svg {
+            display: block; width: calc(100% + 1.3px); height: 40px;
+        }
     </style>
 </head>
-<body class="bg-dark text-white font-sans antialiased h-screen flex flex-col overflow-hidden selection:bg-cheese selection:text-dark">
+<body class="font-sans antialiased relative overflow-x-hidden selection:bg-cheese selection:text-dark">
 
-    <!-- ECRAN 1 : CONNEXION STAFF -->
-    <div id="auth-screen" class="absolute inset-0 bg-dark z-50 flex items-center justify-center">
-        <div class="bg-card border-2 border-brand/30 p-10 w-full max-w-md text-center rounded-3xl neon-shadow">
-            <div class="text-6xl mb-4">🍟</div>
-            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase">BORNE <span class="text-brand">STAFF</span></h2>
-            <input type="email" id="staff-email" placeholder="Email Staff" class="w-full bg-dark border border-white/10 px-5 py-4 mb-4 rounded-xl outline-none focus:border-brand transition-colors font-bold text-center text-lg">
-            <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-5 py-4 mb-6 rounded-xl outline-none focus:border-brand transition-colors font-bold text-center text-lg">
-            <button onclick="loginStaff()" class="w-full bg-brand text-white font-black py-5 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-xl shadow-lg shadow-brand/40">Déverrouiller</button>
+    <!-- ÉCRAN DE MAINTENANCE -->
+    <div id="maintenance-screen" class="hidden fixed inset-0 bg-dark z-[100] flex flex-col items-center justify-center text-center px-6">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-20"></div>
+        <div class="relative z-10">
+            <div class="text-7xl mb-6 animate-bounce">🧀</div>
+            <h1 class="text-5xl md:text-7xl font-black mb-4 text-transparent bg-clip-text bg-cheese-gradient uppercase tracking-tight">Surcharge de Cheddar.</h1>
+            <p class="text-gray-300 font-bold text-lg max-w-lg mx-auto leading-relaxed mb-8 bg-dark/80 p-6 rounded-2xl border border-cheese/20">Nous mettons à jour notre système pour encore plus de fondant.<br><strong class="text-white mt-2 block">Nos bornes en restaurant restent ouvertes !</strong></p>
         </div>
     </div>
 
-    <!-- ECRAN 2 : CONFIGURATION DU RESTO -->
-    <div id="setup-screen" class="hidden absolute inset-0 bg-dark z-40 flex items-center justify-center">
-        <div class="bg-card border-2 border-cheese/30 p-10 w-full max-w-md text-center rounded-3xl cheese-shadow">
-            <h2 class="text-2xl font-black mb-8 uppercase tracking-widest text-cheese">Choix du Restaurant</h2>
-            <select id="restaurant-select" class="w-full bg-dark border border-white/10 px-5 py-5 mb-8 rounded-xl outline-none text-white font-black uppercase tracking-widest text-lg text-center"></select>
-            <button onclick="startBorne()" class="w-full bg-gradient-to-r from-cheese to-melt text-dark font-black py-5 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-xl cheese-shadow">Lancer la borne</button>
-        </div>
-    </div>
+    <!-- LE SITE PRINCIPAL -->
+    <div id="main-site-content" class="hidden relative">
 
-    <!-- ECRAN 3 : CAISSE PRINCIPALE -->
-    <div id="app-screen" class="hidden flex-1 flex flex-col h-full">
-        <!-- HEADER -->
-        <header class="bg-card border-b-2 border-cheese p-5 flex justify-between items-center shadow-lg relative z-20">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-cheese to-melt rounded-xl flex items-center justify-center font-black text-dark text-xl cheese-shadow">FG</div>
-                <div class="text-3xl font-black tracking-tighter">FAST<span class="text-brand">GOOD</span></div>
-            </div>
-            <div id="active-restaurant-name" class="text-white font-black bg-dark border border-white/10 px-6 py-2 rounded-xl text-sm uppercase tracking-widest shadow-inner">...</div>
-            <button onclick="logout()" class="text-gray-400 bg-dark px-4 py-2 rounded-xl hover:text-brand hover:border-brand border border-white/5 text-xs font-bold uppercase tracking-widest transition-colors">Fermer la caisse</button>
-        </header>
-
-        <div class="flex flex-1 overflow-hidden">
-            <!-- COLONNE GAUCHE : MENU & CLIENT -->
-            <div class="flex-1 p-6 overflow-y-auto bg-dark custom-scrollbar">
-                
-                <!-- Zone VIP -->
-                <div class="bg-card p-6 rounded-3xl border-2 border-cheese/20 mb-8 shadow-xl relative overflow-hidden">
-                    <div class="absolute -right-10 -top-10 text-9xl opacity-5">👑</div>
-                    <div class="flex gap-4 relative z-10">
-                        <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres)" class="bg-dark border border-white/10 px-6 py-4 rounded-xl flex-1 text-2xl uppercase outline-none focus:border-cheese transition font-black tracking-widest text-center shadow-inner">
-                        <button onclick="searchClient()" class="bg-cheese text-dark px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition shadow-lg shadow-cheese/20 text-lg">Identifier</button>
+        <!-- NAVBAR -->
+        <nav class="fixed w-full glass-nav z-50 transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                        <div class="w-10 h-10 bg-cheese-gradient rounded-xl flex items-center justify-center font-black text-dark text-xl cheese-shadow group-hover:scale-110 transition-transform">FG</div>
+                        <span class="text-2xl font-black tracking-tighter">FAST<span class="text-brand">GOOD</span></span>
                     </div>
-                    <div id="client-info" class="mt-6 relative z-10"></div>
-                    <div id="loyalty-actions" class="hidden mt-6 pt-6 border-t border-white/10 flex flex-col gap-4 relative z-10">
-                        <select id="promo-select" class="bg-dark border border-white/10 px-6 py-4 rounded-xl outline-none w-full text-sm font-black uppercase tracking-widest focus:border-cheese transition" onchange="applyDiscounts()"><option value="">-- Aucun code promo --</option></select>
-                        <select id="reward-select" class="bg-dark border-2 border-cheese/50 text-cheese px-6 py-4 rounded-xl outline-none w-full text-sm font-black uppercase tracking-widest focus:border-cheese transition cheese-shadow" onchange="applyDiscounts()"><option value="">-- Utiliser des Couronnes 👑 --</option></select>
+                    <div class="hidden md:flex space-x-8 items-center font-black text-sm text-white uppercase tracking-wide">
+                        <a href="#menu-section" class="hover:text-cheese transition-colors">La Carte</a>
+                        <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
+                            <button onclick="toggleAuthModal('login')" class="hover:text-cheese transition-colors">Connexion</button>
+                            <button onclick="toggleAuthModal('register')" class="bg-brand text-white px-6 py-2 rounded-xl hover:bg-white hover:text-brand transition-colors neon-shadow">S'inscrire</button>
+                        </div>
+                        <div id="user-menu" class="hidden flex gap-6 border-l border-white/20 pl-8 items-center">
+                            <span id="user-email" class="text-dark bg-cheese px-4 py-2 rounded-xl font-bold"></span>
+                            <button onclick="logout()" class="text-gray-400 hover:text-brand transition-colors">Déconnexion</button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- La Carte -->
-                <div id="borne-menu-container" class="space-y-10"></div>
             </div>
+        </nav>
 
-            <!-- COLONNE DROITE : TICKET DE CAISSE -->
-            <div class="w-[450px] bg-card flex flex-col border-l border-white/10 shadow-2xl relative z-10">
-                <div class="p-8 border-b border-white/5 bg-dark/50 flex items-center justify-between">
-                    <h2 class="font-black text-2xl uppercase tracking-widest text-cheese">Ticket</h2>
-                    <span class="text-3xl">🧾</span>
-                </div>
-                
-                <div id="cart-container" class="flex-1 p-6 overflow-y-auto space-y-3 bg-dark/20 custom-scrollbar"></div>
-                
-                <div class="p-8 bg-card border-t-2 border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-                    <div class="flex justify-between items-center text-gray-400 text-sm font-black mb-4 uppercase tracking-widest"><span>Sous-total</span><span id="sub-price" class="text-white">0.00 €</span></div>
-                    <div id="discount-line" class="hidden flex justify-between items-center text-dark text-sm font-black mb-6 bg-cheese px-5 py-4 rounded-xl uppercase tracking-widest cheese-shadow"><span>Avantage FidGood</span><span id="discount-amount">- 0.00 €</span></div>
-                    <div class="flex justify-between items-end mb-8 border-t border-white/10 pt-6">
-                        <span class="text-gray-400 font-black uppercase tracking-widest text-sm">Total à Payer</span>
-                        <span class="text-6xl font-black text-white" id="total-price">0.00 <span class="text-3xl text-brand">€</span></span>
+        <!-- MODAL AUTH -->
+        <div id="auth-modal" class="hidden fixed inset-0 bg-dark/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+            <div class="bg-card border-2 border-cheese/50 p-8 rounded-3xl w-full max-w-md relative cheese-shadow">
+                <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white font-black text-xl transition-colors bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
+                <div class="text-5xl text-center mb-4">🍔</div>
+                <h2 id="modal-title" class="text-3xl font-black mb-8 text-center uppercase tracking-tight">Rejoins le Club</h2>
+                <div class="space-y-4">
+                    <div id="register-fields" class="hidden flex gap-4">
+                        <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                        <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
                     </div>
-                    <button id="btn-encaissement" class="w-full bg-brand text-white py-6 rounded-2xl font-black text-2xl uppercase tracking-widest hover:opacity-90 transition neon-shadow">ENCAISSER</button>
+                    <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                    <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                    <button onclick="handleAuth()" class="w-full bg-cheese-gradient text-dark font-black py-4 rounded-xl hover:opacity-90 transition-opacity mt-4 text-lg uppercase tracking-widest cheese-shadow">DÉVORER</button>
+                    <p id="auth-error" class="text-brand text-sm text-center hidden font-black mt-4 bg-brand/10 py-2 rounded-lg"></p>
                 </div>
             </div>
         </div>
+
+        <!-- HERO SECTION: GROS BURGER, GROS FROMAGE -->
+        <div class="relative h-[90vh] flex items-center justify-center overflow-hidden bg-dark">
+            <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 z-10 bg-gradient-to-t from-dark via-dark/60 to-transparent"></div>
+            
+            <div class="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
+                <div class="inline-flex items-center gap-2 bg-cheese/20 text-cheese font-black uppercase tracking-widest text-sm px-6 py-3 rounded-full mb-8 border border-cheese/50 backdrop-blur-md">
+                    <span class="w-3 h-3 bg-cheese rounded-full animate-ping"></span> Pur Cheddar Fondu
+                </div>
+                <h1 class="text-6xl md:text-9xl font-black tracking-tighter mb-6 leading-[0.9] uppercase drop-shadow-2xl">
+                    LE GOÛT.<br>
+                    <span class="text-transparent bg-clip-text bg-cheese-gradient filter drop-shadow-lg">SANS ATTENTE.</span>
+                </h1>
+                <p class="mt-6 text-lg md:text-2xl text-white font-bold max-w-2xl mx-auto leading-relaxed mb-10 drop-shadow-lg">Viande caramélisée, fromages de caractère, préparés à la commande.</p>
+                <a href="#menu-section" class="inline-block bg-brand text-white font-black px-12 py-6 rounded-2xl hover:bg-white hover:text-brand transition-colors duration-300 neon-shadow text-xl uppercase tracking-widest">Voir la Carte 🍟</a>
+            </div>
+
+            <!-- Décoration dégoulinante -->
+            <div class="drip-shape text-dark">
+                <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="fill-current"><path d="M0,0V16.3C40.9,16.3,64,39,104.9,39s64-22.7,104.9-22.7c41,0,64,22.7,105,22.7s64-22.7,105-22.7c40.9,0,64,22.7,104.9,22.7s64-22.7,104.9-22.7c41,0,64,22.7,105,22.7s64-22.7,105-22.7c40.9,0,64,22.7,104.9,22.7S1159.1,0,1200,0V40H0V0z"></path></svg>
+            </div>
+        </div>
+
+        <!-- BANDEAU ANIMÉ JAUNE -->
+        <div class="bg-cheese-gradient text-dark py-4 overflow-hidden flex relative z-30 font-black text-lg tracking-widest uppercase shadow-[0_10px_30px_rgba(255,184,0,0.2)] border-b-4 border-melt">
+            <div class="animate-marquee inline-block space-x-12 whitespace-nowrap">
+                <span>🧀 CHEDDAR ANGLAIS</span> <span>•</span> <span>🔥 SMASH EXTRÊME</span> <span>•</span> <span>🍟 FRITES MAISON</span> <span>•</span> <span>🧀 CHEDDAR ANGLAIS</span> <span>•</span> <span>🔥 SMASH EXTRÊME</span> <span>•</span> <span>🍟 FRITES MAISON</span>
+            </div>
+        </div>
+
+        <!-- ESPACE CLIENT FIDGOOD VIP -->
+        <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-24">
+            <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6 bg-card p-8 rounded-3xl border border-white/5">
+                <div>
+                    <h2 class="text-5xl font-black uppercase tracking-tighter mb-2">Club <span class="text-cheese">FidGood</span> 👑</h2>
+                    <p class="text-gray-400 font-bold uppercase text-sm">Client N° <span id="client-number" class="text-white">...</span></p>
+                </div>
+                <div class="text-right bg-dark px-8 py-4 rounded-2xl border border-cheese/30 cheese-shadow">
+                    <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Cagnotte</div>
+                    <div class="text-5xl font-black text-white"><span id="client-points" class="text-cheese">0</span> 👑</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                
+                <!-- PALIERS -->
+                <div class="bg-card p-10 rounded-3xl lg:col-span-3 border-2 border-cheese/20 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-cheese/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="flex justify-between items-end mb-8 relative z-10">
+                        <h3 class="text-lg font-black text-white uppercase tracking-widest">Tes Récompenses 🎁</h3>
+                        <span class="font-black text-2xl text-cheese"><span id="progress-text">0</span> / 200</span>
+                    </div>
+                    
+                    <div class="relative w-full h-4 bg-dark rounded-full mb-10 border border-white/10 overflow-hidden relative z-10 p-1">
+                        <div id="crown-progress" class="h-full bg-cheese-gradient rounded-full transition-all duration-1000 ease-out shadow-lg shadow-cheese/50" style="width: 0%;"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center relative z-10">
+                        <div id="tier-30" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">30</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">IceGood Mini</div></div>
+                        <div id="tier-60" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">60</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">IceGood 50cl</div></div>
+                        <div id="tier-90" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">90</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">Classic Burger</div></div>
+                        <div id="tier-120" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">120</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">Deluxe / -10%</div></div>
+                        <div id="tier-200" class="bg-dark p-6 rounded-2xl border border-cheese/50 transition-all duration-500 opacity-40 bg-cheese/5"><div class="text-cheese font-black text-3xl mb-2">200</div><div class="text-[11px] font-black uppercase tracking-widest text-cheese">Festin / -25%</div></div>
+                    </div>
+                </div>
+
+                <!-- COMMANDES -->
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="bg-card p-8 rounded-3xl border border-white/5 shadow-xl">
+                        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                            <h3 class="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-brand animate-pulse"></span> En Cuisine 🔥</h3>
+                            <button onclick="loadOrders()" class="text-xs font-black text-gray-400 hover:text-white uppercase transition-colors bg-white/10 px-4 py-2 rounded-xl">Actualiser</button>
+                        </div>
+                        <div id="orders-encours" class="space-y-4 max-h-[400px] overflow-y-auto pr-2"></div>
+                    </div>
+                    
+                    <div class="bg-card p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Historique des festins</h3>
+                        <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2"></div>
+                    </div>
+                </div>
+
+                <!-- CODES PROMO -->
+                <div class="space-y-8">
+                    <div class="bg-cheese-gradient p-8 rounded-3xl shadow-xl text-dark">
+                        <h3 class="text-lg font-black uppercase tracking-widest mb-6 flex items-center gap-2">🎟️ Ajouter un Code</h3>
+                        <div class="flex flex-col gap-4">
+                            <input type="text" id="promo-input" placeholder="CODE SECRET" class="w-full bg-white border-2 border-dark/10 px-5 py-4 rounded-xl outline-none uppercase font-black text-dark focus:border-dark transition-colors text-center text-xl placeholder-gray-400">
+                            <button onclick="savePromo()" class="w-full bg-dark text-cheese font-black py-4 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-lg">Activer</button>
+                        </div>
+                        <p id="promo-msg" class="text-sm mt-4 font-black h-5 text-center"></p>
+                    </div>
+                    <div class="bg-card p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Vos Coupons</h3>
+                        <div id="my-promos" class="flex flex-wrap gap-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CARTE ORGANISÉE AVEC IMAGES -->
+        <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative z-20">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 bg-card p-8 rounded-3xl border border-white/5">
+                <div>
+                    <h2 class="text-6xl font-black uppercase tracking-tighter mb-2 text-transparent bg-clip-text bg-cheese-gradient">La Carte.</h2>
+                    <p class="text-white font-bold uppercase tracking-widest">Food Porn Premium.</p>
+                </div>
+                
+                <div class="w-full md:w-auto">
+                    <p class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Choisir le restaurant :</p>
+                    <select id="client-resto-select" onchange="loadMenu()" class="bg-dark border-2 border-cheese/50 text-white px-6 py-4 rounded-xl outline-none font-black uppercase tracking-widest text-sm focus:border-cheese transition-colors w-full md:w-auto cheese-shadow">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="menu-container" class="space-y-20">
+                <div class="col-span-full text-center py-32 bg-card rounded-3xl border border-white/5">
+                    <span class="text-7xl block mb-6 animate-pulse">🍔</span>
+                    <span class="text-gray-400 uppercase tracking-widest font-black text-xl">Veuillez sélectionner un établissement pour afficher le menu.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="border-t-4 border-cheese bg-dark py-16 text-center mt-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
+            <div class="relative z-10">
+                <div class="text-4xl font-black tracking-tighter text-white mb-4">FAST<span class="text-brand">GOOD</span></div>
+                <p class="text-cheese font-black uppercase tracking-widest">© 2026. L'excellence fondante.</p>
+            </div>
+        </footer>
     </div>
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT (Logique intacte) -->
     <script type="module">
         import { supabase } from './db.js';
+        let authMode = 'login'; let userId = null;
 
-        let cart = []; let allProducts = []; let categories = []; let currentClient = null; let availablePromos = []; let activeRestaurantId = null;
+        async function checkMaintenance() {
+            const { data } = await supabase.from('settings').select('maintenance_mode').eq('id', 1).single();
+            document.getElementById('initial-loader').classList.add('hidden');
 
-        const REWARDS = [
-            { id: 'r30', points: 30, type: 'item', name: 'IceGood Mini / 33cL' },
-            { id: 'r60', points: 60, type: 'item', name: 'IceGood / 50cL' },
-            { id: 'r90', points: 90, type: 'item', name: 'Classic Burger' },
-            { id: 'r120a', points: 120, type: 'item', name: 'Deluxe Burger' },
-            { id: 'r120b', points: 120, type: 'percent', value: 10, name: '-10% sur l\'addition' },
-            { id: 'r200a', points: 200, type: 'item', name: 'Festin des Rois' },
-            { id: 'r200b', points: 200, type: 'percent', value: 25, name: '-25% sur l\'addition' }
-        ];
+            if(data && data.maintenance_mode) {
+                document.getElementById('maintenance-screen').classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.getElementById('main-site-content').classList.remove('hidden');
+                checkUser(); loadRestosForClient();
+            }
+        }
+        checkMaintenance();
 
-        window.loginStaff = async function() {
-            const email = document.getElementById('staff-email').value, password = document.getElementById('staff-password').value;
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (!error) checkAuth(); else alert("Identifiants incorrects");
+        window.toggleAuthModal = function(mode) {
+            if(mode) {
+                authMode = mode; document.getElementById('modal-title').innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
+                document.getElementById('auth-error').classList.add('hidden'); document.getElementById('register-fields').classList.toggle('hidden', mode !== 'register');
+                document.getElementById('auth-modal').classList.remove('hidden');
+            } else { document.getElementById('auth-modal').classList.add('hidden'); }
+        };
+
+        window.handleAuth = async function() {
+            const e = document.getElementById('auth-email').value, p = document.getElementById('auth-password').value, fn = document.getElementById('auth-firstname').value, ln = document.getElementById('auth-lastname').value;
+            if(!e || !p || (authMode === 'register' && (!fn || !ln))) return;
+            const { error } = authMode === 'register' ? await supabase.auth.signUp({ email: e, password: p, options: { data: { first_name: fn, last_name: ln } } }) : await supabase.auth.signInWithPassword({ email: e, password: p });
+            if (error) { document.getElementById('auth-error').innerText = error.message; document.getElementById('auth-error').classList.remove('hidden'); } else { toggleAuthModal(); checkUser(); }
         };
         window.logout = async function() { await supabase.auth.signOut(); window.location.reload(); };
 
-        async function checkAuth() {
+        async function checkUser() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('setup-screen').classList.remove('hidden');
-                const { data: restos } = await supabase.from('restaurants').select('*');
-                document.getElementById('restaurant-select').innerHTML = restos?.length ? restos.map(r => `<option value="${r.id}">${r.name}</option>`).join('') : '<option value="">Aucun resto configuré</option>';
+                userId = session.user.id;
+                document.getElementById('auth-buttons').classList.add('hidden'); document.getElementById('user-menu').classList.remove('hidden'); document.getElementById('fidgood-section').classList.remove('hidden');
+                const { data: prof } = await supabase.from('profiles').select('*').eq('id', userId).single();
+                if (prof) {
+                    document.getElementById('user-email').innerText = prof.first_name ? `${prof.first_name}` : session.user.email;
+                    document.getElementById('client-number').innerText = prof.client_number || '...';
+                    
+                    let pts = prof.fidgood_points || 0;
+                    document.getElementById('client-points').innerText = pts; document.getElementById('progress-text').innerText = pts;
+                    document.getElementById('crown-progress').style.width = `${Math.min((pts / 200) * 100, 100)}%`;
+                    [30, 60, 90, 120, 200].forEach(tier => {
+                        let el = document.getElementById(`tier-${tier}`);
+                        if(pts >= tier) { 
+                            el.classList.remove('opacity-40'); 
+                            el.classList.add('opacity-100', 'bg-cheese/10', 'border-cheese/50', 'scale-105', 'cheese-shadow'); 
+                            el.querySelector('div:last-child').classList.replace('text-gray-400', 'text-cheese'); 
+                        } 
+                        else { 
+                            el.classList.add('opacity-40'); 
+                            el.classList.remove('opacity-100', 'bg-cheese/10', 'border-cheese/50', 'scale-105', 'cheese-shadow'); 
+                            el.querySelector('div:last-child').classList.replace('text-cheese', 'text-gray-400'); 
+                        }
+                    });
+                }
+                loadPromos(); loadOrders();
             }
         }
 
-        window.startBorne = function() {
-            const select = document.getElementById('restaurant-select'); activeRestaurantId = select.value;
-            document.getElementById('active-restaurant-name').innerText = select.options[select.selectedIndex].text.toUpperCase();
-            document.getElementById('setup-screen').classList.add('hidden'); document.getElementById('app-screen').classList.remove('hidden');
-            loadMenu();
-        };
-
-        async function loadMenu() {
-            const { data: cats } = await supabase.from('categories').select('*'); categories = cats || [];
-            const { data: prods } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false }); allProducts = prods || [];
-            const { data: stocks } = await supabase.from('restaurant_stock').select('*').eq('restaurant_id', activeRestaurantId);
-            const restoStocks = stocks || [];
-
-            let htmlMenu = '';
-            categories.forEach(c => {
-                let catProds = allProducts.filter(p => p.category_id === c.id);
-                if(catProds.length > 0) {
-                    htmlMenu += `
-                    <div>
-                        <div class="inline-block bg-white text-dark px-6 py-2 rounded-xl mb-6 font-black uppercase tracking-widest shadow-lg">${c.name}</div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-                            ${catProds.map(p => {
-                                let stockInfo = restoStocks.find(s => s.product_id === p.id);
-                                let isOOS = stockInfo ? !stockInfo.in_stock : false;
-
-                                const overlay = isOOS ? `<div class="absolute inset-0 bg-dark/80 z-20 flex items-center justify-center backdrop-blur-sm"><span class="bg-brand text-white font-black px-6 py-3 rounded-xl text-xl uppercase tracking-widest shadow-2xl border-2 border-brand/50 rotate-[-10deg]">RUPTURE</span></div>` : '';
-                                const click = isOOS ? '' : `onclick="window.addToCart('${p.id}')"`;
-                                const cls = isOOS ? 'cursor-not-allowed opacity-70' : 'hover:border-cheese hover:-translate-y-1 hover:shadow-[0_15px_30px_-5px_rgba(255,184,0,0.3)] active:scale-95 cursor-pointer';
-                                
-                                const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-cheese to-melt">🧀</div>`;
-
-                                return `
-                                <div ${click} class="bg-card border-2 border-white/5 rounded-3xl transition-all duration-200 flex flex-col h-full relative overflow-hidden group ${cls}">
-                                    ${overlay}
-                                    
-                                    <!-- Image HAUT -->
-                                    <div class="h-40 w-full bg-dark overflow-hidden relative border-b border-white/5">
-                                        ${visuel}
-                                    </div>
-                                    
-                                    <!-- Contenu BAS -->
-                                    <div class="flex-1 p-5 flex flex-col">
-                                        <span class="font-black text-lg uppercase tracking-wide leading-tight block mb-2 ${isOOS?'text-gray-500':'text-white'}">${p.name}</span>
-                                        <div class="w-8 h-1 ${isOOS?'bg-gray-600':'bg-cheese'} rounded-full mb-auto mt-2"></div>
-                                        <span class="${isOOS?'text-gray-600':'text-cheese'} font-black text-2xl block mt-6">${p.price.toFixed(2)} €</span>
-                                    </div>
-                                </div>
-                            `}).join('')}
-                        </div>
-                    </div>`;
-                }
-            });
-            document.getElementById('borne-menu-container').innerHTML = htmlMenu || '<p class="text-center text-gray-500 py-10 font-bold uppercase">Carte vide</p>';
-        }
-
-        window.searchClient = async function() {
-            const clientNum = document.getElementById('client-id-input').value;
-            const { data } = await supabase.from('profiles').select('*').eq('client_number', clientNum).single();
-            const infoDiv = document.getElementById('client-info'), loyActions = document.getElementById('loyalty-actions');
+        window.loadOrders = async function() {
+            if(!userId) return;
+            const { data } = await supabase.from('orders').select('*').eq('client_id', userId).order('created_at', { ascending: false });
+            if (!data) return;
             
-            if (data) {
-                currentClient = data;
-                infoDiv.innerHTML = `<div class="bg-cheese/20 border-2 border-cheese/50 text-cheese px-6 py-5 rounded-2xl flex justify-between items-center shadow-lg"><span class="font-black text-sm uppercase tracking-widest text-white">✅ ${data.first_name || 'Client'}</span><span class="font-black text-2xl tracking-widest">👑 ${data.fidgood_points}</span></div>`;
-                loyActions.classList.remove('hidden');
+            const renderEncours = (o) => {
+                const isReady = o.status === 'prete';
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-white border border-white/5">${i.name}</span>`).join(' ') : '<span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Détails indisponibles</span>';
                 
-                const { data: userPromos } = await supabase.from('user_promocodes').select('code').eq('client_id', data.id).eq('is_used', false);
-                if (userPromos?.length) {
-                    const { data: fullPromos } = await supabase.from('promocodes').select('*').in('code', userPromos.map(u=>u.code)).neq('discount_type', 'points');
-                    availablePromos = fullPromos || [];
-                    document.getElementById('promo-select').innerHTML = '<option value="">-- Sélectionner un Code --</option>' + availablePromos.map(p => `<option value="${p.code}">${p.code} (-${p.discount_value}${p.discount_type==='percent'?'%':'€'})</option>`).join('');
-                } else { document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code dispo --</option>'; availablePromos = []; }
-
-                let rewardOptions = '<option value="">-- Sélectionner une Récompense 👑 --</option>';
-                REWARDS.forEach(r => {
-                    if (data.fidgood_points >= r.points) rewardOptions += `<option value="${r.id}">${r.points} 👑 : ${r.name}</option>`;
-                    else rewardOptions += `<option value="${r.id}" disabled>${r.points} 👑 : ${r.name} (Bloqué)</option>`;
-                });
-                document.getElementById('reward-select').innerHTML = rewardOptions;
-            } else {
-                currentClient = null; availablePromos = []; loyActions.classList.add('hidden');
-                infoDiv.innerHTML = `<div class="bg-brand/10 border-2 border-brand/30 text-brand font-black px-6 py-5 rounded-2xl text-sm uppercase tracking-widest text-center shadow-lg">❌ INTROUVABLE</div>`;
-                document.getElementById('reward-select').value = ""; document.getElementById('promo-select').value = "";
-            }
-            applyDiscounts();
-        };
-
-        window.addToCart = function(id) { cart.push(allProducts.find(p => p.id === id)); applyDiscounts(); };
-        window.removeFromCart = function(i) { cart.splice(i, 1); applyDiscounts(); };
-
-        window.applyDiscounts = function() {
-            const container = document.getElementById('cart-container');
-            let sousTotal = cart.reduce((acc, item) => acc + item.price, 0); 
-            let discountValueAmount = 0; let discountValuePercent = 0; let rewardItemHtml = '';
-
-            const selCode = document.getElementById('promo-select')?.value;
-            if (selCode) {
-                const promo = availablePromos.find(p => p.code === selCode);
-                if (promo.discount_type === 'amount') discountValueAmount += promo.discount_value;
-                if (promo.discount_type === 'percent') discountValuePercent += promo.discount_value;
-            }
-
-            const selRewardId = document.getElementById('reward-select')?.value;
-            if (selRewardId) {
-                const r = REWARDS.find(rw => rw.id === selRewardId);
-                if (r.type === 'percent') {
-                    discountValuePercent += r.value;
-                    rewardItemHtml += `<div class="flex justify-between items-center bg-gradient-to-r from-cheese/20 to-transparent text-cheese p-5 rounded-2xl border border-cheese/30 mb-3"><span class="font-black text-sm uppercase tracking-widest">👑 Avantage VIP</span> <span class="font-black tracking-widest uppercase text-xs bg-cheese text-dark px-3 py-1 rounded-lg">-${r.value}%</span></div>`;
-                }
-                if (r.type === 'item') {
-                    rewardItemHtml += `<div class="flex justify-between items-center bg-gradient-to-r from-cheese/20 to-transparent text-cheese p-5 rounded-2xl border border-cheese/30 mb-3"><span class="font-black text-sm uppercase tracking-widest">👑 ${r.name}</span> <span class="font-black tracking-widest uppercase text-xs bg-cheese text-dark px-3 py-1 rounded-lg">OFFERT</span></div>`;
-                }
-            }
-
-            if(cart.length === 0 && !selRewardId) {
-                container.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-500 opacity-50"><span class="text-6xl mb-4">🛒</span><span class="font-black uppercase tracking-widest text-sm">Le plateau est vide</span></div>`;
-                document.getElementById('total-price').innerHTML = `0.00 <span class="text-3xl text-brand">€</span>`; document.getElementById('sub-price').innerText = "0.00 €"; document.getElementById('discount-line').classList.add('hidden'); return;
-            }
-
-            let totalDiscount = discountValueAmount + (sousTotal * (discountValuePercent / 100));
-            let totalFinal = Math.max(0, sousTotal - totalDiscount);
-
-            container.innerHTML = cart.map((item, i) => `
-                <div class="flex justify-between items-center bg-dark p-5 rounded-2xl border border-white/5 mb-3 group hover:border-brand/30 transition-colors shadow-sm">
-                    <span class="font-black text-sm uppercase tracking-wide text-white">${item.name}</span> 
-                    <div class="flex gap-4 items-center">
-                        <span class="text-white font-bold text-xl">${item.price.toFixed(2)}€</span> 
-                        <button onclick="window.removeFromCart(${i})" class="bg-white/5 hover:bg-brand text-gray-400 hover:text-white w-8 h-8 flex items-center justify-center rounded-lg font-black transition-colors">✕</button>
+                return `
+                <div class="bg-dark p-6 rounded-2xl border-2 ${isReady ? 'border-brand bg-brand/5 neon-shadow' : 'border-white/5'} transition-all mb-4">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex-1 pr-4">
+                            <div class="text-white font-black text-xl mb-3">#${o.id.substring(0,6).toUpperCase()}</div>
+                            <div class="flex flex-wrap gap-2">${items}</div>
+                        </div>
+                        <div class="text-right">
+                            <span class="${isReady ? 'bg-brand text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'} px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg">${o.status.replace('_', ' ')}</span>
+                        </div>
                     </div>
-                </div>
-            `).join('');
-            if(rewardItemHtml) container.innerHTML += rewardItemHtml;
+                    <div class="flex justify-between items-end border-t border-white/10 pt-4 mt-4">
+                        <span class="text-[10px] text-gray-500 font-black uppercase tracking-widest">Attente: ${o.estimated_time}s</span>
+                        <span class="font-black text-2xl text-cheese">${o.total_price.toFixed(2)} €</span>
+                    </div>
+                </div>`;
+            };
 
-            document.getElementById('sub-price').innerText = `${sousTotal.toFixed(2)} €`;
-            if (totalDiscount > 0) { document.getElementById('discount-line').classList.remove('hidden'); document.getElementById('discount-amount').innerText = `- ${totalDiscount.toFixed(2)} €`; } else { document.getElementById('discount-line').classList.add('hidden'); }
-            document.getElementById('total-price').innerHTML = `${totalFinal.toFixed(2)} <span class="text-3xl text-brand">€</span>`;
+            const renderHisto = (o) => {
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
+                return `
+                <div class="flex justify-between items-center bg-dark p-5 rounded-2xl border border-white/5 hover:border-white/20 transition-colors">
+                    <div class="flex-1 pr-4">
+                        <div class="font-black text-sm uppercase tracking-widest mb-1 text-white">#${o.id.substring(0,6).toUpperCase()}</div>
+                        <div class="text-xs text-gray-500 font-bold truncate">${items}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-black text-xl text-white">${o.total_price.toFixed(2)} €</div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                </div>`;
+            };
+            const encours = data.filter(o => o.status !== 'terminee'), histo = data.filter(o => o.status === 'terminee');
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Rien sur le grill.</div>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Aucun historique.</div>';
         };
 
-        document.getElementById('btn-encaissement').addEventListener('click', async () => {
-            const selRewardId = document.getElementById('reward-select')?.value;
+        window.savePromo = async function() {
+            const code = document.getElementById('promo-input').value.toUpperCase(); const msg = document.getElementById('promo-msg');
+            if(!code) return;
+            const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
+            if(!promo) { msg.innerText = "❌ Code Invalide."; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center"; return; }
+            const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
+            if(exist) { msg.innerText = "⚠️ Code déjà utilisé."; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center"; return; }
             
-            if(cart.length === 0 && (!selRewardId || REWARDS.find(rw => rw.id === selRewardId).type === 'percent')) {
-                 alert("AJOUTEZ AU MOINS UN PRODUIT !"); return;
+            if (promo.discount_type === 'points') {
+                const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
+                await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
+                await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
+                msg.innerText = `🔥 +${promo.discount_value} couronnes !`; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center";
+            } else {
+                await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
+                msg.innerText = "✅ Code enregistré (Borne)."; msg.className = "text-sm mt-4 font-black text-green-800 uppercase tracking-widest text-center";
+            }
+            document.getElementById('promo-input').value = ""; checkUser();
+        };
+
+        async function loadPromos() {
+            const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
+            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through bg-dark border-white/5':'text-dark bg-cheese border-cheese cheese-shadow'} border px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest">${p.code}</span>`).join('') : '<span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Aucun coupon.</span>';
+        }
+
+        async function loadRestosForClient() {
+            const { data } = await supabase.from('restaurants').select('*');
+            document.getElementById('client-resto-select').innerHTML = '<option value="">-- Sélection --</option>' + (data || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+        }
+
+        window.loadMenu = async function() {
+            const activeRestoId = document.getElementById('client-resto-select').value;
+            if(!activeRestoId) {
+                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-32 bg-card rounded-3xl border border-white/5"><span class="text-7xl block mb-6 animate-pulse">🍔</span><span class="text-gray-400 uppercase tracking-widest font-black text-xl">Veuillez sélectionner un établissement pour afficher le menu.</span></div>';
+                return;
             }
 
-            const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "CUISSON EN COURS...";
-            let finalItems = [...cart]; let pointsToDeduct = 0;
-            let totalTemps = cart.reduce((acc, item) => acc + item.prep_time, 0);
-            let finalPrice = parseFloat(document.getElementById('total-price').innerText);
+            const { data: categories } = await supabase.from('categories').select('*');
+            const { data: products } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false });
+            const { data: stocks } = await supabase.from('restaurant_stock').select('*').eq('restaurant_id', activeRestoId);
+            
+            let htmlMenu = '';
+            if(categories && products) {
+                categories.forEach(c => {
+                    let prods = products.filter(p => p.category_id === c.id);
+                    if(prods.length > 0) {
+                        htmlMenu += `
+                        <div class="mb-16">
+                            <div class="inline-block bg-cheese text-dark px-6 py-2 rounded-xl mb-8 font-black uppercase tracking-widest text-xl cheese-shadow">${c.name}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                                ${prods.map(p => {
+                                    let stockInfo = (stocks||[]).find(s => s.product_id === p.id);
+                                    let isOOS = stockInfo ? !stockInfo.in_stock : false;
 
-            if (selRewardId) {
-                const r = REWARDS.find(rw => rw.id === selRewardId);
-                pointsToDeduct = r.points;
-                if (r.type === 'item') {
-                    finalItems.push({ name: `🎁 ${r.name}`, price: 0, prep_time: 45 });
-                    totalTemps += 45;
-                }
+                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-widest z-20 shadow-xl border border-red-400">RUPTURE</div>` : '';
+                                    const cls = isOOS ? 'grayscale opacity-60' : 'hover:-translate-y-2 hover:border-cheese hover:shadow-[0_20px_40px_-10px_rgba(255,184,0,0.3)]';
+
+                                    // L'IMAGE EST DE RETOUR : Si pas d'image, affiche un gros émoji fromage/burger sympa.
+                                    const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-7xl bg-gradient-to-br from-cheese to-melt">🧀</div>`;
+
+                                    return `
+                                    <div class="bg-card border-2 border-white/5 rounded-3xl transition-all duration-300 flex flex-col h-full relative overflow-hidden group ${cls}">
+                                        ${badge}
+                                        
+                                        <!-- Zone Image -->
+                                        <div class="h-56 w-full bg-dark overflow-hidden relative">
+                                            ${visuel}
+                                            <div class="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-80 z-10"></div>
+                                        </div>
+
+                                        <div class="flex-1 p-6 relative z-20 -mt-10">
+                                            <h3 class="text-2xl font-black mb-3 uppercase tracking-wide leading-tight drop-shadow-lg">${p.name}</h3>
+                                            <div class="w-12 h-1.5 ${isOOS?'bg-gray-600':'bg-cheese'} rounded-full mb-6"></div>
+                                        </div>
+                                        
+                                        <div class="flex justify-between items-end p-6 pt-0 mt-auto z-20">
+                                            <span class="text-gray-400 text-xs font-black uppercase tracking-widest bg-dark px-3 py-1.5 rounded-lg border border-white/5">PRIX</span>
+                                            <span class="text-3xl font-black ${isOOS?'text-gray-500':'text-cheese'}">${p.price.toFixed(2)} €</span>
+                                        </div>
+                                    </div>
+                                `}).join('')}
+                            </div>
+                        </div>`;
+                    }
+                });
             }
-
-            await supabase.from('orders').insert([{ client_id: currentClient?.id || null, restaurant_id: activeRestaurantId, total_price: finalPrice, estimated_time: totalTemps, status: 'en_preparation', items: finalItems }]);
-
-            if (currentClient) {
-                let nouveauxPoints = currentClient.fidgood_points + (Math.floor(finalPrice) * 2) - pointsToDeduct;
-                await supabase.from('profiles').update({ fidgood_points: nouveauxPoints }).eq('id', currentClient.id);
-                const selCode = document.getElementById('promo-select')?.value;
-                if (selCode) await supabase.from('user_promocodes').update({ is_used: true }).eq('client_id', currentClient.id).eq('code', selCode);
-                alert(`✅ COMMANDE VALIDÉE !\n\n👑 Points utilisés : -${pointsToDeduct}\n👑 Points gagnés : +${Math.floor(finalPrice) * 2}\n\n👑 Nouveau solde : ${nouveauxPoints} couronnes.`);
-            } else { alert("✅ COMMANDE ENVOYÉE EN CUISINE !"); }
-
-            cart = []; currentClient = null; availablePromos = [];
-            document.getElementById('client-id-input').value = ""; document.getElementById('client-info').innerHTML = ""; 
-            document.getElementById('loyalty-actions').classList.add('hidden'); document.getElementById('reward-select').value = ""; document.getElementById('promo-select').value = "";
-            applyDiscounts(); btn.innerText = "ENCAISSER"; btn.disabled = false;
-        });
-
-        checkAuth();
+            document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm bg-card rounded-3xl">Menu en cours de préparation</div>';
+        }
     </script>
 </body>
 </html>
