@@ -56,7 +56,7 @@
                 <div id="cart-container" class="flex-1 p-8 overflow-y-auto space-y-4"></div>
                 <div class="p-8 bg-darker border-t border-white/5">
                     <div class="flex justify-between items-center text-gray-500 text-xs font-bold mb-3 uppercase tracking-widest"><span>Sous-total</span><span id="sub-price" class="text-white">0.00 €</span></div>
-                    <div id="discount-line" class="hidden flex justify-between items-center text-neon text-xs font-black mb-6 bg-neon/10 px-4 py-3 border border-neon/20 uppercase tracking-widest"><span>Avantage</span><span id="discount-amount">- 0.00 €</span></div>
+                    <div id="discount-line" class="hidden flex justify-between items-center text-neon text-xs font-black mb-6 bg-neon/10 px-4 py-3 border border-neon/20 uppercase tracking-widest"><span>Avantage Global</span><span id="discount-amount">- 0.00 €</span></div>
                     <div class="flex justify-between items-end mb-8 border-t border-white/5 pt-6 mt-4">
                         <span class="text-gray-500 font-bold uppercase tracking-widest text-xs">Total à Payer</span>
                         <span class="text-5xl font-black text-white" id="total-price">0.00 €</span>
@@ -181,8 +181,13 @@
             const selRewardId = document.getElementById('reward-select')?.value;
             if (selRewardId) {
                 const r = REWARDS.find(rw => rw.id === selRewardId);
-                if (r.type === 'percent') discountValuePercent += r.value;
-                if (r.type === 'item') rewardItemHtml = `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">${r.name}</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">OFFERT</span></div>`;
+                if (r.type === 'percent') {
+                    discountValuePercent += r.value;
+                    rewardItemHtml += `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">👑 Avantage VIP</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">-${r.value}%</span></div>`;
+                }
+                if (r.type === 'item') {
+                    rewardItemHtml += `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">👑 ${r.name}</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">OFFERT</span></div>`;
+                }
             }
 
             if(cart.length === 0 && !selRewardId) {
@@ -203,7 +208,12 @@
 
         document.getElementById('btn-encaissement').addEventListener('click', async () => {
             const selRewardId = document.getElementById('reward-select')?.value;
-            if(cart.length === 0 && !selRewardId) return;
+            
+            // Si le panier est vide ET qu'aucun avantage physique n'est choisi
+            if(cart.length === 0 && (!selRewardId || REWARDS.find(rw => rw.id === selRewardId).type === 'percent')) {
+                 alert("Le panier est vide !");
+                 return;
+            }
 
             const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "ENVOI...";
             let finalItems = [...cart]; let pointsToDeduct = 0;
@@ -213,7 +223,10 @@
             if (selRewardId) {
                 const r = REWARDS.find(rw => rw.id === selRewardId);
                 pointsToDeduct = r.points;
-                if (r.type === 'item') finalItems.push({ name: `🎁 ${r.name}`, price: 0, prep_time: 45 });
+                if (r.type === 'item') {
+                    finalItems.push({ name: `🎁 ${r.name}`, price: 0, prep_time: 45 });
+                    totalTemps += 45;
+                }
             }
 
             await supabase.from('orders').insert([{ client_id: currentClient?.id || null, restaurant_id: activeRestaurantId, total_price: finalPrice, estimated_time: totalTemps, status: 'en_preparation', items: finalItems }]);
