@@ -9,20 +9,11 @@
         tailwind.config = { 
             theme: { 
                 extend: { 
-                    colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', premium: '#1a1a1a' },
-                    animation: {
-                        'marquee': 'marquee 30s linear infinite',
-                        'kenburns': 'kenburns 20s ease-out infinite alternate',
-                    },
+                    colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', premium: '#1a1a1a', gold: '#FFD700' },
+                    animation: { 'marquee': 'marquee 30s linear infinite', 'kenburns': 'kenburns 20s ease-out infinite alternate' },
                     keyframes: {
-                        marquee: {
-                            '0%': { transform: 'translateX(0%)' },
-                            '100%': { transform: 'translateX(-100%)' },
-                        },
-                        kenburns: {
-                            '0%': { transform: 'scale(1)' },
-                            '100%': { transform: 'scale(1.1)' },
-                        }
+                        marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } },
+                        kenburns: { '0%': { transform: 'scale(1)' }, '100%': { transform: 'scale(1.1)' } }
                     }
                 } 
             } 
@@ -35,7 +26,6 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased relative overflow-x-hidden">
 
-    <!-- NAVBAR -->
     <nav class="fixed w-full glass-panel z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -60,7 +50,6 @@
         </div>
     </nav>
 
-    <!-- MODAL AUTH -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-md z-[60] flex items-center justify-center p-4">
         <div class="bg-premium border border-white/5 p-10 w-full max-w-md relative shadow-2xl">
             <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-600 hover:text-white font-black text-xl transition">X</button>
@@ -78,34 +67,23 @@
         </div>
     </div>
 
-    <!-- HERO SECTION -->
     <div class="relative h-screen flex items-center justify-center overflow-hidden bg-darker">
         <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-40 animate-kenburns"></div>
         <div class="absolute inset-0 z-10 bg-gradient-to-t from-darker via-darker/60 to-transparent"></div>
-        
         <div class="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
             <div class="inline-block border border-white/20 text-gray-300 px-6 py-2 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md">Premium Smash Burgers</div>
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-tight uppercase">
-                L'Excellence.<br>
-                <span class="text-neon text-glow">Sans Attente.</span>
-            </h1>
-            <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-medium mb-10 leading-relaxed">
-                Des viandes caramélisées, un cheddar affiné, une exécution millimétrée. Commandez en borne, dégustez instantanément.
-            </p>
-            <a href="#menu-section" class="inline-block bg-white text-dark font-black uppercase tracking-widest px-10 py-4 hover:bg-neon hover:text-white transition duration-300">
-                Découvrir la carte
-            </a>
+            <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-tight uppercase">L'Excellence.<br><span class="text-neon text-glow">Sans Attente.</span></h1>
+            <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-medium mb-10 leading-relaxed">Des viandes caramélisées, un cheddar affiné, une exécution millimétrée. Commandez en borne, dégustez instantanément.</p>
+            <a href="#menu-section" class="inline-block bg-white text-dark font-black uppercase tracking-widest px-10 py-4 hover:bg-neon hover:text-white transition duration-300">Découvrir la carte</a>
         </div>
     </div>
 
-    <!-- BANDEAU DÉFILANT -->
     <div class="bg-neon text-dark py-4 overflow-hidden border-y border-neon flex relative z-30">
         <div class="animate-marquee inline-block font-black text-sm tracking-widest uppercase space-x-12">
             <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span> <span>•</span> <span>PROGRAMME FIDGOOD</span> <span>•</span> <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span>
         </div>
     </div>
 
-    <!-- ESPACE CLIENT FIDGOOD VIP -->
     <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-20">
         <div class="mb-12 border-b border-white/10 pb-6 flex justify-between items-end">
             <div>
@@ -113,24 +91,32 @@
                 <p class="text-gray-500 mt-2">Client <span id="client-number" class="font-bold text-white">...</span></p>
             </div>
             <div class="text-right">
-                <div class="text-gray-500 text-xs uppercase tracking-widest mb-1">Solde Couronnes</div>
-                <div class="text-3xl font-black text-white"><span id="client-points" class="text-neon">0</span> Cts</div>
+                <div class="text-gray-500 text-xs uppercase tracking-widest mb-1">Solde actuel</div>
+                <div class="text-4xl font-black text-white"><span id="client-points" class="text-gold">0</span> 👑</div>
             </div>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- NOUVEAU BLOC : LES RECOMPENSES -->
+            <div class="glass-panel p-8 border border-white/5 lg:col-span-3">
+                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">👑 Le Catalogue des Récompenses (Directement sur la Borne)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-xs font-bold uppercase tracking-wide">
+                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">30 👑</span> IceGood Mini / Boisson 33cl</div>
+                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">60 👑</span> IceGood / Boisson 50cl</div>
+                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">90 👑</span> Classic Burger</div>
+                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">120 👑</span> Deluxe Burger <br> <span class="text-gray-500 my-1">OU</span> -10% sur l'addition</div>
+                    <div class="bg-gold/10 p-4 rounded-xl border border-gold/30 flex flex-col items-center justify-center text-center text-gold"><span class="text-3xl font-black mb-2">200 👑</span> Festin des Rois <br><span class="text-[10px] text-gray-400">(Burger + 33cl + Dessert)</span> <span class="text-gray-500 my-1">OU</span> -25% sur l'addition</div>
+                </div>
+            </div>
+
             <div class="lg:col-span-2 space-y-8">
                 <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">En Préparation</h3>
-                        <button onclick="loadOrders()" class="text-xs text-white hover:text-neon uppercase tracking-widest transition">Actualiser</button>
-                    </div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">En Préparation</h3><button onclick="loadOrders()" class="text-xs text-white hover:text-neon uppercase tracking-widest transition">Actualiser</button></div>
                     <div id="orders-encours" class="space-y-4"></div>
                 </div>
-
                 <div>
                     <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Historique</h3>
-                    <div id="orders-historique" class="space-y-2 max-h-60 overflow-y-auto pr-2"></div>
+                    <div id="orders-historique" class="space-y-2"></div>
                 </div>
             </div>
 
@@ -143,7 +129,6 @@
                     </div>
                     <p id="promo-msg" class="text-sm mt-4 font-bold h-5"></p>
                 </div>
-
                 <div class="glass-panel p-8 border border-white/5">
                     <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Codes Disponibles</h3>
                     <div id="my-promos" class="text-sm text-gray-500 font-medium"></div>
@@ -152,55 +137,28 @@
         </div>
     </div>
 
-    <!-- SECTION CONCEPT -->
+    <!-- CONCEPT -->
     <div id="concept-section" class="py-24 bg-darker border-y border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div class="group">
-                    <div class="h-64 mb-6 overflow-hidden bg-premium">
-                        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=800" alt="Burger Smash" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
-                    </div>
-                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">La Maîtrise Smash</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Une viande sélectionnée, écrasée sur une plaque à très haute température pour caraméliser les sucs et développer une croûte pleine de saveurs.</p>
-                </div>
-                <div class="group">
-                    <div class="h-64 mb-6 overflow-hidden bg-premium">
-                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800" alt="Cheddar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
-                    </div>
-                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Art du Fromage</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Nous n'utilisons aucun substitut. Chaque burger est nappé d'un cheddar affiné, fondu à la perfection directement sur la viande.</p>
-                </div>
-                <div class="group">
-                    <div class="h-64 mb-6 overflow-hidden bg-premium">
-                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800" alt="Restaurant rapide" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105">
-                    </div>
-                    <h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Efficacité</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Une architecture de cuisine pensée pour la performance. Commandez, et recevez votre plateau en un temps record.</p>
-                </div>
+                <div class="group"><div class="h-64 mb-6 overflow-hidden bg-premium"><img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=800" alt="Burger Smash" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105"></div><h3 class="text-xl font-black uppercase tracking-wide mb-3">La Maîtrise Smash</h3><p class="text-gray-400 text-sm leading-relaxed">Une viande sélectionnée, écrasée sur une plaque à très haute température pour caraméliser les sucs et développer une croûte pleine de saveurs.</p></div>
+                <div class="group"><div class="h-64 mb-6 overflow-hidden bg-premium"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=800" alt="Cheddar" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105"></div><h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Art du Fromage</h3><p class="text-gray-400 text-sm leading-relaxed">Nous n'utilisons aucun substitut. Chaque burger est nappé d'un cheddar affiné, fondu à la perfection directement sur la viande.</p></div>
+                <div class="group"><div class="h-64 mb-6 overflow-hidden bg-premium"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=800" alt="Restaurant rapide" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-700 transform group-hover:scale-105"></div><h3 class="text-xl font-black uppercase tracking-wide mb-3">L'Efficacité</h3><p class="text-gray-400 text-sm leading-relaxed">Une architecture de cuisine pensée pour la performance. Commandez, et recevez votre plateau en un temps record.</p></div>
             </div>
         </div>
     </div>
 
-    <!-- MENU SECTION -->
+    <!-- CARTE -->
     <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16">
-            <div>
-                <h2 class="text-5xl font-black uppercase tracking-tighter mb-4">La Carte.</h2>
-                <p class="text-gray-500 font-medium">L'essentiel, exécuté à la perfection.</p>
-            </div>
+            <div><h2 class="text-5xl font-black uppercase tracking-tighter mb-4">La Carte.</h2><p class="text-gray-500 font-medium">L'essentiel, exécuté à la perfection.</p></div>
         </div>
-        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Chargement de la carte...</div>
-        </div>
+        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Chargement...</div></div>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="bg-darker border-t border-white/5 py-12 text-center">
-        <div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div>
-        <p class="text-gray-600 text-xs uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p>
-    </footer>
+    <footer class="bg-darker border-t border-white/5 py-12 text-center"><div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div><p class="text-gray-600 text-xs uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p></footer>
 
-    <!-- SCRIPT APPLICATION -->
+    <!-- SCRIPT -->
     <script type="module">
         import { supabase } from './db.js';
 
@@ -208,20 +166,15 @@
 
         window.toggleAuthModal = function(mode) {
             if(mode) {
-                authMode = mode; 
-                document.getElementById('modal-title').innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
-                document.getElementById('auth-error').classList.add('hidden');
-                document.getElementById('register-fields').classList.toggle('hidden', mode !== 'register');
+                authMode = mode; document.getElementById('modal-title').innerText = mode === 'login' ? 'Connexion' : 'Créer un compte';
+                document.getElementById('auth-error').classList.add('hidden'); document.getElementById('register-fields').classList.toggle('hidden', mode !== 'register');
                 document.getElementById('auth-modal').classList.remove('hidden');
-            } else { 
-                document.getElementById('auth-modal').classList.add('hidden'); 
-            }
+            } else { document.getElementById('auth-modal').classList.add('hidden'); }
         };
 
         window.handleAuth = async function() {
             const e = document.getElementById('auth-email').value, p = document.getElementById('auth-password').value, fn = document.getElementById('auth-firstname').value, ln = document.getElementById('auth-lastname').value;
             if(!e || !p || (authMode === 'register' && (!fn || !ln))) return;
-            
             const { error } = authMode === 'register' ? await supabase.auth.signUp({ email: e, password: p, options: { data: { first_name: fn, last_name: ln } } }) : await supabase.auth.signInWithPassword({ email: e, password: p });
             if (error) { document.getElementById('auth-error').innerText = error.message; document.getElementById('auth-error').classList.remove('hidden'); } 
             else { toggleAuthModal(); checkUser(); }
@@ -232,10 +185,7 @@
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
                 userId = session.user.id;
-                document.getElementById('auth-buttons').classList.add('hidden'); 
-                document.getElementById('user-menu').classList.remove('hidden'); 
-                document.getElementById('fidgood-section').classList.remove('hidden');
-                
+                document.getElementById('auth-buttons').classList.add('hidden'); document.getElementById('user-menu').classList.remove('hidden'); document.getElementById('fidgood-section').classList.remove('hidden');
                 const { data: prof } = await supabase.from('profiles').select('*').eq('id', userId).single();
                 if (prof) {
                     document.getElementById('user-email').innerText = prof.first_name ? `${prof.first_name}` : session.user.email;
@@ -253,41 +203,22 @@
 
             const renderEncours = (o) => {
                 const isReady = o.status === 'prete';
-                const orderItems = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-2 py-1 rounded text-xs font-bold mr-1 inline-block mb-1">${i.name}</span>`).join('') : '<span class="text-xs text-gray-600">Détails indisponibles</span>';
-                
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-2 py-1 rounded text-[10px] font-bold mr-1 inline-block mb-1 uppercase tracking-widest text-gray-300">${i.name}</span>`).join('') : '<span class="text-xs text-gray-600">Détails indisponibles</span>';
                 return `<div class="glass-panel p-6 border ${isReady ? 'border-neon shadow-[0_0_15px_rgba(255,0,85,0.2)]' : 'border-white/5'} transition-all">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="flex-1">
-                            <div class="text-white font-black text-lg mb-2">#${o.id.substring(0,6).toUpperCase()}</div>
-                            <div class="flex flex-wrap gap-1">${orderItems}</div>
-                        </div>
-                        <div class="text-right ml-4">
-                            <span class="${isReady ? 'text-neon border-neon' : 'text-gray-400 border-gray-600'} border px-3 py-1 text-xs font-bold uppercase tracking-widest">${o.status.replace('_', ' ')}</span>
-                        </div>
+                        <div class="flex-1"><div class="text-white font-black text-lg mb-3">#${o.id.substring(0,6).toUpperCase()}</div><div class="flex flex-wrap gap-1">${items}</div></div>
+                        <div class="text-right ml-4"><span class="${isReady ? 'text-neon border-neon' : 'text-gray-400 border-gray-600'} border px-3 py-1 text-[10px] font-bold uppercase tracking-widest">${o.status.replace('_', ' ')}</span></div>
                     </div>
-                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-2">
-                        <span class="text-xs text-gray-500 uppercase tracking-widest">Attente estimée: ${o.estimated_time}s</span>
-                        <span class="font-black text-xl">${o.total_price.toFixed(2)} €</span>
-                    </div>
+                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-2"><span class="text-[10px] text-gray-500 uppercase tracking-widest">Attente: ${o.estimated_time}s</span><span class="font-black text-xl">${o.total_price.toFixed(2)} €</span></div>
                 </div>`;
             };
 
             const renderHisto = (o) => {
-                const orderItems = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
-                return `<div class="flex justify-between items-center bg-premium p-4 border border-white/5 hover:bg-white/5 transition">
-                    <div class="flex-1 pr-4">
-                        <div class="text-gray-300 font-bold text-sm mb-1">#${o.id.substring(0,6).toUpperCase()}</div>
-                        <div class="text-xs text-gray-500 truncate">${orderItems}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-bold text-gray-400">${o.total_price.toFixed(2)} €</div>
-                        <div class="text-[10px] text-gray-600 uppercase mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
-                    </div>
-                </div>`;
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
+                return `<div class="flex justify-between items-center bg-premium p-4 border border-white/5 hover:bg-white/5 transition"><div class="flex-1 pr-4"><div class="text-gray-300 font-bold text-sm mb-1">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-500 truncate">${items}</div></div><div class="text-right"><div class="font-bold text-gray-400">${o.total_price.toFixed(2)} €</div><div class="text-[10px] text-gray-600 uppercase mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div></div></div>`;
             };
 
-            const encours = data.filter(o => o.status !== 'terminee');
-            const histo = data.filter(o => o.status === 'terminee');
+            const encours = data.filter(o => o.status !== 'terminee'); const histo = data.filter(o => o.status === 'terminee');
             document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucune commande en cours.</div>';
             document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucun historique.</div>';
         };
@@ -295,13 +226,10 @@
         window.savePromo = async function() {
             const code = document.getElementById('promo-input').value.toUpperCase(); const msg = document.getElementById('promo-msg');
             if(!code) return;
-
             const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
             if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-sm mt-4 font-bold text-neon"; return; }
-
             const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
             if(exist) { msg.innerText = "Code déjà utilisé."; msg.className = "text-sm mt-4 font-bold text-gray-400"; return; }
-
             if (promo.discount_type === 'points') {
                 const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
                 await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
@@ -323,22 +251,8 @@
             const { data } = await supabase.from('products').select('*');
             document.getElementById('menu-container').innerHTML = data ? data.map(p => {
                 const visual = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-6xl font-black text-gray-800">${p.name.substring(0,1).toUpperCase()}</div>`;
-                
-                return `
-                <div class="bg-premium border border-white/5 p-6 hover:border-white/20 transition duration-300 group flex flex-col h-full">
-                    <div class="h-48 bg-darker mb-6 overflow-hidden flex items-center justify-center">
-                        ${visual}
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3>
-                        <p class="text-gray-500 text-xs font-bold uppercase tracking-widest mb-6">⏱️ ${p.prep_time}s</p>
-                    </div>
-                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-auto">
-                        <span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Prix</span>
-                        <span class="text-2xl font-black text-white">${p.price.toFixed(2)} €</span>
-                    </div>
-                </div>
-            `}).join('') : '';
+                return `<div class="bg-premium border border-white/5 p-6 hover:border-white/20 transition duration-300 group flex flex-col h-full"><div class="h-48 bg-darker mb-6 overflow-hidden flex items-center justify-center">${visual}</div><div class="flex-1"><h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3><p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-6">⏱️ Prêt en ${p.prep_time}s</p></div><div class="flex justify-between items-end border-t border-white/5 pt-4 mt-auto"><span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Prix</span><span class="text-2xl font-black text-white">${p.price.toFixed(2)} €</span></div></div>`;
+            }).join('') : '';
         }
 
         checkUser(); loadMenu();
