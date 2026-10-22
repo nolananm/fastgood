@@ -26,6 +26,7 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased relative overflow-x-hidden">
 
+    <!-- NAVBAR -->
     <nav class="fixed w-full glass-panel z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -50,6 +51,7 @@
         </div>
     </nav>
 
+    <!-- MODAL AUTH -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-md z-[60] flex items-center justify-center p-4">
         <div class="bg-premium border border-white/5 p-10 w-full max-w-md relative shadow-2xl">
             <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-600 hover:text-white font-black text-xl transition">X</button>
@@ -67,11 +69,12 @@
         </div>
     </div>
 
+    <!-- HERO SECTION -->
     <div class="relative h-screen flex items-center justify-center overflow-hidden bg-darker">
         <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1586816001966-79b736744398?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-40 animate-kenburns"></div>
         <div class="absolute inset-0 z-10 bg-gradient-to-t from-darker via-darker/60 to-transparent"></div>
         <div class="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
-            <div class="inline-block border border-white/20 text-gray-300 px-6 py-2 text-xs font-bold uppercase tracking-widest mb-8 backdrop-blur-md">Premium Smash Burgers</div>
+            <div class="inline-block border border-white/20 text-gray-300 px-6 py-2 text-[10px] font-bold uppercase tracking-widest mb-8 backdrop-blur-md">Premium Smash Burgers</div>
             <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 leading-tight uppercase">L'Excellence.<br><span class="text-neon text-glow">Sans Attente.</span></h1>
             <p class="mt-6 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-medium mb-10 leading-relaxed">Des viandes caramélisées, un cheddar affiné, une exécution millimétrée. Commandez en borne, dégustez instantanément.</p>
             <a href="#menu-section" class="inline-block bg-white text-dark font-black uppercase tracking-widest px-10 py-4 hover:bg-neon hover:text-white transition duration-300">Découvrir la carte</a>
@@ -79,59 +82,73 @@
     </div>
 
     <div class="bg-neon text-dark py-4 overflow-hidden border-y border-neon flex relative z-30">
-        <div class="animate-marquee inline-block font-black text-sm tracking-widest uppercase space-x-12">
+        <div class="animate-marquee inline-block font-black text-[10px] tracking-widest uppercase space-x-12">
             <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span> <span>•</span> <span>PROGRAMME FIDGOOD</span> <span>•</span> <span>SMASH BURGERS PREMIUM</span> <span>•</span> <span>SERVICE ÉCLAIR</span> <span>•</span> <span>CHEDDAR AFFINÉ</span>
         </div>
     </div>
 
-    <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-20">
-        <div class="mb-12 border-b border-white/10 pb-6 flex justify-between items-end">
+    <!-- ESPACE CLIENT FIDGOOD VIP -->
+    <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-24">
+        <div class="mb-16 border-b border-white/5 pb-8 flex justify-between items-end">
             <div>
-                <h2 class="text-4xl font-black uppercase tracking-tighter">Espace <span class="text-neon">FidGood</span></h2>
-                <p class="text-gray-500 mt-2">Client <span id="client-number" class="font-bold text-white">...</span></p>
+                <h2 class="text-5xl font-black uppercase tracking-tighter">Club <span class="text-neon">FidGood</span></h2>
+                <p class="text-gray-500 mt-2 font-bold tracking-widest uppercase text-xs">Client <span id="client-number" class="text-white">...</span></p>
             </div>
             <div class="text-right">
-                <div class="text-gray-500 text-xs uppercase tracking-widest mb-1">Solde actuel</div>
+                <div class="text-gray-500 text-[10px] uppercase tracking-widest mb-1 font-bold">Solde Actuel</div>
                 <div class="text-4xl font-black text-white"><span id="client-points" class="text-gold">0</span> 👑</div>
             </div>
         </div>
         
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            <!-- NOUVEAU BLOC : LES RECOMPENSES -->
-            <div class="glass-panel p-8 border border-white/5 lg:col-span-3">
-                <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">👑 Le Catalogue des Récompenses (Directement sur la Borne)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 text-xs font-bold uppercase tracking-wide">
-                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">30 👑</span> IceGood Mini / Boisson 33cl</div>
-                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">60 👑</span> IceGood / Boisson 50cl</div>
-                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">90 👑</span> Classic Burger</div>
-                    <div class="bg-darker/50 p-4 rounded-xl border border-white/10 flex flex-col items-center justify-center text-center"><span class="text-gold text-2xl font-black mb-2">120 👑</span> Deluxe Burger <br> <span class="text-gray-500 my-1">OU</span> -10% sur l'addition</div>
-                    <div class="bg-gold/10 p-4 rounded-xl border border-gold/30 flex flex-col items-center justify-center text-center text-gold"><span class="text-3xl font-black mb-2">200 👑</span> Festin des Rois <br><span class="text-[10px] text-gray-400">(Burger + 33cl + Dessert)</span> <span class="text-gray-500 my-1">OU</span> -25% sur l'addition</div>
+            
+            <!-- PROGRESSION DES COURONNES -->
+            <div class="glass-panel p-10 border border-white/5 lg:col-span-3">
+                <div class="flex justify-between items-end mb-10">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Tes Paliers de Récompenses</h3>
+                    <span class="text-gold font-black text-xl tracking-tighter"><span id="progress-text">0</span> / 200</span>
+                </div>
+                
+                <!-- Jauge -->
+                <div class="relative w-full h-2 bg-darker rounded-full mb-12 overflow-hidden border border-white/5">
+                    <div id="crown-progress" class="absolute top-0 left-0 h-full bg-gradient-to-r from-orange-500 via-neon to-gold rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(255,215,0,0.5)]" style="width: 0%;"></div>
+                </div>
+
+                <!-- Paliers -->
+                <div class="grid grid-cols-5 gap-2 text-center relative z-10">
+                    <div id="tier-30" class="transition-all duration-500 opacity-40 grayscale"><div class="text-gold font-black text-2xl mb-2">30</div><div class="text-[10px] font-bold uppercase tracking-wider text-gray-500">IceGood Mini</div></div>
+                    <div id="tier-60" class="transition-all duration-500 opacity-40 grayscale"><div class="text-gold font-black text-2xl mb-2">60</div><div class="text-[10px] font-bold uppercase tracking-wider text-gray-500">IceGood 50cl</div></div>
+                    <div id="tier-90" class="transition-all duration-500 opacity-40 grayscale"><div class="text-gold font-black text-2xl mb-2">90</div><div class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Classic Burger</div></div>
+                    <div id="tier-120" class="transition-all duration-500 opacity-40 grayscale"><div class="text-gold font-black text-2xl mb-2">120</div><div class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Deluxe / -10%</div></div>
+                    <div id="tier-200" class="transition-all duration-500 opacity-40 grayscale"><div class="text-gold font-black text-2xl mb-2">200</div><div class="text-[10px] font-bold uppercase tracking-wider text-gray-500">Festin / -25%</div></div>
                 </div>
             </div>
 
+            <!-- Commandes -->
             <div class="lg:col-span-2 space-y-8">
                 <div>
-                    <div class="flex justify-between items-center mb-4"><h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">En Préparation</h3><button onclick="loadOrders()" class="text-xs text-white hover:text-neon uppercase tracking-widest transition">Actualiser</button></div>
+                    <div class="flex justify-between items-center mb-4"><h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">En Préparation</h3><button onclick="loadOrders()" class="text-[10px] font-bold text-white hover:text-neon uppercase tracking-widest transition">Actualiser</button></div>
                     <div id="orders-encours" class="space-y-4"></div>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Historique</h3>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Historique</h3>
                     <div id="orders-historique" class="space-y-2"></div>
                 </div>
             </div>
 
+            <!-- Codes Promo -->
             <div class="space-y-8">
                 <div class="glass-panel p-8 border border-white/5">
-                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Ajouter un Code</h3>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Ajouter un Code</h3>
                     <div class="flex flex-col gap-4">
-                        <input type="text" id="promo-input" placeholder="CODE PROMO" class="bg-darker border border-white/10 px-4 py-3 outline-none uppercase font-bold text-white focus:border-neon transition text-sm">
-                        <button onclick="savePromo()" class="bg-white text-dark font-black py-3 uppercase tracking-widest hover:bg-neon hover:text-white transition">Valider</button>
+                        <input type="text" id="promo-input" placeholder="CODE PROMO" class="bg-darker border border-white/5 px-4 py-4 outline-none uppercase font-bold text-white focus:border-neon transition text-sm tracking-widest text-center">
+                        <button onclick="savePromo()" class="bg-white text-dark font-black py-4 uppercase tracking-widest hover:bg-neon hover:text-white transition">Valider</button>
                     </div>
-                    <p id="promo-msg" class="text-sm mt-4 font-bold h-5"></p>
+                    <p id="promo-msg" class="text-xs mt-4 font-bold h-4 text-center"></p>
                 </div>
                 <div class="glass-panel p-8 border border-white/5">
-                    <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">Codes Disponibles</h3>
-                    <div id="my-promos" class="text-sm text-gray-500 font-medium"></div>
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Codes Disponibles</h3>
+                    <div id="my-promos" class="text-xs text-gray-500 font-bold uppercase tracking-widest"></div>
                 </div>
             </div>
         </div>
@@ -148,15 +165,15 @@
         </div>
     </div>
 
-    <!-- CARTE -->
-    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative">
+    <!-- CARTE TYPOGRAPHIQUE -->
+    <div id="menu-section" class="max-w-7xl mx-auto px-4 py-32 relative">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16">
-            <div><h2 class="text-5xl font-black uppercase tracking-tighter mb-4">La Carte.</h2><p class="text-gray-500 font-medium">L'essentiel, exécuté à la perfection.</p></div>
+            <div><h2 class="text-6xl font-black uppercase tracking-tighter mb-4">La Carte.</h2><p class="text-gray-500 font-bold tracking-widest uppercase text-xs">L'essentiel, exécuté à la perfection.</p></div>
         </div>
         <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Chargement...</div></div>
     </div>
 
-    <footer class="bg-darker border-t border-white/5 py-12 text-center"><div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div><p class="text-gray-600 text-xs uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p></footer>
+    <footer class="bg-darker border-t border-white/5 py-12 text-center"><div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div><p class="text-gray-600 text-[10px] font-bold uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p></footer>
 
     <!-- SCRIPT -->
     <script type="module">
@@ -190,7 +207,28 @@
                 if (prof) {
                     document.getElementById('user-email').innerText = prof.first_name ? `${prof.first_name}` : session.user.email;
                     document.getElementById('client-number').innerText = prof.client_number || '...';
-                    document.getElementById('client-points').innerText = prof.fidgood_points;
+                    
+                    // Mise à jour de la Jauge de Progression
+                    let pts = prof.fidgood_points || 0;
+                    document.getElementById('client-points').innerText = pts;
+                    document.getElementById('progress-text').innerText = pts;
+                    
+                    let percent = Math.min((pts / 200) * 100, 100);
+                    document.getElementById('crown-progress').style.width = `${percent}%`;
+
+                    // Allumer les paliers atteints
+                    [30, 60, 90, 120, 200].forEach(tier => {
+                        let el = document.getElementById(`tier-${tier}`);
+                        if(pts >= tier) {
+                            el.classList.remove('opacity-40', 'grayscale');
+                            el.classList.add('opacity-100', 'scale-110');
+                            el.querySelector('div:last-child').classList.replace('text-gray-500', 'text-white');
+                        } else {
+                            el.classList.add('opacity-40', 'grayscale');
+                            el.classList.remove('opacity-100', 'scale-110');
+                            el.querySelector('div:last-child').classList.replace('text-white', 'text-gray-500');
+                        }
+                    });
                 }
                 loadPromos(); loadOrders();
             }
@@ -203,55 +241,68 @@
 
             const renderEncours = (o) => {
                 const isReady = o.status === 'prete';
-                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-2 py-1 rounded text-[10px] font-bold mr-1 inline-block mb-1 uppercase tracking-widest text-gray-300">${i.name}</span>`).join('') : '<span class="text-xs text-gray-600">Détails indisponibles</span>';
-                return `<div class="glass-panel p-6 border ${isReady ? 'border-neon shadow-[0_0_15px_rgba(255,0,85,0.2)]' : 'border-white/5'} transition-all">
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-2 py-1 rounded text-[9px] font-bold mr-1 inline-block mb-1 uppercase tracking-widest text-white">${i.name}</span>`).join('') : '<span class="text-[10px] text-gray-600 uppercase tracking-widest">Détails indisponibles</span>';
+                return `<div class="glass-panel p-6 border ${isReady ? 'border-neon shadow-[0_0_20px_rgba(255,0,85,0.15)]' : 'border-white/5'} transition-all group">
                     <div class="flex justify-between items-start mb-4">
-                        <div class="flex-1"><div class="text-white font-black text-lg mb-3">#${o.id.substring(0,6).toUpperCase()}</div><div class="flex flex-wrap gap-1">${items}</div></div>
-                        <div class="text-right ml-4"><span class="${isReady ? 'text-neon border-neon' : 'text-gray-400 border-gray-600'} border px-3 py-1 text-[10px] font-bold uppercase tracking-widest">${o.status.replace('_', ' ')}</span></div>
+                        <div class="flex-1"><div class="text-white font-black text-xl mb-3 tracking-wide">#${o.id.substring(0,6).toUpperCase()}</div><div class="flex flex-wrap gap-1">${items}</div></div>
+                        <div class="text-right ml-4"><span class="${isReady ? 'text-neon border-neon' : 'text-gray-500 border-gray-700'} border px-3 py-1 text-[10px] font-bold uppercase tracking-widest">${o.status.replace('_', ' ')}</span></div>
                     </div>
-                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-2"><span class="text-[10px] text-gray-500 uppercase tracking-widest">Attente: ${o.estimated_time}s</span><span class="font-black text-xl">${o.total_price.toFixed(2)} €</span></div>
+                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-2"><span class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Attente estimée: ${o.estimated_time}s</span><span class="font-black text-2xl text-white">${o.total_price.toFixed(2)} €</span></div>
                 </div>`;
             };
 
             const renderHisto = (o) => {
                 const items = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
-                return `<div class="flex justify-between items-center bg-premium p-4 border border-white/5 hover:bg-white/5 transition"><div class="flex-1 pr-4"><div class="text-gray-300 font-bold text-sm mb-1">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-xs text-gray-500 truncate">${items}</div></div><div class="text-right"><div class="font-bold text-gray-400">${o.total_price.toFixed(2)} €</div><div class="text-[10px] text-gray-600 uppercase mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div></div></div>`;
+                return `<div class="flex justify-between items-center bg-premium p-5 border border-white/5 hover:bg-white/5 transition group"><div class="flex-1 pr-4"><div class="text-gray-300 font-black text-sm mb-1 uppercase tracking-widest">#${o.id.substring(0,6).toUpperCase()}</div><div class="text-[10px] text-gray-500 uppercase tracking-widest font-bold truncate">${items}</div></div><div class="text-right"><div class="font-black text-white text-lg">${o.total_price.toFixed(2)} €</div><div class="text-[9px] text-gray-600 font-bold uppercase tracking-widest mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div></div></div>`;
             };
 
             const encours = data.filter(o => o.status !== 'terminee'); const histo = data.filter(o => o.status === 'terminee');
-            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucune commande en cours.</div>';
-            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-600 text-sm font-bold uppercase tracking-widest py-6">Aucun historique.</div>';
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-600 text-xs font-bold uppercase tracking-widest py-6">Aucune commande en cours.</div>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-600 text-xs font-bold uppercase tracking-widest py-6">Aucun historique.</div>';
         };
 
         window.savePromo = async function() {
             const code = document.getElementById('promo-input').value.toUpperCase(); const msg = document.getElementById('promo-msg');
             if(!code) return;
             const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
-            if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-sm mt-4 font-bold text-neon"; return; }
+            if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-[10px] mt-4 font-bold text-neon uppercase tracking-widest"; return; }
             const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
-            if(exist) { msg.innerText = "Code déjà utilisé."; msg.className = "text-sm mt-4 font-bold text-gray-400"; return; }
+            if(exist) { msg.innerText = "Code déjà utilisé."; msg.className = "text-[10px] mt-4 font-bold text-gray-400 uppercase tracking-widest"; return; }
+            
             if (promo.discount_type === 'points') {
                 const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
                 await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
-                msg.innerText = `+${promo.discount_value} couronnes créditées.`; msg.className = "text-sm mt-4 font-bold text-white";
+                msg.innerText = `+${promo.discount_value} couronnes !`; msg.className = "text-[10px] mt-4 font-bold text-gold uppercase tracking-widest";
             } else {
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
-                msg.innerText = "Code enregistré pour la borne."; msg.className = "text-sm mt-4 font-bold text-white";
+                msg.innerText = "Code ajouté (Borne)."; msg.className = "text-[10px] mt-4 font-bold text-white uppercase tracking-widest";
             }
             document.getElementById('promo-input').value = ""; checkUser();
         };
 
         async function loadPromos() {
             const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
-            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through border-gray-800':'text-white border-white/20'} border px-3 py-1 mr-2 mb-2 inline-block font-bold text-xs uppercase tracking-widest">${p.code}</span>`).join('') : "Aucun code enregistré.";
+            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through border-gray-800':'text-neon border-neon/30 bg-neon/10'} border px-3 py-1 mr-2 mb-2 inline-block font-bold text-[10px] uppercase tracking-widest rounded">${p.code}</span>`).join('') : "Aucun code enregistré.";
         }
 
         async function loadMenu() {
             const { data } = await supabase.from('products').select('*');
             document.getElementById('menu-container').innerHTML = data ? data.map(p => {
-                const visual = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-500 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-6xl font-black text-gray-800">${p.name.substring(0,1).toUpperCase()}</div>`;
-                return `<div class="bg-premium border border-white/5 p-6 hover:border-white/20 transition duration-300 group flex flex-col h-full"><div class="h-48 bg-darker mb-6 overflow-hidden flex items-center justify-center">${visual}</div><div class="flex-1"><h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3><p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-6">⏱️ Prêt en ${p.prep_time}s</p></div><div class="flex justify-between items-end border-t border-white/5 pt-4 mt-auto"><span class="text-gray-500 text-xs font-bold uppercase tracking-widest">Prix</span><span class="text-2xl font-black text-white">${p.price.toFixed(2)} €</span></div></div>`;
+                return `
+                <div class="bg-premium border border-white/5 p-8 hover:border-neon transition-all duration-500 group flex flex-col h-full relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-[150px] font-black text-white/[0.02] group-hover:text-neon/[0.05] transition-colors duration-500 pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
+                    <div class="flex-1 z-10">
+                        <h3 class="text-2xl font-black mb-2 uppercase tracking-wide">${p.name}</h3>
+                        <div class="w-10 h-1 bg-neon/50 mb-6 group-hover:w-full transition-all duration-500"></div>
+                        <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">⏱️ Préparation : ${p.prep_time}s</p>
+                    </div>
+                    <div class="flex justify-between items-end pt-8 mt-auto z-10">
+                        <span class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Prix</span>
+                        <span class="text-3xl font-black text-white">${p.price.toFixed(2)} €</span>
+                    </div>
+                </div>
+                `
             }).join('') : '';
         }
 
