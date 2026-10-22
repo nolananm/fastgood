@@ -5,63 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borne - FastGood</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', gold: '#FFD700', premium: '#1a1a1a' } } } }</script>
+    <script>
+        tailwind.config = { 
+            theme: { extend: { colors: { brand: '#FF0055', cheese: '#FFB800', melt: '#FF8A00', dark: '#0f0f13', card: '#1a1a24' } } } 
+        }
+    </script>
+    <style>
+        .cheese-shadow { box-shadow: 0 10px 40px -10px rgba(255, 184, 0, 0.4); }
+        .neon-shadow { box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
+    </style>
 </head>
-<body class="bg-dark text-white font-sans antialiased h-screen flex flex-col overflow-hidden">
+<body class="bg-dark text-white font-sans antialiased h-screen flex flex-col overflow-hidden selection:bg-cheese selection:text-dark">
 
-    <div id="auth-screen" class="absolute inset-0 bg-darker z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/5 p-10 w-full max-w-md text-center shadow-2xl">
-            <h2 class="text-3xl font-black mb-8 tracking-wide">BORNE <span class="text-neon">STAFF</span></h2>
-            <input type="email" id="staff-email" placeholder="Email Staff" class="w-full bg-dark border border-white/10 px-4 py-4 mb-4 outline-none focus:border-neon transition text-sm">
-            <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-4 py-4 mb-6 outline-none focus:border-neon transition text-sm">
-            <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition">Déverrouiller</button>
+    <!-- ECRAN 1 : CONNEXION STAFF -->
+    <div id="auth-screen" class="absolute inset-0 bg-dark z-50 flex items-center justify-center">
+        <div class="bg-card border-2 border-brand/30 p-10 w-full max-w-md text-center rounded-3xl neon-shadow">
+            <div class="text-6xl mb-4">🍟</div>
+            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase">BORNE <span class="text-brand">STAFF</span></h2>
+            <input type="email" id="staff-email" placeholder="Email Staff" class="w-full bg-dark border border-white/10 px-5 py-4 mb-4 rounded-xl outline-none focus:border-brand transition-colors font-bold text-center text-lg">
+            <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-5 py-4 mb-6 rounded-xl outline-none focus:border-brand transition-colors font-bold text-center text-lg">
+            <button onclick="loginStaff()" class="w-full bg-brand text-white font-black py-5 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-xl shadow-lg shadow-brand/40">Déverrouiller</button>
         </div>
     </div>
 
-    <div id="setup-screen" class="hidden absolute inset-0 bg-darker z-40 flex items-center justify-center">
-        <div class="bg-premium border border-white/5 p-10 w-full max-w-md text-center">
-            <h2 class="text-2xl font-black mb-8 uppercase tracking-wide">Choix du Restaurant</h2>
-            <select id="restaurant-select" class="w-full bg-dark border border-white/10 px-4 py-4 mb-6 outline-none text-white font-bold uppercase tracking-widest text-sm"></select>
-            <button onclick="startBorne()" class="w-full bg-white text-dark font-black py-4 uppercase tracking-widest hover:bg-neon hover:text-white transition">Lancer la caisse</button>
+    <!-- ECRAN 2 : CONFIGURATION DU RESTO -->
+    <div id="setup-screen" class="hidden absolute inset-0 bg-dark z-40 flex items-center justify-center">
+        <div class="bg-card border-2 border-cheese/30 p-10 w-full max-w-md text-center rounded-3xl cheese-shadow">
+            <h2 class="text-2xl font-black mb-8 uppercase tracking-widest text-cheese">Choix du Restaurant</h2>
+            <select id="restaurant-select" class="w-full bg-dark border border-white/10 px-5 py-5 mb-8 rounded-xl outline-none text-white font-black uppercase tracking-widest text-lg text-center"></select>
+            <button onclick="startBorne()" class="w-full bg-gradient-to-r from-cheese to-melt text-dark font-black py-5 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-xl cheese-shadow">Lancer la borne</button>
         </div>
     </div>
 
+    <!-- ECRAN 3 : CAISSE PRINCIPALE -->
     <div id="app-screen" class="hidden flex-1 flex flex-col h-full">
-        <header class="bg-darker border-b border-white/5 p-5 flex justify-between items-center">
-            <div class="text-2xl font-black tracking-tighter">FAST<span class="text-neon">GOOD</span></div>
-            <div id="active-restaurant-name" class="text-white font-bold bg-white/5 border border-white/10 px-6 py-2 text-xs uppercase tracking-widest">...</div>
-            <button onclick="logout()" class="text-gray-500 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition">Fermer la caisse</button>
+        <!-- HEADER -->
+        <header class="bg-card border-b-2 border-cheese p-5 flex justify-between items-center shadow-lg relative z-20">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-cheese to-melt rounded-xl flex items-center justify-center font-black text-dark text-xl cheese-shadow">FG</div>
+                <div class="text-3xl font-black tracking-tighter">FAST<span class="text-brand">GOOD</span></div>
+            </div>
+            <div id="active-restaurant-name" class="text-white font-black bg-dark border border-white/10 px-6 py-2 rounded-xl text-sm uppercase tracking-widest shadow-inner">...</div>
+            <button onclick="logout()" class="text-gray-400 bg-dark px-4 py-2 rounded-xl hover:text-brand hover:border-brand border border-white/5 text-xs font-bold uppercase tracking-widest transition-colors">Fermer la caisse</button>
         </header>
 
         <div class="flex flex-1 overflow-hidden">
-            <div class="flex-1 p-8 overflow-y-auto bg-dark border-r border-white/5">
-                <div class="bg-premium p-6 border border-white/5 mb-10 shadow-2xl relative overflow-hidden">
+            <!-- COLONNE GAUCHE : MENU & CLIENT -->
+            <div class="flex-1 p-6 overflow-y-auto bg-dark custom-scrollbar">
+                
+                <!-- Zone VIP -->
+                <div class="bg-card p-6 rounded-3xl border-2 border-cheese/20 mb-8 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 text-9xl opacity-5">👑</div>
                     <div class="flex gap-4 relative z-10">
-                        <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres)" class="bg-dark border border-white/10 px-6 py-4 flex-1 text-lg uppercase outline-none focus:border-neon transition font-bold tracking-widest text-center">
-                        <button onclick="searchClient()" class="bg-white text-dark px-10 py-4 font-black uppercase tracking-widest hover:bg-neon hover:text-white transition">Identifier</button>
+                        <input type="text" id="client-id-input" placeholder="N° Client (6 chiffres)" class="bg-dark border border-white/10 px-6 py-4 rounded-xl flex-1 text-2xl uppercase outline-none focus:border-cheese transition font-black tracking-widest text-center shadow-inner">
+                        <button onclick="searchClient()" class="bg-cheese text-dark px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:opacity-90 transition shadow-lg shadow-cheese/20 text-lg">Identifier</button>
                     </div>
                     <div id="client-info" class="mt-6 relative z-10"></div>
-                    <div id="loyalty-actions" class="hidden mt-6 pt-6 border-t border-white/5 flex flex-col gap-4 relative z-10">
-                        <select id="promo-select" class="bg-dark border border-white/10 px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-neon transition" onchange="applyDiscounts()"><option value="">-- Aucun code promo --</option></select>
-                        <select id="reward-select" class="bg-dark border border-gold/30 text-gold px-6 py-4 outline-none w-full text-xs font-bold uppercase tracking-widest focus:border-gold transition" onchange="applyDiscounts()"><option value="">-- Utiliser des Couronnes 👑 --</option></select>
+                    <div id="loyalty-actions" class="hidden mt-6 pt-6 border-t border-white/10 flex flex-col gap-4 relative z-10">
+                        <select id="promo-select" class="bg-dark border border-white/10 px-6 py-4 rounded-xl outline-none w-full text-sm font-black uppercase tracking-widest focus:border-cheese transition" onchange="applyDiscounts()"><option value="">-- Aucun code promo --</option></select>
+                        <select id="reward-select" class="bg-dark border-2 border-cheese/50 text-cheese px-6 py-4 rounded-xl outline-none w-full text-sm font-black uppercase tracking-widest focus:border-cheese transition cheese-shadow" onchange="applyDiscounts()"><option value="">-- Utiliser des Couronnes 👑 --</option></select>
                     </div>
                 </div>
 
-                <div id="borne-menu-container" class="space-y-12"></div>
+                <!-- La Carte -->
+                <div id="borne-menu-container" class="space-y-10"></div>
             </div>
 
-            <!-- TICKET -->
-            <div class="w-96 bg-premium flex flex-col border-l border-white/5 shadow-2xl">
-                <div class="p-8 border-b border-white/5"><h2 class="font-black text-2xl uppercase tracking-widest">Commande</h2></div>
-                <div id="cart-container" class="flex-1 p-8 overflow-y-auto space-y-4"></div>
-                <div class="p-8 bg-darker border-t border-white/5">
-                    <div class="flex justify-between items-center text-gray-500 text-xs font-bold mb-3 uppercase tracking-widest"><span>Sous-total</span><span id="sub-price" class="text-white">0.00 €</span></div>
-                    <div id="discount-line" class="hidden flex justify-between items-center text-neon text-xs font-black mb-6 bg-neon/10 px-4 py-3 border border-neon/20 uppercase tracking-widest"><span>Avantage</span><span id="discount-amount">- 0.00 €</span></div>
-                    <div class="flex justify-between items-end mb-8 border-t border-white/5 pt-6 mt-4">
-                        <span class="text-gray-500 font-bold uppercase tracking-widest text-xs">Total à Payer</span>
-                        <span class="text-5xl font-black text-white" id="total-price">0.00 €</span>
+            <!-- COLONNE DROITE : TICKET DE CAISSE -->
+            <div class="w-[450px] bg-card flex flex-col border-l border-white/10 shadow-2xl relative z-10">
+                <div class="p-8 border-b border-white/5 bg-dark/50 flex items-center justify-between">
+                    <h2 class="font-black text-2xl uppercase tracking-widest text-cheese">Ticket</h2>
+                    <span class="text-3xl">🧾</span>
+                </div>
+                
+                <div id="cart-container" class="flex-1 p-6 overflow-y-auto space-y-3 bg-dark/20 custom-scrollbar"></div>
+                
+                <div class="p-8 bg-card border-t-2 border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                    <div class="flex justify-between items-center text-gray-400 text-sm font-black mb-4 uppercase tracking-widest"><span>Sous-total</span><span id="sub-price" class="text-white">0.00 €</span></div>
+                    <div id="discount-line" class="hidden flex justify-between items-center text-dark text-sm font-black mb-6 bg-cheese px-5 py-4 rounded-xl uppercase tracking-widest cheese-shadow"><span>Avantage FidGood</span><span id="discount-amount">- 0.00 €</span></div>
+                    <div class="flex justify-between items-end mb-8 border-t border-white/10 pt-6">
+                        <span class="text-gray-400 font-black uppercase tracking-widest text-sm">Total à Payer</span>
+                        <span class="text-6xl font-black text-white" id="total-price">0.00 <span class="text-3xl text-brand">€</span></span>
                     </div>
-                    <button id="btn-encaissement" class="w-full bg-neon text-white py-6 font-black text-xl uppercase tracking-widest hover:bg-white hover:text-dark transition">ENCAISSER</button>
+                    <button id="btn-encaissement" class="w-full bg-brand text-white py-6 rounded-2xl font-black text-2xl uppercase tracking-widest hover:opacity-90 transition neon-shadow">ENCAISSER</button>
                 </div>
             </div>
         </div>
@@ -109,8 +135,6 @@
         async function loadMenu() {
             const { data: cats } = await supabase.from('categories').select('*'); categories = cats || [];
             const { data: prods } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false }); allProducts = prods || [];
-            
-            // On récupère le stock de CE restaurant
             const { data: stocks } = await supabase.from('restaurant_stock').select('*').eq('restaurant_id', activeRestaurantId);
             const restoStocks = stocks || [];
 
@@ -120,29 +144,40 @@
                 if(catProds.length > 0) {
                     htmlMenu += `
                     <div>
-                        <h2 class="text-xl font-black uppercase tracking-widest text-neon mb-6">${c.name}</h2>
+                        <div class="inline-block bg-white text-dark px-6 py-2 rounded-xl mb-6 font-black uppercase tracking-widest shadow-lg">${c.name}</div>
                         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                             ${catProds.map(p => {
                                 let stockInfo = restoStocks.find(s => s.product_id === p.id);
                                 let isOOS = stockInfo ? !stockInfo.in_stock : false;
 
-                                const overlay = isOOS ? `<div class="absolute inset-0 bg-darker/80 z-20 flex items-center justify-center backdrop-blur-sm"><span class="bg-red-500 text-white font-black px-4 py-2 text-xl uppercase tracking-widest rotate-[-10deg]">RUPTURE</span></div>` : '';
+                                const overlay = isOOS ? `<div class="absolute inset-0 bg-dark/80 z-20 flex items-center justify-center backdrop-blur-sm"><span class="bg-brand text-white font-black px-6 py-3 rounded-xl text-xl uppercase tracking-widest shadow-2xl border-2 border-brand/50 rotate-[-10deg]">RUPTURE</span></div>` : '';
                                 const click = isOOS ? '' : `onclick="window.addToCart('${p.id}')"`;
-                                const cls = isOOS ? 'cursor-not-allowed opacity-75' : 'hover:border-neon';
+                                const cls = isOOS ? 'cursor-not-allowed opacity-70' : 'hover:border-cheese hover:-translate-y-1 hover:shadow-[0_15px_30px_-5px_rgba(255,184,0,0.3)] active:scale-95 cursor-pointer';
                                 
+                                const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-6xl bg-gradient-to-br from-cheese to-melt">🧀</div>`;
+
                                 return `
-                                <button ${click} class="bg-darker border border-white/5 p-6 text-left transition-all flex flex-col justify-between h-full relative overflow-hidden group ${cls}">
+                                <div ${click} class="bg-card border-2 border-white/5 rounded-3xl transition-all duration-200 flex flex-col h-full relative overflow-hidden group ${cls}">
                                     ${overlay}
-                                    <div class="absolute -right-4 -bottom-4 text-[100px] font-black text-white/[0.02] group-hover:text-neon/[0.05] transition-colors pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
-                                    <div class="z-10 w-full"><span class="font-black text-sm uppercase tracking-wide leading-tight block mb-2 ${isOOS?'text-gray-500':''}">${p.name}</span><div class="w-6 h-1 ${isOOS?'bg-gray-600':'bg-neon/30'} mb-4 group-hover:w-full transition-all duration-300"></div></div>
-                                    <span class="${isOOS?'text-gray-600':'text-white'} font-black text-xl block mt-4 z-10">${p.price.toFixed(2)} €</span>
-                                </button>
+                                    
+                                    <!-- Image HAUT -->
+                                    <div class="h-40 w-full bg-dark overflow-hidden relative border-b border-white/5">
+                                        ${visuel}
+                                    </div>
+                                    
+                                    <!-- Contenu BAS -->
+                                    <div class="flex-1 p-5 flex flex-col">
+                                        <span class="font-black text-lg uppercase tracking-wide leading-tight block mb-2 ${isOOS?'text-gray-500':'text-white'}">${p.name}</span>
+                                        <div class="w-8 h-1 ${isOOS?'bg-gray-600':'bg-cheese'} rounded-full mb-auto mt-2"></div>
+                                        <span class="${isOOS?'text-gray-600':'text-cheese'} font-black text-2xl block mt-6">${p.price.toFixed(2)} €</span>
+                                    </div>
+                                </div>
                             `}).join('')}
                         </div>
                     </div>`;
                 }
             });
-            document.getElementById('borne-menu-container').innerHTML = htmlMenu || '<p class="text-gray-500">Carte vide</p>';
+            document.getElementById('borne-menu-container').innerHTML = htmlMenu || '<p class="text-center text-gray-500 py-10 font-bold uppercase">Carte vide</p>';
         }
 
         window.searchClient = async function() {
@@ -152,17 +187,17 @@
             
             if (data) {
                 currentClient = data;
-                infoDiv.innerHTML = `<div class="bg-green-500/10 border border-green-500/20 text-green-400 px-6 py-4 flex justify-between items-center"><span class="font-bold text-xs uppercase tracking-widest">✅ ${data.first_name || 'Client'}</span><span class="font-black text-xl tracking-widest">👑 ${data.fidgood_points}</span></div>`;
+                infoDiv.innerHTML = `<div class="bg-cheese/20 border-2 border-cheese/50 text-cheese px-6 py-5 rounded-2xl flex justify-between items-center shadow-lg"><span class="font-black text-sm uppercase tracking-widest text-white">✅ ${data.first_name || 'Client'}</span><span class="font-black text-2xl tracking-widest">👑 ${data.fidgood_points}</span></div>`;
                 loyActions.classList.remove('hidden');
                 
                 const { data: userPromos } = await supabase.from('user_promocodes').select('code').eq('client_id', data.id).eq('is_used', false);
                 if (userPromos?.length) {
                     const { data: fullPromos } = await supabase.from('promocodes').select('*').in('code', userPromos.map(u=>u.code)).neq('discount_type', 'points');
                     availablePromos = fullPromos || [];
-                    document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code promo --</option>' + availablePromos.map(p => `<option value="${p.code}">${p.code} (-${p.discount_value}${p.discount_type==='percent'?'%':'€'})</option>`).join('');
-                } else { document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code promo --</option>'; availablePromos = []; }
+                    document.getElementById('promo-select').innerHTML = '<option value="">-- Sélectionner un Code --</option>' + availablePromos.map(p => `<option value="${p.code}">${p.code} (-${p.discount_value}${p.discount_type==='percent'?'%':'€'})</option>`).join('');
+                } else { document.getElementById('promo-select').innerHTML = '<option value="">-- Aucun code dispo --</option>'; availablePromos = []; }
 
-                let rewardOptions = '<option value="">-- Choisir une Récompense 👑 --</option>';
+                let rewardOptions = '<option value="">-- Sélectionner une Récompense 👑 --</option>';
                 REWARDS.forEach(r => {
                     if (data.fidgood_points >= r.points) rewardOptions += `<option value="${r.id}">${r.points} 👑 : ${r.name}</option>`;
                     else rewardOptions += `<option value="${r.id}" disabled>${r.points} 👑 : ${r.name} (Bloqué)</option>`;
@@ -170,7 +205,7 @@
                 document.getElementById('reward-select').innerHTML = rewardOptions;
             } else {
                 currentClient = null; availablePromos = []; loyActions.classList.add('hidden');
-                infoDiv.innerHTML = `<div class="bg-red-500/10 border border-red-500/20 text-red-500 font-bold px-6 py-4 text-xs uppercase tracking-widest text-center">❌ Client Introuvable</div>`;
+                infoDiv.innerHTML = `<div class="bg-brand/10 border-2 border-brand/30 text-brand font-black px-6 py-5 rounded-2xl text-sm uppercase tracking-widest text-center shadow-lg">❌ INTROUVABLE</div>`;
                 document.getElementById('reward-select').value = ""; document.getElementById('promo-select').value = "";
             }
             applyDiscounts();
@@ -196,37 +231,45 @@
                 const r = REWARDS.find(rw => rw.id === selRewardId);
                 if (r.type === 'percent') {
                     discountValuePercent += r.value;
-                    rewardItemHtml += `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">👑 Avantage VIP</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">-${r.value}%</span></div>`;
+                    rewardItemHtml += `<div class="flex justify-between items-center bg-gradient-to-r from-cheese/20 to-transparent text-cheese p-5 rounded-2xl border border-cheese/30 mb-3"><span class="font-black text-sm uppercase tracking-widest">👑 Avantage VIP</span> <span class="font-black tracking-widest uppercase text-xs bg-cheese text-dark px-3 py-1 rounded-lg">-${r.value}%</span></div>`;
                 }
                 if (r.type === 'item') {
-                    rewardItemHtml += `<div class="flex justify-between items-center bg-gold/10 text-gold p-5 border border-gold/30 mb-2"><span class="font-black text-xs uppercase tracking-widest">👑 ${r.name}</span> <span class="font-black tracking-widest uppercase text-[10px] bg-gold/20 px-3 py-1">OFFERT</span></div>`;
+                    rewardItemHtml += `<div class="flex justify-between items-center bg-gradient-to-r from-cheese/20 to-transparent text-cheese p-5 rounded-2xl border border-cheese/30 mb-3"><span class="font-black text-sm uppercase tracking-widest">👑 ${r.name}</span> <span class="font-black tracking-widest uppercase text-xs bg-cheese text-dark px-3 py-1 rounded-lg">OFFERT</span></div>`;
                 }
             }
 
             if(cart.length === 0 && !selRewardId) {
-                container.innerHTML = `<p class="text-gray-600 text-center py-10 font-bold uppercase tracking-widest text-xs">Panier vide.</p>`;
-                document.getElementById('total-price').innerText = "0.00 €"; document.getElementById('sub-price').innerText = "0.00 €"; document.getElementById('discount-line').classList.add('hidden'); return;
+                container.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-gray-500 opacity-50"><span class="text-6xl mb-4">🛒</span><span class="font-black uppercase tracking-widest text-sm">Le plateau est vide</span></div>`;
+                document.getElementById('total-price').innerHTML = `0.00 <span class="text-3xl text-brand">€</span>`; document.getElementById('sub-price').innerText = "0.00 €"; document.getElementById('discount-line').classList.add('hidden'); return;
             }
 
             let totalDiscount = discountValueAmount + (sousTotal * (discountValuePercent / 100));
             let totalFinal = Math.max(0, sousTotal - totalDiscount);
 
-            container.innerHTML = cart.map((item, i) => `<div class="flex justify-between items-center bg-white/5 p-5 border border-white/5 mb-2 group"><span class="font-black text-sm uppercase tracking-wide">${item.name}</span> <div class="flex gap-6 items-center"><span class="text-white font-bold text-lg">${item.price.toFixed(2)}€</span> <button onclick="window.removeFromCart(${i})" class="text-gray-600 font-black hover:text-red-500 transition">X</button></div></div>`).join('');
+            container.innerHTML = cart.map((item, i) => `
+                <div class="flex justify-between items-center bg-dark p-5 rounded-2xl border border-white/5 mb-3 group hover:border-brand/30 transition-colors shadow-sm">
+                    <span class="font-black text-sm uppercase tracking-wide text-white">${item.name}</span> 
+                    <div class="flex gap-4 items-center">
+                        <span class="text-white font-bold text-xl">${item.price.toFixed(2)}€</span> 
+                        <button onclick="window.removeFromCart(${i})" class="bg-white/5 hover:bg-brand text-gray-400 hover:text-white w-8 h-8 flex items-center justify-center rounded-lg font-black transition-colors">✕</button>
+                    </div>
+                </div>
+            `).join('');
             if(rewardItemHtml) container.innerHTML += rewardItemHtml;
 
             document.getElementById('sub-price').innerText = `${sousTotal.toFixed(2)} €`;
             if (totalDiscount > 0) { document.getElementById('discount-line').classList.remove('hidden'); document.getElementById('discount-amount').innerText = `- ${totalDiscount.toFixed(2)} €`; } else { document.getElementById('discount-line').classList.add('hidden'); }
-            document.getElementById('total-price').innerText = `${totalFinal.toFixed(2)} €`;
+            document.getElementById('total-price').innerHTML = `${totalFinal.toFixed(2)} <span class="text-3xl text-brand">€</span>`;
         };
 
         document.getElementById('btn-encaissement').addEventListener('click', async () => {
             const selRewardId = document.getElementById('reward-select')?.value;
             
             if(cart.length === 0 && (!selRewardId || REWARDS.find(rw => rw.id === selRewardId).type === 'percent')) {
-                 alert("Le panier est vide !"); return;
+                 alert("AJOUTEZ AU MOINS UN PRODUIT !"); return;
             }
 
-            const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "ENVOI...";
+            const btn = document.getElementById('btn-encaissement'); btn.disabled = true; btn.innerText = "CUISSON EN COURS...";
             let finalItems = [...cart]; let pointsToDeduct = 0;
             let totalTemps = cart.reduce((acc, item) => acc + item.prep_time, 0);
             let finalPrice = parseFloat(document.getElementById('total-price').innerText);
@@ -247,8 +290,8 @@
                 await supabase.from('profiles').update({ fidgood_points: nouveauxPoints }).eq('id', currentClient.id);
                 const selCode = document.getElementById('promo-select')?.value;
                 if (selCode) await supabase.from('user_promocodes').update({ is_used: true }).eq('client_id', currentClient.id).eq('code', selCode);
-                alert(`COMMANDE VALIDÉE\n\nPoints utilisés : -${pointsToDeduct} 👑\nPoints gagnés : +${Math.floor(finalPrice) * 2} 👑\nNouveau solde : ${nouveauxPoints} couronnes.`);
-            } else { alert("COMMANDE ENVOYÉE EN CUISINE"); }
+                alert(`✅ COMMANDE VALIDÉE !\n\n👑 Points utilisés : -${pointsToDeduct}\n👑 Points gagnés : +${Math.floor(finalPrice) * 2}\n\n👑 Nouveau solde : ${nouveauxPoints} couronnes.`);
+            } else { alert("✅ COMMANDE ENVOYÉE EN CUISINE !"); }
 
             cart = []; currentClient = null; availablePromos = [];
             document.getElementById('client-id-input').value = ""; document.getElementById('client-info').innerHTML = ""; 
