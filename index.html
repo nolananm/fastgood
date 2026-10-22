@@ -9,7 +9,7 @@
         tailwind.config = { 
             theme: { 
                 extend: { 
-                    colors: { brand: '#E60039', dark: '#0a0a0a', card: '#141414', border: '#222222' },
+                    colors: { brand: '#FF0055', dark: '#0a0a0a', card: '#141414', border: '#222222' },
                     animation: { 'marquee': 'marquee 35s linear infinite' },
                     keyframes: { marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } } }
                 } 
@@ -38,7 +38,7 @@
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
                 <div class="flex justify-between items-center h-20">
                     <div class="flex items-center gap-4 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                        <div class="w-8 h-8 bg-brand flex items-center justify-center font-black text-white text-sm">FG</div>
+                        <div class="w-8 h-8 bg-brand flex items-center justify-center font-black text-white text-sm rounded-lg shadow-lg shadow-brand/30">FG</div>
                         <span class="text-xl font-black tracking-tight uppercase">Fast<span class="text-brand">Good</span></span>
                     </div>
                     <div class="hidden md:flex space-x-8 items-center font-bold text-xs text-gray-300 uppercase tracking-widest">
@@ -48,7 +48,7 @@
                             <button onclick="toggleAuthModal('register')" class="bg-white text-dark px-5 py-2 rounded-full hover:bg-brand hover:text-white transition">S'inscrire</button>
                         </div>
                         <div id="user-menu" class="hidden flex gap-6 border-l border-border pl-8 items-center">
-                            <span id="user-email" class="text-white bg-card px-4 py-2 border border-border"></span>
+                            <span id="user-email" class="text-white bg-card px-4 py-2 border border-border rounded-full"></span>
                             <button onclick="logout()" class="text-gray-400 hover:text-brand transition">Déconnexion</button>
                         </div>
                     </div>
@@ -57,35 +57,36 @@
         </nav>
 
         <div id="auth-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-            <div class="bg-card border border-border p-10 w-full max-w-md relative">
+            <div class="bg-card border border-border p-10 rounded-2xl w-full max-w-md relative">
                 <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white font-bold text-xl transition">✕</button>
                 <h2 id="modal-title" class="text-2xl font-black mb-8 text-center uppercase tracking-widest">Connexion</h2>
                 <div class="space-y-4">
                     <div id="register-fields" class="hidden flex gap-4">
-                        <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
-                        <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                        <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-border rounded-lg px-4 py-3 outline-none focus:border-brand transition text-sm">
+                        <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-border rounded-lg px-4 py-3 outline-none focus:border-brand transition text-sm">
                     </div>
-                    <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
-                    <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
-                    <button onclick="handleAuth()" class="w-full bg-brand text-white font-bold py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition mt-4 text-xs">Valider</button>
+                    <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-border rounded-lg px-4 py-3 outline-none focus:border-brand transition text-sm">
+                    <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-border rounded-lg px-4 py-3 outline-none focus:border-brand transition text-sm">
+                    <button onclick="handleAuth()" class="w-full bg-brand text-white font-bold py-4 rounded-lg uppercase tracking-widest hover:bg-white hover:text-dark transition mt-4 text-xs shadow-lg shadow-brand/20">Valider</button>
                     <p id="auth-error" class="text-brand text-xs text-center hidden font-bold mt-4"></p>
                 </div>
             </div>
         </div>
 
         <div class="relative h-[85vh] flex items-center justify-center overflow-hidden bg-dark">
-            <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-40"></div>
+            <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-30"></div>
             <div class="absolute inset-0 z-10 bg-gradient-to-t from-dark via-dark/50 to-transparent"></div>
             
             <div class="relative z-20 text-center px-4 max-w-4xl mx-auto mt-20">
-                <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 uppercase text-white">L'Excellence.<br><span class="text-brand">Sans Attente.</span></h1>
+                <div class="inline-block bg-brand/20 text-brand px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border border-brand/30">L'Expérience FastGood</div>
+                <h1 class="text-6xl md:text-8xl font-black tracking-tighter mb-6 uppercase text-white drop-shadow-lg">L'Excellence.<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-orange-500">Sans Attente.</span></h1>
                 <p class="mt-6 text-lg text-gray-300 max-w-xl mx-auto font-medium mb-10 leading-relaxed">Viande sélectionnée, ingrédients de qualité, exécution millimétrée. Commandez en borne, dégustez instantanément.</p>
-                <a href="#menu-section" class="inline-block bg-white text-dark font-black px-8 py-4 uppercase tracking-widest text-xs hover:bg-brand hover:text-white transition duration-300">Voir la Carte</a>
+                <a href="#menu-section" class="inline-block bg-white text-dark font-black px-8 py-4 rounded-xl uppercase tracking-widest text-xs hover:scale-105 transition duration-300 shadow-xl shadow-white/10">Voir la Carte</a>
             </div>
         </div>
 
-        <div class="bg-card border-y border-border py-4 overflow-hidden flex relative z-30">
-            <div class="animate-marquee inline-block font-bold text-xs text-gray-400 tracking-widest uppercase space-x-12 whitespace-nowrap">
+        <div class="bg-gradient-to-r from-brand to-orange-600 text-white py-4 overflow-hidden flex relative z-30 shadow-[0_0_30px_rgba(255,0,85,0.3)]">
+            <div class="animate-marquee inline-block font-bold text-xs tracking-widest uppercase space-x-12 whitespace-nowrap">
                 <span>Qualité Premium</span> <span>•</span> <span>Service Rapide</span> <span>•</span> <span>Cheddar Affiné</span> <span>•</span> <span>Programme FidGood</span> <span>•</span> <span>Qualité Premium</span> <span>•</span> <span>Service Rapide</span> <span>•</span> <span>Cheddar Affiné</span>
             </div>
         </div>
@@ -98,52 +99,52 @@
                 </div>
                 <div class="text-right">
                     <div class="text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-1">Solde Points</div>
-                    <div class="text-4xl font-black text-brand"><span id="client-points">0</span> PTS</div>
+                    <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500"><span id="client-points">0</span> PTS</div>
                 </div>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <div class="bg-card p-10 lg:col-span-3 border border-border">
+                <div class="bg-card p-10 rounded-2xl lg:col-span-3 border border-border shadow-xl">
                     <div class="flex justify-between items-end mb-8">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Progression des avantages</h3>
                         <span class="font-black text-lg text-white"><span id="progress-text">0</span> / 200</span>
                     </div>
-                    <div class="relative w-full h-1 bg-dark mb-10 border border-border">
-                        <div id="crown-progress" class="h-full bg-brand transition-all duration-1000 ease-out" style="width: 0%;"></div>
+                    <div class="relative w-full h-2 bg-dark rounded-full mb-10 border border-border overflow-hidden">
+                        <div id="crown-progress" class="h-full bg-gradient-to-r from-yellow-400 to-brand transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(255,0,85,0.8)]" style="width: 0%;"></div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
-                        <div id="tier-30" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-xl mb-1">30</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">IceGood Mini</div></div>
-                        <div id="tier-60" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-xl mb-1">60</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">IceGood 50cl</div></div>
-                        <div id="tier-90" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-xl mb-1">90</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Classic Burger</div></div>
-                        <div id="tier-120" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-xl mb-1">120</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Deluxe / -10%</div></div>
-                        <div id="tier-200" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-xl mb-1">200</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Festin / -25%</div></div>
+                        <div id="tier-30" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-2xl mb-1">30</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">IceGood Mini</div></div>
+                        <div id="tier-60" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-2xl mb-1">60</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">IceGood 50cl</div></div>
+                        <div id="tier-90" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-2xl mb-1">90</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Classic Burger</div></div>
+                        <div id="tier-120" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-2xl mb-1">120</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Deluxe / -10%</div></div>
+                        <div id="tier-200" class="transition-opacity duration-500 opacity-40"><div class="text-white font-black text-2xl mb-1">200</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Festin / -25%</div></div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-2 space-y-8">
-                    <div class="bg-card p-8 border border-border">
+                    <div class="bg-card p-8 rounded-2xl border border-border shadow-lg">
                         <div class="flex justify-between items-center mb-6 border-b border-border pb-4">
                             <h3 class="text-xs font-bold text-white uppercase tracking-widest">En Cuisine</h3>
-                            <button onclick="loadOrders()" class="text-[10px] font-bold text-gray-400 hover:text-brand uppercase transition border border-border px-3 py-1">Actualiser</button>
+                            <button onclick="loadOrders()" class="text-[10px] font-bold text-gray-400 hover:text-brand uppercase transition border border-border rounded bg-dark px-3 py-1">Actualiser</button>
                         </div>
                         <div id="orders-encours" class="space-y-4 max-h-[400px] overflow-y-auto pr-2"></div>
                     </div>
-                    <div class="bg-card p-8 border border-border">
+                    <div class="bg-card p-8 rounded-2xl border border-border shadow-lg">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Historique</h3>
                         <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2"></div>
                     </div>
                 </div>
 
                 <div class="space-y-8">
-                    <div class="bg-card p-8 border border-border">
+                    <div class="bg-card p-8 rounded-2xl border border-border shadow-lg">
                         <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-6">Ajouter un Code</h3>
                         <div class="flex flex-col gap-4">
-                            <input type="text" id="promo-input" placeholder="CODE PROMO" class="w-full bg-dark border border-border px-4 py-3 outline-none uppercase font-bold text-white focus:border-brand transition text-center tracking-widest text-sm">
-                            <button onclick="savePromo()" class="w-full bg-brand text-white font-bold py-3 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs">Activer</button>
+                            <input type="text" id="promo-input" placeholder="CODE PROMO" class="w-full bg-dark border border-border rounded-lg px-4 py-3 outline-none uppercase font-bold text-white focus:border-brand transition text-center tracking-widest text-sm">
+                            <button onclick="savePromo()" class="w-full bg-brand text-white rounded-lg font-bold py-3 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs shadow-lg shadow-brand/20">Activer</button>
                         </div>
                         <p id="promo-msg" class="text-xs mt-4 font-bold h-4 text-center uppercase tracking-widest"></p>
                     </div>
-                    <div class="bg-card p-8 border border-border">
+                    <div class="bg-card p-8 rounded-2xl border border-border shadow-lg">
                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Codes Disponibles</h3>
                         <div id="my-promos" class="flex flex-wrap gap-2 text-xs font-bold"></div>
                     </div>
@@ -155,17 +156,17 @@
             <div class="flex flex-col md:flex-row justify-between items-end mb-12 pb-6 border-b border-border gap-6">
                 <div>
                     <h2 class="text-4xl font-black uppercase tracking-widest mb-2 text-white">La Carte.</h2>
-                    <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">Qualité et précision.</p>
+                    <p class="text-gray-500 font-bold uppercase tracking-widest text-xs">Vibrante et Gourmande.</p>
                 </div>
                 <div class="w-full md:w-auto">
-                    <select id="client-resto-select" onchange="loadMenu()" class="bg-dark border border-border text-white px-5 py-3 outline-none font-bold uppercase tracking-widest text-xs focus:border-brand transition w-full md:w-auto">
+                    <select id="client-resto-select" onchange="loadMenu()" class="bg-dark border border-border rounded-lg text-white px-5 py-3 outline-none font-bold uppercase tracking-widest text-xs focus:border-brand transition w-full md:w-auto">
                         <option value="">Sélectionner un restaurant</option>
                     </select>
                 </div>
             </div>
             
             <div id="menu-container" class="space-y-16">
-                <div class="col-span-full text-center py-24 bg-card border border-border">
+                <div class="col-span-full text-center py-24 bg-card rounded-2xl border border-border">
                     <span class="text-gray-500 uppercase tracking-widest font-bold text-xs">Veuillez sélectionner un établissement pour afficher le menu.</span>
                 </div>
             </div>
@@ -182,7 +183,16 @@
         import { supabase } from './db.js';
         let authMode = 'login'; let userId = null;
 
-        // ALGORITHME DE CONVERSION UUID VERS 4 CHIFFRES
+        // Palette de dégradés vibrants pour les cartes
+        const vibrantGradients = [
+            'from-pink-600 to-brand',
+            'from-orange-500 to-red-500',
+            'from-emerald-500 to-teal-600',
+            'from-blue-600 to-indigo-600',
+            'from-purple-600 to-fuchsia-600',
+            'from-amber-500 to-orange-600'
+        ];
+
         function formatOrderNumber(uuid) {
             if (!uuid) return "0000";
             return String(parseInt(uuid.substring(0,8), 16)).substring(0,4).padStart(4, '0');
@@ -232,8 +242,8 @@
                     document.getElementById('crown-progress').style.width = `${Math.min((pts / 200) * 100, 100)}%`;
                     [30, 60, 90, 120, 200].forEach(tier => {
                         let el = document.getElementById(`tier-${tier}`);
-                        if(pts >= tier) { el.classList.remove('opacity-40'); el.querySelector('div:first-child').classList.add('text-brand'); } 
-                        else { el.classList.add('opacity-40'); el.querySelector('div:first-child').classList.remove('text-brand'); }
+                        if(pts >= tier) { el.classList.remove('opacity-40'); el.querySelector('div:first-child').classList.add('text-yellow-400'); } 
+                        else { el.classList.add('opacity-40'); el.querySelector('div:first-child').classList.remove('text-yellow-400'); }
                     });
                 }
                 loadPromos(); loadOrders();
@@ -248,22 +258,22 @@
             const renderEncours = (o) => {
                 const isReady = o.status === 'prete';
                 const orderNum = formatOrderNumber(o.id);
-                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-dark border border-border px-2 py-1 text-[10px] uppercase tracking-widest text-gray-300">${i.name}</span>`).join(' ') : '<span class="text-[10px] text-gray-500 uppercase tracking-widest">Détails indisponibles</span>';
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-dark border border-border px-3 py-1 rounded text-[10px] uppercase tracking-widest text-gray-300 shadow-sm">${i.name}</span>`).join(' ') : '<span class="text-[10px] text-gray-500 uppercase tracking-widest">Détails indisponibles</span>';
                 
                 return `
-                <div class="bg-dark p-6 border ${isReady ? 'border-brand' : 'border-border'} transition-colors mb-4">
+                <div class="bg-dark p-6 rounded-xl border ${isReady ? 'border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]' : 'border-border'} transition-colors mb-4">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex-1 pr-4">
                             <div class="text-white font-black text-xl mb-3 tracking-widest">#${orderNum}</div>
                             <div class="flex flex-wrap gap-2">${items}</div>
                         </div>
                         <div class="text-right">
-                            <span class="${isReady ? 'bg-brand text-white' : 'bg-card text-gray-400 border border-border'} px-3 py-2 text-[10px] font-bold uppercase tracking-widest inline-block">${o.status.replace('_', ' ')}</span>
+                            <span class="${isReady ? 'bg-green-500 text-white' : 'bg-card text-gray-400 border border-border'} px-3 py-2 rounded text-[10px] font-bold uppercase tracking-widest inline-block shadow-sm">${o.status.replace('_', ' ')}</span>
                         </div>
                     </div>
                     <div class="flex justify-between items-end border-t border-border pt-4 mt-4">
                         <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Attente: ${o.estimated_time}s</span>
-                        <span class="font-black text-xl text-white">${o.total_price.toFixed(2)} €</span>
+                        <span class="font-black text-2xl text-white">${o.total_price.toFixed(2)} €</span>
                     </div>
                 </div>`;
             };
@@ -272,7 +282,7 @@
                 const orderNum = formatOrderNumber(o.id);
                 const items = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
                 return `
-                <div class="flex justify-between items-center bg-dark p-5 border border-border transition-colors">
+                <div class="flex justify-between items-center bg-dark p-5 rounded-xl border border-border transition-colors">
                     <div class="flex-1 pr-4">
                         <div class="font-bold text-sm uppercase tracking-widest mb-1 text-white">#${orderNum}</div>
                         <div class="text-[10px] text-gray-500 font-medium uppercase tracking-widest truncate">${items}</div>
@@ -285,8 +295,8 @@
             };
             const encours = (data||[]).filter(o => o.status !== 'terminee');
             const histo = (data||[]).filter(o => o.status === 'terminee');
-            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest text-center py-6 bg-dark border border-border">Aucune commande en cours.</div>';
-            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest text-center py-6 bg-dark border border-border">Aucun historique.</div>';
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest text-center py-6 bg-dark rounded-xl border border-border">Aucune commande en cours.</div>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest text-center py-6 bg-dark rounded-xl border border-border">Aucun historique.</div>';
         };
 
         window.savePromo = async function() {
@@ -301,7 +311,7 @@
                 const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
                 await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
-                msg.innerText = `+${promo.discount_value} points ajoutés.`; msg.className = "text-xs mt-4 font-bold text-white uppercase tracking-widest text-center";
+                msg.innerText = `+${promo.discount_value} points ajoutés.`; msg.className = "text-xs mt-4 font-bold text-yellow-400 uppercase tracking-widest text-center";
             } else {
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
                 msg.innerText = "Code enregistré pour la borne."; msg.className = "text-xs mt-4 font-bold text-gray-300 uppercase tracking-widest text-center";
@@ -311,7 +321,7 @@
 
         async function loadPromos() {
             const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
-            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through bg-dark border-border':'text-white bg-card border-gray-600'} border px-3 py-1 text-[10px] font-bold uppercase tracking-widest">${p.code}</span>`).join('') : '<span class="text-xs font-medium text-gray-500 uppercase tracking-widest">Aucun code disponible.</span>';
+            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through bg-dark border-border':'text-white bg-card border-gray-600 shadow-sm'} border px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest">${p.code}</span>`).join('') : '<span class="text-xs font-medium text-gray-500 uppercase tracking-widest">Aucun code disponible.</span>';
         }
 
         async function loadRestosForClient() {
@@ -322,7 +332,7 @@
         window.loadMenu = async function() {
             const activeRestoId = document.getElementById('client-resto-select').value;
             if(!activeRestoId) {
-                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-24 bg-card border border-border"><span class="text-gray-500 uppercase tracking-widest font-bold text-xs">Veuillez sélectionner un établissement pour afficher le menu.</span></div>';
+                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-24 bg-card rounded-2xl border border-border"><span class="text-gray-500 uppercase tracking-widest font-bold text-xs">Veuillez sélectionner un établissement pour afficher le menu.</span></div>';
                 return;
             }
 
@@ -337,25 +347,27 @@
                     if(prods.length > 0) {
                         htmlMenu += `
                         <div class="mb-12">
-                            <h3 class="text-lg font-black uppercase tracking-widest text-white mb-6 border-b border-border pb-2">${c.name}</h3>
+                            <h3 class="text-xl font-black uppercase tracking-widest text-white mb-6 border-b border-border pb-2">${c.name}</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                ${prods.map(p => {
+                                ${prods.map((p, index) => {
                                     let stockInfo = (stocks||[]).find(s => s.product_id === p.id);
                                     let isOOS = stockInfo ? !stockInfo.in_stock : false;
 
-                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-dark border border-border text-gray-400 font-bold px-3 py-1 text-[10px] uppercase tracking-widest z-20">Rupture</div>` : '';
-                                    const cls = isOOS ? 'grayscale opacity-50' : 'hover:border-gray-500 transition-colors';
-                                    const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center font-black text-4xl text-gray-800">${p.name.substring(0,1).toUpperCase()}</div>`;
+                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-dark/80 backdrop-blur border border-white/20 text-white font-bold px-3 py-1 rounded-lg text-[10px] uppercase tracking-widest z-20">Rupture</div>` : '';
+                                    
+                                    // Utilisation de la palette vibrante avec un index
+                                    const gradientClass = isOOS ? 'from-gray-800 to-gray-900 grayscale opacity-60' : vibrantGradients[index % vibrantGradients.length];
 
                                     return `
-                                    <div class="bg-card border border-border flex flex-col h-full relative overflow-hidden group ${cls}">
+                                    <div class="bg-gradient-to-br ${gradientClass} rounded-2xl shadow-xl flex flex-col h-full relative overflow-hidden transition-transform duration-300 hover:scale-105">
                                         ${badge}
-                                        <div class="h-48 w-full bg-dark overflow-hidden relative border-b border-border">
-                                            ${visuel}
+                                        <div class="flex-1 p-8 flex flex-col z-10 relative">
+                                            <h3 class="text-2xl font-black mb-2 uppercase tracking-wide text-white drop-shadow-md">${p.name}</h3>
+                                            <div class="w-10 h-1 bg-white/50 rounded-full mb-6"></div>
                                         </div>
-                                        <div class="flex-1 p-6 flex flex-col">
-                                            <h3 class="text-lg font-black mb-2 uppercase tracking-widest">${p.name}</h3>
-                                            <span class="${isOOS?'text-gray-500':'text-white'} font-light text-xl mt-auto pt-4">${p.price.toFixed(2)} €</span>
+                                        <div class="flex justify-between items-end p-8 pt-0 mt-auto z-10 border-t border-white/10">
+                                            <span class="text-white/80 font-bold uppercase tracking-widest text-[10px] drop-shadow-sm">Prix</span>
+                                            <span class="text-3xl font-black text-white drop-shadow-md">${p.price.toFixed(2)} €</span>
                                         </div>
                                     </div>
                                 `}).join('')}
@@ -364,7 +376,7 @@
                     }
                 });
             }
-            document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-center py-24 text-gray-500 font-bold uppercase tracking-widest text-xs bg-card border border-border">Menu indisponible</div>';
+            document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-center py-24 text-gray-500 font-bold uppercase tracking-widest text-xs bg-card rounded-2xl border border-border">Menu indisponible</div>';
         }
     </script>
 </body>
