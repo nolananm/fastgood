@@ -1,12 +1,3 @@
-C'est le piège classique ! L'écran noir est dû à **l'écran de chargement invisible qui bloquait tout le site**.
-
-Le code disait au site : *"Cache-toi entièrement tant que la base de données n'a pas confirmé si on est en maintenance ou non"*. Sauf que si ta base de données met 1 seconde de trop à répondre, ou s'il y a un micro-bug réseau, le site restait caché pour toujours, d'où la fameuse page noire sans aucune erreur visible.
-
-**La solution :** J'ai supprimé ce blocage. Le site s'affiche désormais **instantanément** par défaut. Si le mode maintenance est réellement activé, le panneau de blocage viendra se superposer par-dessus, c'est beaucoup plus sûr et rapide.
-
-Voici ton **`index.html`** corrigé et ultra-robuste, avec le même design "Food Porn Premium" :
-
-```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
