@@ -5,106 +5,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FastGood - Staff</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>tailwind.config = { theme: { extend: { colors: { neon: '#FF0055', dark: '#0a0a0a', darker: '#050505', premium: '#1a1a1a' } } } }</script>
+    <script>tailwind.config = { theme: { extend: { colors: { brand: '#E60039', dark: '#0a0a0a', card: '#141414', border: '#222222' } } } }</script>
 </head>
 <body class="bg-dark text-white font-sans antialiased h-screen flex overflow-hidden">
 
-    <div id="auth-screen" class="fixed inset-0 bg-darker z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/10 p-10 w-full max-w-md text-center shadow-2xl">
-            <h2 class="text-3xl font-black mb-8 tracking-wide">GESTION <span class="text-neon">STAFF</span></h2>
+    <div id="auth-screen" class="fixed inset-0 bg-dark z-50 flex items-center justify-center">
+        <div class="bg-card border border-border p-10 w-full max-w-md text-center">
+            <h2 class="text-2xl font-black mb-8 tracking-widest uppercase">GESTION STAFF</h2>
             <div class="space-y-4">
-                <input type="email" id="staff-email" placeholder="Email Admin" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
-                <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition text-sm">
-                <button onclick="loginStaff()" class="w-full bg-neon text-white font-black py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition mt-4">Connexion</button>
-                <p id="auth-error" class="text-neon text-sm hidden font-bold mt-4"></p>
+                <input type="email" id="staff-email" placeholder="Email Admin" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                <input type="password" id="staff-password" placeholder="Mot de passe" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                <button onclick="loginStaff()" class="w-full bg-brand text-white font-bold py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition mt-4 text-xs">Connexion</button>
+                <p id="auth-error" class="text-brand text-xs hidden font-bold mt-4"></p>
             </div>
         </div>
     </div>
 
     <!-- MODALS -->
-    <div id="modal-category" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/10 p-8 w-full max-w-md relative shadow-2xl">
-            <button onclick="toggleModal('modal-category', false)" class="absolute top-4 right-4 text-gray-500 font-black text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6 uppercase tracking-wide">Nouvelle Catégorie</h2>
-            <input type="text" id="cat-name" placeholder="Nom (Ex: Burgers)" class="w-full bg-dark border border-white/10 px-4 py-3 mb-4 outline-none focus:border-neon transition">
-            <button onclick="submitCategory()" class="w-full bg-white text-dark font-black py-3 uppercase tracking-widest hover:bg-neon hover:text-white transition">Créer</button>
+    <div id="modal-category" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-card border border-border p-8 w-full max-w-md relative">
+            <button onclick="toggleModal('modal-category', false)" class="absolute top-4 right-4 text-gray-500 font-bold text-xl hover:text-white">✕</button>
+            <h2 class="text-lg font-black mb-6 uppercase tracking-widest">Nouvelle Catégorie</h2>
+            <input type="text" id="cat-name" placeholder="Nom (Ex: Burgers)" class="w-full bg-dark border border-border px-4 py-3 mb-4 outline-none focus:border-brand transition text-sm">
+            <button onclick="submitCategory()" class="w-full bg-white text-dark font-bold py-3 uppercase tracking-widest hover:bg-brand hover:text-white transition text-xs">Créer</button>
         </div>
     </div>
 
-    <div id="modal-product" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/10 p-8 w-full max-w-md relative shadow-2xl">
-            <button onclick="toggleModal('modal-product', false)" class="absolute top-4 right-4 text-gray-500 font-black text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6 uppercase tracking-wide">Nouveau Plat</h2>
+    <div id="modal-product" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-card border border-border p-8 w-full max-w-md relative">
+            <button onclick="toggleModal('modal-product', false)" class="absolute top-4 right-4 text-gray-500 font-bold text-xl hover:text-white">✕</button>
+            <h2 class="text-lg font-black mb-6 uppercase tracking-widest">Nouveau Plat</h2>
             <div class="space-y-4">
-                <input type="text" id="prod-name" placeholder="Nom du plat" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
+                <input type="text" id="prod-name" placeholder="Nom du plat" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
                 <div class="flex gap-4">
-                    <input type="number" step="0.10" id="prod-price" placeholder="Prix (€)" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
-                    <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
+                    <input type="number" step="0.10" id="prod-price" placeholder="Prix (€)" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                    <input type="number" id="prod-time" placeholder="Temps (sec)" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
                 </div>
-                <select id="prod-category" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition"></select>
-                <button onclick="submitProduct()" class="w-full bg-neon text-white font-black py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition">Créer le plat</button>
+                <select id="prod-category" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm"></select>
+                <button onclick="submitProduct()" class="w-full bg-brand text-white font-bold py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs">Créer le plat</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-promo" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/10 p-8 w-full max-w-md relative shadow-2xl">
-            <button onclick="toggleModal('modal-promo', false)" class="absolute top-4 right-4 text-gray-500 font-black text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6 uppercase tracking-wide">Code PromoGood</h2>
+    <div id="modal-promo" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-card border border-border p-8 w-full max-w-md relative">
+            <button onclick="toggleModal('modal-promo', false)" class="absolute top-4 right-4 text-gray-500 font-bold text-xl hover:text-white">✕</button>
+            <h2 class="text-lg font-black mb-6 uppercase tracking-widest">Code Promo</h2>
             <div class="space-y-4">
-                <input type="text" id="promo-code" placeholder="Code (Ex: GOOD10)" class="w-full uppercase bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
-                <select id="promo-type" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
+                <input type="text" id="promo-code" placeholder="Code (Ex: GOOD10)" class="w-full uppercase bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                <select id="promo-type" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
                     <option value="percent">Remise (%)</option>
                     <option value="amount">Remise Fixe (€)</option>
-                    <option value="points">Couronnes 👑</option>
+                    <option value="points">Points FidGood</option>
                 </select>
                 <div class="flex gap-4">
-                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
-                    <input type="number" id="promo-max" placeholder="Utilisations Max" class="w-full bg-dark border border-white/10 px-4 py-3 outline-none focus:border-neon transition">
+                    <input type="number" step="0.10" id="promo-value" placeholder="Valeur" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
+                    <input type="number" id="promo-max" placeholder="Utilisations Max" class="w-full bg-dark border border-border px-4 py-3 outline-none focus:border-brand transition text-sm">
                 </div>
-                <button onclick="submitPromo()" class="w-full bg-neon text-white font-black py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition">Créer le code</button>
+                <button onclick="submitPromo()" class="w-full bg-brand text-white font-bold py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs">Créer le code</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-resto" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-sm z-50 flex items-center justify-center">
-        <div class="bg-premium border border-white/10 p-8 w-full max-w-md relative shadow-2xl">
-            <button onclick="toggleModal('modal-resto', false)" class="absolute top-4 right-4 text-gray-500 font-black text-xl hover:text-white">X</button>
-            <h2 class="text-2xl font-black mb-6 uppercase tracking-wide">Nouveau Restaurant</h2>
-            <input type="text" id="resto-name" placeholder="Nom (Ex: Paris Centre)" class="w-full bg-dark border border-white/10 px-4 py-3 mb-4 outline-none focus:border-neon transition">
-            <button onclick="submitResto()" class="w-full bg-white text-dark font-black py-3 uppercase tracking-widest hover:bg-neon hover:text-white transition">Créer</button>
+    <div id="modal-resto" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-card border border-border p-8 w-full max-w-md relative">
+            <button onclick="toggleModal('modal-resto', false)" class="absolute top-4 right-4 text-gray-500 font-bold text-xl hover:text-white">✕</button>
+            <h2 class="text-lg font-black mb-6 uppercase tracking-widest">Nouveau Restaurant</h2>
+            <input type="text" id="resto-name" placeholder="Nom (Ex: Paris Centre)" class="w-full bg-dark border border-border px-4 py-3 mb-4 outline-none focus:border-brand transition text-sm">
+            <button onclick="submitResto()" class="w-full bg-white text-dark font-bold py-3 uppercase tracking-widest hover:bg-brand hover:text-white transition text-xs">Créer</button>
         </div>
     </div>
 
     <!-- APPLICATION -->
     <div id="app-screen" class="hidden flex-1 flex h-full">
-        <aside class="w-64 bg-darker border-r border-white/5 flex flex-col">
-            <div class="h-20 flex items-center px-6 border-b border-white/5 text-xl font-black tracking-tighter">STAFF<span class="text-neon">GOOD</span></div>
+        <aside class="w-64 bg-card border-r border-border flex flex-col">
+            <div class="h-20 flex items-center px-6 border-b border-border text-lg font-black tracking-widest uppercase">Staff</div>
             <nav class="flex-1 p-4 space-y-2">
-                <button onclick="switchTab('sec-carte')" id="tab-sec-carte" class="w-full text-left px-4 py-3 bg-neon/10 text-neon rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Carte & Stocks</button>
-                <button onclick="switchTab('sec-commandes')" id="tab-sec-commandes" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Commandes Live</button>
-                <button onclick="switchTab('sec-restos')" id="tab-sec-restos" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Restaurants</button>
-                <button onclick="switchTab('sec-promo')" id="tab-sec-promo" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn">Promos</button>
-                <button onclick="switchTab('sec-parametres')" id="tab-sec-parametres" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-xs transition tab-btn mt-4 border-t border-white/5 pt-4">Paramètres</button>
+                <button onclick="switchTab('sec-carte')" id="tab-sec-carte" class="w-full text-left px-4 py-3 bg-brand/10 text-brand rounded font-bold uppercase tracking-widest text-[10px] transition tab-btn">Carte & Stocks</button>
+                <button onclick="switchTab('sec-commandes')" id="tab-sec-commandes" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-[10px] transition tab-btn">Commandes Live</button>
+                <button onclick="switchTab('sec-restos')" id="tab-sec-restos" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-[10px] transition tab-btn">Restaurants</button>
+                <button onclick="switchTab('sec-promo')" id="tab-sec-promo" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-[10px] transition tab-btn">Promos</button>
+                <button onclick="switchTab('sec-parametres')" id="tab-sec-parametres" class="w-full text-left px-4 py-3 text-gray-500 hover:text-white hover:bg-white/5 rounded font-bold uppercase tracking-widest text-[10px] transition tab-btn mt-4 border-t border-border pt-4">Paramètres</button>
             </nav>
-            <button onclick="logout()" class="p-6 text-gray-600 hover:text-neon text-xs font-bold uppercase tracking-widest border-t border-white/5 text-left transition">Verrouiller</button>
+            <button onclick="logout()" class="p-6 text-gray-600 hover:text-brand text-[10px] font-bold uppercase tracking-widest border-t border-border text-left transition">Verrouiller</button>
         </aside>
 
         <main class="flex-1 overflow-y-auto p-10 relative bg-dark">
-            <button onclick="loadData()" class="absolute top-10 right-10 border border-white/10 text-xs font-bold uppercase tracking-widest px-4 py-2 hover:bg-white/10 transition">Rafraîchir</button>
+            <button onclick="loadData()" class="absolute top-10 right-10 border border-border text-[10px] font-bold uppercase tracking-widest px-4 py-2 hover:bg-white/10 transition">Rafraîchir</button>
 
             <!-- CARTE & STOCKS -->
             <div id="sec-carte" class="tab-content block">
-                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
+                <div class="flex justify-between items-end mb-8 border-b border-border pb-4">
                     <div>
-                        <h1 class="text-3xl font-black uppercase tracking-wide mb-2">La Carte & Stocks</h1>
-                        <select id="staff-stock-resto" onchange="loadData()" class="bg-darker border border-neon/50 text-neon px-4 py-2 rounded outline-none font-bold uppercase tracking-widest text-xs">
+                        <h1 class="text-2xl font-black uppercase tracking-widest mb-3">La Carte & Stocks</h1>
+                        <select id="staff-stock-resto" onchange="loadData()" class="bg-dark border border-border text-white px-4 py-2 outline-none font-bold uppercase tracking-widest text-xs focus:border-brand transition">
                             <option value="">-- Sélectionnez un restaurant --</option>
                         </select>
                     </div>
                     <div class="flex gap-4">
-                        <button onclick="toggleModal('modal-category', true)" class="text-xs font-bold uppercase tracking-widest border border-white/20 text-white px-4 py-2 hover:bg-white/10 transition">Catégorie +</button>
-                        <button onclick="toggleModal('modal-product', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Plat</button>
+                        <button onclick="toggleModal('modal-category', true)" class="text-[10px] font-bold uppercase tracking-widest border border-border text-white px-4 py-2 hover:bg-white/10 transition">Catégorie +</button>
+                        <button onclick="toggleModal('modal-product', true)" class="text-[10px] font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-brand hover:text-white transition">Nouveau Plat</button>
                     </div>
                 </div>
                 <div id="list-products-container" class="space-y-8"></div>
@@ -112,34 +112,34 @@
 
             <!-- RESTAURANTS -->
             <div id="sec-restos" class="tab-content hidden">
-                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Restaurants</h1><button onclick="toggleModal('modal-resto', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Resto</button></div>
-                <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">ID</th><th class="p-4">Nom</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-restos" class="divide-y divide-white/5 text-sm"></tbody></table></div>
+                <div class="flex justify-between items-end mb-8 border-b border-border pb-4"><h1 class="text-2xl font-black uppercase tracking-widest">Restaurants</h1><button onclick="toggleModal('modal-resto', true)" class="text-[10px] font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-brand hover:text-white transition">Nouveau Resto</button></div>
+                <div class="bg-card border border-border"><table class="w-full text-left"><thead class="bg-dark border-b border-border text-gray-500 text-[10px] uppercase tracking-widest"><tr><th class="p-4">ID</th><th class="p-4">Nom</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-restos" class="divide-y divide-border text-sm"></tbody></table></div>
             </div>
 
             <!-- COMMANDES -->
             <div id="sec-commandes" class="tab-content hidden">
-                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Cuisine</h1></div>
-                <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">Commande</th><th class="p-4">Total</th><th class="p-4 text-right">Statut / Actions</th></tr></thead><tbody id="list-orders" class="divide-y divide-white/5 text-sm"></tbody></table></div>
+                <div class="flex justify-between items-end mb-8 border-b border-border pb-4"><h1 class="text-2xl font-black uppercase tracking-widest">Cuisine</h1></div>
+                <div class="bg-card border border-border"><table class="w-full text-left"><thead class="bg-dark border-b border-border text-gray-500 text-[10px] uppercase tracking-widest"><tr><th class="p-4">Commande</th><th class="p-4">Total</th><th class="p-4 text-right">Statut / Actions</th></tr></thead><tbody id="list-orders" class="divide-y divide-border text-sm"></tbody></table></div>
             </div>
 
             <!-- PROMOS -->
             <div id="sec-promo" class="tab-content hidden">
-                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4"><h1 class="text-3xl font-black uppercase tracking-wide">Codes Promo</h1><button onclick="toggleModal('modal-promo', true)" class="text-xs font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-neon hover:text-white transition">Nouveau Code</button></div>
-                <div class="bg-premium border border-white/5"><table class="w-full text-left"><thead class="bg-white/5 border-b border-white/5 text-gray-500 text-xs uppercase tracking-widest"><tr><th class="p-4">Code</th><th class="p-4">Avantage</th><th class="p-4">Utilisations</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-promos" class="divide-y divide-white/5 text-sm"></tbody></table></div>
+                <div class="flex justify-between items-end mb-8 border-b border-border pb-4"><h1 class="text-2xl font-black uppercase tracking-widest">Codes Promo</h1><button onclick="toggleModal('modal-promo', true)" class="text-[10px] font-bold uppercase tracking-widest bg-white text-dark px-4 py-2 hover:bg-brand hover:text-white transition">Nouveau Code</button></div>
+                <div class="bg-card border border-border"><table class="w-full text-left"><thead class="bg-dark border-b border-border text-gray-500 text-[10px] uppercase tracking-widest"><tr><th class="p-4">Code</th><th class="p-4">Avantage</th><th class="p-4">Utilisations</th><th class="p-4 text-right">Actions</th></tr></thead><tbody id="list-promos" class="divide-y divide-border text-sm"></tbody></table></div>
             </div>
 
             <!-- PARAMÈTRES (MAINTENANCE) -->
             <div id="sec-parametres" class="tab-content hidden">
-                <div class="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
-                    <h1 class="text-3xl font-black uppercase tracking-wide">Paramètres</h1>
+                <div class="flex justify-between items-end mb-8 border-b border-border pb-4">
+                    <h1 class="text-2xl font-black uppercase tracking-widest">Paramètres</h1>
                 </div>
-                <div class="bg-premium border border-white/5 p-8">
-                    <div class="flex items-center justify-between border-b border-white/5 pb-6 mb-6">
+                <div class="bg-card border border-border p-8">
+                    <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-xl font-black uppercase tracking-wide mb-1">Mode Maintenance</h3>
-                            <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">Coupe l'accès au site client. Vos bornes resteront fonctionnelles en restaurant.</p>
+                            <h3 class="text-lg font-black uppercase tracking-widest mb-1">Mode Maintenance</h3>
+                            <p class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Coupe l'accès au site client. Vos bornes resteront fonctionnelles en restaurant.</p>
                         </div>
-                        <button id="btn-maintenance" onclick="toggleMaintenance()" class="bg-white/10 text-white font-black px-8 py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition">CHARGEMENT...</button>
+                        <button id="btn-maintenance" onclick="toggleMaintenance()" class="border border-border text-gray-400 font-bold px-6 py-3 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs">CHARGEMENT...</button>
                     </div>
                 </div>
             </div>
@@ -151,11 +151,16 @@
         import { supabase } from './db.js';
         let categories = []; let restaurants = []; let isMaintenance = false;
 
+        function formatOrderNumber(uuid) {
+            if (!uuid) return "0000";
+            return String(parseInt(uuid.substring(0,8), 16)).substring(0,4).padStart(4, '0');
+        }
+
         window.switchTab = function(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('bg-neon/10', 'text-neon'); b.classList.add('text-gray-500'); });
-            document.getElementById('tab-'+id).classList.add('bg-neon/10', 'text-neon');
+            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('bg-brand/10', 'text-brand'); b.classList.add('text-gray-500'); });
+            document.getElementById('tab-'+id).classList.add('bg-brand/10', 'text-brand');
         };
 
         window.toggleModal = function(id, show) { document.getElementById(id).classList.toggle('hidden', !show); };
@@ -177,18 +182,17 @@
             }
         }
 
-        // --- GESTION DU MODE MAINTENANCE ---
         window.loadSettings = async function() {
             const { data } = await supabase.from('settings').select('maintenance_mode').eq('id', 1).single();
             if(data) {
                 isMaintenance = data.maintenance_mode;
                 const btn = document.getElementById('btn-maintenance');
                 if(isMaintenance) {
-                    btn.innerText = "ACTIVÉ 🔴";
-                    btn.className = "bg-red-500 text-white font-black px-8 py-4 uppercase tracking-widest hover:bg-red-600 transition shadow-[0_0_20px_rgba(239,68,68,0.5)]";
+                    btn.innerText = "ACTIVÉ";
+                    btn.className = "bg-brand text-white font-bold px-6 py-3 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs";
                 } else {
-                    btn.innerText = "DÉSACTIVÉ ⚪";
-                    btn.className = "bg-white/10 text-gray-400 font-black px-8 py-4 uppercase tracking-widest hover:bg-white hover:text-dark transition border border-white/20";
+                    btn.innerText = "DÉSACTIVÉ";
+                    btn.className = "bg-dark text-gray-400 border border-border font-bold px-6 py-3 uppercase tracking-widest hover:bg-white hover:text-dark transition text-xs";
                 }
             }
         };
@@ -198,7 +202,6 @@
             await supabase.from('settings').upsert({ id: 1, maintenance_mode: newVal });
             loadSettings();
         };
-        // -----------------------------------
 
         window.updateOrderStatus = async function(id, status) { await supabase.from('orders').update({ status }).eq('id', id); loadData(); };
         window.deleteProduct = async function(id) { if(confirm('Supprimer définitivement ce plat ?')) { await supabase.from('products').delete().eq('id', id); loadData(); } };
@@ -217,7 +220,7 @@
             const { data } = await supabase.from('restaurants').select('*');
             restaurants = data || [];
             document.getElementById('staff-stock-resto').innerHTML = '<option value="">-- Sélectionnez un restaurant --</option>' + restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
-            document.getElementById('list-restos').innerHTML = restaurants.map(r => `<tr class="hover:bg-white/5"><td class="p-4 text-gray-500 font-mono text-xs">${r.id.substring(0,8)}</td><td class="p-4 font-bold uppercase">${r.name}</td><td class="p-4 text-right"><button onclick="deleteResto('${r.id}')" class="text-gray-500 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition">Supprimer</button></td></tr>`).join('');
+            document.getElementById('list-restos').innerHTML = restaurants.map(r => `<tr class="hover:bg-white/5"><td class="p-4 text-gray-500 font-mono text-[10px]">${r.id.substring(0,8)}</td><td class="p-4 font-bold uppercase text-xs">${r.name}</td><td class="p-4 text-right"><button onclick="deleteResto('${r.id}')" class="text-gray-500 hover:text-brand text-[10px] font-bold uppercase tracking-widest transition">Supprimer</button></td></tr>`).join('');
         }
 
         window.loadData = async function() {
@@ -240,30 +243,30 @@
                 if(prodsInCat.length > 0) {
                     htmlCarte += `
                     <div class="mb-8">
-                        <h2 class="text-xl font-black uppercase tracking-widest text-neon mb-4 border-b border-white/10 pb-2">${c.name}</h2>
-                        <div class="bg-premium border border-white/5 rounded-xl overflow-hidden">
+                        <h2 class="text-sm font-black uppercase tracking-widest text-white mb-4 border-b border-border pb-2">${c.name}</h2>
+                        <div class="bg-card border border-border overflow-hidden">
                             <table class="w-full text-left text-sm">
-                                <thead class="bg-white/5 text-gray-500 text-[10px] uppercase tracking-widest border-b border-white/5">
-                                    <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4 text-center">Stock ${activeRestoId ? '(Ce Resto)' : ''}</th><th class="p-4 text-right">Actions</th></tr>
+                                <thead class="bg-dark text-gray-500 text-[10px] uppercase tracking-widest border-b border-border">
+                                    <tr><th class="p-4">Produit</th><th class="p-4">Prix</th><th class="p-4 text-center">Stock ${activeRestoId ? '' : ''}</th><th class="p-4 text-right">Actions</th></tr>
                                 </thead>
-                                <tbody class="divide-y divide-white/5">
+                                <tbody class="divide-y divide-border">
                                     ${prodsInCat.map(p => {
                                         let prodStock = stocks.find(s => s.product_id === p.id);
                                         let inStock = prodStock ? prodStock.in_stock : true;
-                                        const stockClass = inStock ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-red-500/20 text-red-500 border-red-500/30';
+                                        const stockClass = inStock ? 'bg-dark text-white border-border' : 'bg-brand/10 text-brand border-brand/30';
                                         return `
-                                        <tr class="hover:bg-white/5 transition ${!inStock ? 'opacity-50' : ''}">
-                                            <td class="p-4 font-bold uppercase tracking-wide">${p.name}</td>
-                                            <td class="p-4 font-bold">${p.price.toFixed(2)} €</td>
+                                        <tr class="hover:bg-dark transition ${!inStock ? 'opacity-50' : ''}">
+                                            <td class="p-4 font-bold uppercase tracking-wide text-xs">${p.name}</td>
+                                            <td class="p-4 font-bold text-xs">${p.price.toFixed(2)} €</td>
                                             <td class="p-4 text-center">
-                                                <button onclick="toggleStock('${p.id}',${inStock})" class="border px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest transition ${stockClass}" ${!activeRestoId ? 'disabled title="Sélectionnez un resto en haut"' : ''}>
+                                                <button onclick="toggleStock('${p.id}', ${inStock})" class="border px-3 py-1 text-[9px] font-bold uppercase tracking-widest transition ${stockClass}" ${!activeRestoId ? 'disabled' : ''}>
                                                     ${inStock ? 'EN STOCK' : 'RUPTURE'}
                                                 </button>
                                             </td>
                                             <td class="p-4 text-right flex justify-end gap-3 items-center">
-                                                <button onclick="moveProduct('${p.id}',${p.order_index || 0}, -1)" class="text-gray-500 hover:text-white font-bold">⬆️</button>
-                                                <button onclick="moveProduct('${p.id}',${p.order_index || 0}, 1)" class="text-gray-500 hover:text-white font-bold">⬇️</button>
-                                                <button onclick="deleteProduct('${p.id}')" class="text-gray-500 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition ml-4">Supprimer</button>
+                                                <button onclick="moveProduct('${p.id}', ${p.order_index || 0}, -1)" class="text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest">Monter</button>
+                                                <button onclick="moveProduct('${p.id}', ${p.order_index || 0}, 1)" class="text-gray-500 hover:text-white text-[10px] font-bold uppercase tracking-widest">Descendre</button>
+                                                <button onclick="deleteProduct('${p.id}')" class="text-gray-500 hover:text-brand text-[10px] font-bold uppercase tracking-widest transition ml-4">Supprimer</button>
                                             </td>
                                         </tr>
                                     `}).join('')}
@@ -273,20 +276,21 @@
                     </div>`;
                 }
             });
-            document.getElementById('list-products-container').innerHTML = htmlCarte || '<p class="text-gray-500">Aucun plat.</p>';
+            document.getElementById('list-products-container').innerHTML = htmlCarte || '<p class="text-gray-500 text-xs uppercase tracking-widest font-bold">Aucun plat.</p>';
 
             const { data: orders } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
             document.getElementById('list-orders').innerHTML = orders?.length ? orders.map(o => {
-                let btn = o.status === 'en_preparation' ? `<button onclick="updateOrderStatus('${o.id}', 'prete')" class="border border-neon text-neon px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-neon hover:text-white ml-4 transition">Prête</button>` : (o.status === 'prete' ? `<button onclick="updateOrderStatus('${o.id}', 'terminee')" class="bg-white text-dark px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-gray-300 ml-4 transition">Terminée</button>` : '');
+                let btn = o.status === 'en_preparation' ? `<button onclick="updateOrderStatus('${o.id}', 'prete')" class="border border-brand text-brand px-3 py-1 text-[9px] font-bold uppercase tracking-widest hover:bg-brand hover:text-white ml-4 transition">Prête</button>` : (o.status === 'prete' ? `<button onclick="updateOrderStatus('${o.id}', 'terminee')" class="bg-white text-dark px-3 py-1 text-[9px] font-bold uppercase tracking-widest hover:bg-gray-300 ml-4 transition">Terminée</button>` : '');
                 let color = o.status === 'terminee' ? 'text-gray-600' : 'text-white';
-                let plats = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/5 border border-white/10 px-2 py-1 mr-1 text-[10px] uppercase tracking-widest text-gray-400">${i.name}</span>`).join('') : '<span class="text-gray-600 text-xs">Ancienne commande</span>';
-                return `<tr class="hover:bg-white/5 transition"><td class="p-4"><div class="font-black ${color} mb-2 text-lg">#${o.id.substring(0,6).toUpperCase()}</div><div class="flex flex-wrap gap-1">${plats}</div></td><td class="p-4 font-bold">${o.total_price.toFixed(2)} €</td><td class="p-4 text-right"><span class="text-[10px] font-bold uppercase tracking-widest ${o.status==='terminee'?'text-gray-600':'text-neon'}">${o.status.replace('_',' ')}</span> ${btn}</td></tr>`;
-            }).join('') : '<tr><td colspan="3" class="p-4 text-center text-gray-500">Aucune commande.</td></tr>';
+                const orderNum = formatOrderNumber(o.id);
+                let plats = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-dark border border-border px-2 py-1 mr-1 text-[9px] uppercase tracking-widest text-gray-400">${i.name}</span>`).join('') : '<span class="text-gray-600 text-[10px]">Ancienne commande</span>';
+                return `<tr class="hover:bg-dark transition"><td class="p-4"><div class="font-black ${color} mb-2 text-sm">#${orderNum}</div><div class="flex flex-wrap gap-1">${plats}</div></td><td class="p-4 font-bold text-xs">${o.total_price.toFixed(2)} €</td><td class="p-4 text-right"><span class="text-[9px] font-bold uppercase tracking-widest ${o.status==='terminee'?'text-gray-600':'text-brand'}">${o.status.replace('_',' ')}</span> ${btn}</td></tr>`;
+            }).join('') : '<tr><td colspan="3" class="p-4 text-center text-gray-500 text-xs font-bold uppercase tracking-widest">Aucune commande.</td></tr>';
 
             const { data: promos } = await supabase.from('promocodes').select('*');
             document.getElementById('list-promos').innerHTML = promos?.length ? promos.map(p => `
-                <tr class="hover:bg-white/5 transition"><td class="p-4 font-black uppercase tracking-widest">${p.code}</td><td class="p-4 text-gray-400 text-xs uppercase tracking-widest">${p.discount_value} ${p.discount_type==='points'?'👑':(p.discount_type==='percent'?'%':'€')}</td><td class="p-4 text-sm">${p.current_uses} / ${p.max_uses||'∞'}</td><td class="p-4 text-right"><button onclick="deletePromo('${p.code}')" class="text-gray-500 hover:text-red-500 text-xs font-bold uppercase tracking-widest transition">Supprimer</button></td></tr>
-            `).join('') : '<tr><td colspan="4" class="p-4 text-center text-gray-500">Aucun code.</td></tr>';
+                <tr class="hover:bg-dark transition"><td class="p-4 font-bold text-xs uppercase tracking-widest">${p.code}</td><td class="p-4 text-gray-400 text-[10px] uppercase tracking-widest">${p.discount_value} ${p.discount_type==='points'?'PTS':(p.discount_type==='percent'?'%':'€')}</td><td class="p-4 text-xs font-bold">${p.current_uses} / ${p.max_uses||'∞'}</td><td class="p-4 text-right"><button onclick="deletePromo('${p.code}')" class="text-gray-500 hover:text-brand text-[10px] font-bold uppercase tracking-widest transition">Supprimer</button></td></tr>
+            `).join('') : '<tr><td colspan="4" class="p-4 text-center text-gray-500 text-xs font-bold uppercase tracking-widest">Aucun code.</td></tr>';
         };
 
         window.submitCategory = async function() {
