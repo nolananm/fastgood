@@ -3,41 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FastGood - L'Excellence Sans Attente</title>
+    <title>FastGood - L'Excellence Fondante</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
             theme: { 
                 extend: { 
                     colors: { 
-                        brand: '#FF0055',    /* Rose/Rouge FastGood */
-                        dark: '#0e0e12',     /* Fond principal */
-                        card: '#18181e',     /* Fond des cartes pour remplir l'espace */
-                        gold: '#FFC700'      /* Doré FidGood */
+                        brand: '#FF0055',    /* Néon FastGood */
+                        cheese: '#FFB800',   /* Jaune Cheddar */
+                        melt: '#FF8A00',     /* Orange fondu */
+                        dark: '#0f0f13',     /* Fond principal */
+                        card: '#1a1a24',     /* Fond des cartes */
                     },
-                    animation: { 'marquee': 'marquee 30s linear infinite' },
-                    keyframes: { marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } } }
+                    animation: { 'marquee': 'marquee 20s linear infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite' },
+                    keyframes: { marquee: { '0%': { transform: 'translateX(0%)' }, '100%': { transform: 'translateX(-100%)' } } },
+                    backgroundImage: {
+                        'cheese-gradient': 'linear-gradient(135deg, #FFB800 0%, #FF8A00 100%)',
+                    }
                 } 
             } 
         }
     </script>
     <style>
-        body { background-color: #0e0e12; color: #ffffff; }
-        .glass-nav { background: rgba(14, 14, 18, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        body { background-color: #0f0f13; color: #ffffff; }
+        .glass-nav { background: rgba(15, 15, 19, 0.85); backdrop-filter: blur(16px); border-bottom: 2px solid #FFB800; }
+        .cheese-shadow { box-shadow: 0 10px 40px -10px rgba(255, 184, 0, 0.4); }
+        .neon-shadow { box-shadow: 0 0 20px rgba(255, 0, 85, 0.5); }
+        
+        /* Forme dégoulinante CSS pour le header */
+        .drip-shape {
+            position: absolute; bottom: -2px; left: 0; width: 100%; overflow: hidden; line-height: 0;
+        }
+        .drip-shape svg {
+            display: block; width: calc(100% + 1.3px); height: 40px;
+        }
     </style>
 </head>
-<body class="font-sans antialiased relative overflow-x-hidden selection:bg-brand selection:text-white">
-
-    <!-- ÉCRAN DE CHARGEMENT -->
-    <div id="initial-loader" class="fixed inset-0 bg-dark z-[200] flex items-center justify-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brand"></div>
-    </div>
+<body class="font-sans antialiased relative overflow-x-hidden selection:bg-cheese selection:text-dark">
 
     <!-- ÉCRAN DE MAINTENANCE -->
     <div id="maintenance-screen" class="hidden fixed inset-0 bg-dark z-[100] flex flex-col items-center justify-center text-center px-6">
-        <div class="w-20 h-20 bg-card rounded-3xl flex items-center justify-center font-black text-brand text-4xl mb-8 border border-white/10 shadow-xl">FG</div>
-        <h1 class="text-4xl md:text-5xl font-black mb-4">Pause Cuisine.</h1>
-        <p class="text-gray-400 font-medium max-w-md mx-auto leading-relaxed mb-8">Nous mettons à jour notre système pour vous offrir une expérience encore meilleure.<br><strong class="text-white mt-2 block">Nos bornes en restaurant restent 100% opérationnelles.</strong></p>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-20"></div>
+        <div class="relative z-10">
+            <div class="text-7xl mb-6 animate-bounce">🧀</div>
+            <h1 class="text-5xl md:text-7xl font-black mb-4 text-transparent bg-clip-text bg-cheese-gradient uppercase tracking-tight">Surcharge de Cheddar.</h1>
+            <p class="text-gray-300 font-bold text-lg max-w-lg mx-auto leading-relaxed mb-8 bg-dark/80 p-6 rounded-2xl border border-cheese/20">Nous mettons à jour notre système pour encore plus de fondant.<br><strong class="text-white mt-2 block">Nos bornes en restaurant restent ouvertes !</strong></p>
+        </div>
     </div>
 
     <!-- LE SITE PRINCIPAL -->
@@ -47,18 +59,18 @@
         <nav class="fixed w-full glass-nav z-50 transition-all duration-300">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between items-center h-20">
-                    <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                        <div class="w-10 h-10 bg-brand rounded-xl flex items-center justify-center font-black text-white text-xl shadow-lg shadow-brand/30">FG</div>
+                    <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                        <div class="w-10 h-10 bg-cheese-gradient rounded-xl flex items-center justify-center font-black text-dark text-xl cheese-shadow group-hover:scale-110 transition-transform">FG</div>
                         <span class="text-2xl font-black tracking-tighter">FAST<span class="text-brand">GOOD</span></span>
                     </div>
-                    <div class="hidden md:flex space-x-8 items-center font-bold text-sm text-gray-300 uppercase tracking-wide">
-                        <a href="#menu-section" class="hover:text-white transition-colors">La Carte</a>
-                        <div id="auth-buttons" class="flex gap-4 border-l border-white/10 pl-8">
-                            <button onclick="toggleAuthModal('login')" class="hover:text-white transition-colors">Connexion</button>
-                            <button onclick="toggleAuthModal('register')" class="bg-brand text-white px-6 py-2 rounded-full hover:bg-white hover:text-dark transition-colors shadow-lg shadow-brand/20">S'inscrire</button>
+                    <div class="hidden md:flex space-x-8 items-center font-black text-sm text-white uppercase tracking-wide">
+                        <a href="#menu-section" class="hover:text-cheese transition-colors">La Carte</a>
+                        <div id="auth-buttons" class="flex gap-4 border-l border-white/20 pl-8">
+                            <button onclick="toggleAuthModal('login')" class="hover:text-cheese transition-colors">Connexion</button>
+                            <button onclick="toggleAuthModal('register')" class="bg-brand text-white px-6 py-2 rounded-xl hover:bg-white hover:text-brand transition-colors neon-shadow">S'inscrire</button>
                         </div>
-                        <div id="user-menu" class="hidden flex gap-6 border-l border-white/10 pl-8 items-center">
-                            <span id="user-email" class="text-white bg-card px-4 py-2 rounded-full border border-white/5"></span>
+                        <div id="user-menu" class="hidden flex gap-6 border-l border-white/20 pl-8 items-center">
+                            <span id="user-email" class="text-dark bg-cheese px-4 py-2 rounded-xl font-bold"></span>
                             <button onclick="logout()" class="text-gray-400 hover:text-brand transition-colors">Déconnexion</button>
                         </div>
                     </div>
@@ -67,145 +79,164 @@
         </nav>
 
         <!-- MODAL AUTH -->
-        <div id="auth-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-            <div class="bg-card border border-white/10 p-8 rounded-3xl w-full max-w-md relative shadow-2xl">
-                <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white font-black text-xl transition-colors">✕</button>
-                <h2 id="modal-title" class="text-3xl font-black mb-8 text-center">Connexion</h2>
+        <div id="auth-modal" class="hidden fixed inset-0 bg-dark/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+            <div class="bg-card border-2 border-cheese/50 p-8 rounded-3xl w-full max-w-md relative cheese-shadow">
+                <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white font-black text-xl transition-colors bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
+                <div class="text-5xl text-center mb-4">🍔</div>
+                <h2 id="modal-title" class="text-3xl font-black mb-8 text-center uppercase tracking-tight">Rejoins le Club</h2>
                 <div class="space-y-4">
                     <div id="register-fields" class="hidden flex gap-4">
-                        <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-brand transition-colors text-sm">
-                        <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-brand transition-colors text-sm">
+                        <input type="text" id="auth-firstname" placeholder="Prénom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                        <input type="text" id="auth-lastname" placeholder="Nom" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
                     </div>
-                    <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-brand transition-colors text-sm">
-                    <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-brand transition-colors text-sm">
-                    <button onclick="handleAuth()" class="w-full bg-brand text-white font-black py-4 rounded-xl hover:bg-white hover:text-dark transition-colors mt-4 shadow-lg shadow-brand/20">VALIDER</button>
-                    <p id="auth-error" class="text-brand text-sm text-center hidden font-bold mt-4"></p>
+                    <input type="email" id="auth-email" placeholder="Email" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                    <input type="password" id="auth-password" placeholder="Mot de passe" class="w-full bg-dark border border-white/10 px-5 py-4 rounded-xl outline-none focus:border-cheese transition-colors font-bold">
+                    <button onclick="handleAuth()" class="w-full bg-cheese-gradient text-dark font-black py-4 rounded-xl hover:opacity-90 transition-opacity mt-4 text-lg uppercase tracking-widest cheese-shadow">DÉVORER</button>
+                    <p id="auth-error" class="text-brand text-sm text-center hidden font-black mt-4 bg-brand/10 py-2 rounded-lg"></p>
                 </div>
             </div>
         </div>
 
-        <!-- HERO SECTION -->
-        <div class="relative h-screen flex items-center justify-center overflow-hidden bg-dark">
-            <!-- Belle image en fond sombre -->
-            <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-30"></div>
-            <div class="absolute inset-0 z-10 bg-gradient-to-t from-dark via-dark/80 to-transparent"></div>
+        <!-- HERO SECTION: GROS BURGER, GROS FROMAGE -->
+        <div class="relative h-[90vh] flex items-center justify-center overflow-hidden bg-dark">
+            <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center"></div>
+            <div class="absolute inset-0 z-10 bg-gradient-to-t from-dark via-dark/60 to-transparent"></div>
             
-            <div class="relative z-20 text-center px-4 max-w-4xl mx-auto mt-20">
-                <div class="inline-block bg-brand/10 text-brand font-bold uppercase tracking-widest text-xs px-6 py-2 rounded-full mb-8 border border-brand/20">Premium Fast Food</div>
-                <h1 class="text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-tight">L'EXCELLENCE.<br><span class="text-white">SANS ATTENTE.</span></h1>
-                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-medium mb-10 leading-relaxed">Des viandes caramélisées, un cheddar affiné, une exécution millimétrée. Commandez en borne, dégustez instantanément.</p>
-                <a href="#menu-section" class="inline-block bg-white text-dark font-black px-10 py-5 rounded-full hover:bg-brand hover:text-white transition-colors duration-300 shadow-xl shadow-white/10 hover:shadow-brand/30">DÉCOUVRIR LA CARTE</a>
+            <div class="relative z-20 text-center px-4 max-w-5xl mx-auto mt-20">
+                <div class="inline-flex items-center gap-2 bg-cheese/20 text-cheese font-black uppercase tracking-widest text-sm px-6 py-3 rounded-full mb-8 border border-cheese/50 backdrop-blur-md">
+                    <span class="w-3 h-3 bg-cheese rounded-full animate-ping"></span> Pur Cheddar Fondu
+                </div>
+                <h1 class="text-6xl md:text-9xl font-black tracking-tighter mb-6 leading-[0.9] uppercase drop-shadow-2xl">
+                    LE GOÛT.<br>
+                    <span class="text-transparent bg-clip-text bg-cheese-gradient filter drop-shadow-lg">SANS ATTENTE.</span>
+                </h1>
+                <p class="mt-6 text-lg md:text-2xl text-white font-bold max-w-2xl mx-auto leading-relaxed mb-10 drop-shadow-lg">Viande caramélisée, fromages de caractère, préparés à la commande.</p>
+                <a href="#menu-section" class="inline-block bg-brand text-white font-black px-12 py-6 rounded-2xl hover:bg-white hover:text-brand transition-colors duration-300 neon-shadow text-xl uppercase tracking-widest">Voir la Carte 🍟</a>
+            </div>
+
+            <!-- Décoration dégoulinante -->
+            <div class="drip-shape text-dark">
+                <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="fill-current"><path d="M0,0V16.3C40.9,16.3,64,39,104.9,39s64-22.7,104.9-22.7c41,0,64,22.7,105,22.7s64-22.7,105-22.7c40.9,0,64,22.7,104.9,22.7s64-22.7,104.9-22.7c41,0,64,22.7,105,22.7s64-22.7,105-22.7c40.9,0,64,22.7,104.9,22.7S1159.1,0,1200,0V40H0V0z"></path></svg>
             </div>
         </div>
 
-        <!-- BANDEAU ANIMÉ -->
-        <div class="bg-brand text-white py-4 overflow-hidden flex relative z-30">
-            <div class="animate-marquee inline-block font-black text-sm tracking-widest uppercase space-x-12 whitespace-nowrap">
-                <span>🔥 SMASH BURGERS</span> <span>•</span> <span>⚡ SERVICE ÉCLAIR</span> <span>•</span> <span>🧀 CHEDDAR AFFINÉ</span> <span>•</span> <span>👑 PROGRAMME FIDGOOD</span> <span>•</span> <span>🔥 SMASH BURGERS</span> <span>•</span> <span>⚡ SERVICE ÉCLAIR</span> <span>•</span> <span>🧀 CHEDDAR AFFINÉ</span>
+        <!-- BANDEAU ANIMÉ JAUNE -->
+        <div class="bg-cheese-gradient text-dark py-4 overflow-hidden flex relative z-30 font-black text-lg tracking-widest uppercase shadow-[0_10px_30px_rgba(255,184,0,0.2)] border-b-4 border-melt">
+            <div class="animate-marquee inline-block space-x-12 whitespace-nowrap">
+                <span>🧀 CHEDDAR ANGLAIS</span> <span>•</span> <span>🔥 SMASH EXTRÊME</span> <span>•</span> <span>🍟 FRITES MAISON</span> <span>•</span> <span>🧀 CHEDDAR ANGLAIS</span> <span>•</span> <span>🔥 SMASH EXTRÊME</span> <span>•</span> <span>🍟 FRITES MAISON</span>
             </div>
         </div>
 
         <!-- ESPACE CLIENT FIDGOOD VIP -->
-        <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-20">
-            <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
+        <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-24">
+            <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6 bg-card p-8 rounded-3xl border border-white/5">
                 <div>
-                    <h2 class="text-4xl font-black uppercase tracking-tighter mb-2">Club <span class="text-brand">FidGood</span></h2>
+                    <h2 class="text-5xl font-black uppercase tracking-tighter mb-2">Club <span class="text-cheese">FidGood</span> 👑</h2>
                     <p class="text-gray-400 font-bold uppercase text-sm">Client N° <span id="client-number" class="text-white">...</span></p>
                 </div>
-                <div class="text-right">
-                    <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Solde Actuel</div>
-                    <div class="text-5xl font-black text-gold"><span id="client-points">0</span> 👑</div>
+                <div class="text-right bg-dark px-8 py-4 rounded-2xl border border-cheese/30 cheese-shadow">
+                    <div class="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">Cagnotte</div>
+                    <div class="text-5xl font-black text-white"><span id="client-points" class="text-cheese">0</span> 👑</div>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                 
-                <!-- PALIERS DE RÉCOMPENSES -->
-                <div class="bg-card p-8 rounded-3xl lg:col-span-3 border border-white/5 shadow-xl">
-                    <div class="flex justify-between items-end mb-8">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest">Tes Avantages Débloqués</h3>
-                        <span class="font-black text-xl text-gold"><span id="progress-text">0</span> / 200</span>
+                <!-- PALIERS -->
+                <div class="bg-card p-10 rounded-3xl lg:col-span-3 border-2 border-cheese/20 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-cheese/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="flex justify-between items-end mb-8 relative z-10">
+                        <h3 class="text-lg font-black text-white uppercase tracking-widest">Tes Récompenses 🎁</h3>
+                        <span class="font-black text-2xl text-cheese"><span id="progress-text">0</span> / 200</span>
                     </div>
                     
-                    <div class="relative w-full h-3 bg-dark rounded-full mb-10 border border-white/5 overflow-hidden">
-                        <div id="crown-progress" class="absolute top-0 left-0 h-full bg-gradient-to-r from-brand to-gold transition-all duration-1000 ease-out" style="width: 0%;"></div>
+                    <div class="relative w-full h-4 bg-dark rounded-full mb-10 border border-white/10 overflow-hidden relative z-10 p-1">
+                        <div id="crown-progress" class="h-full bg-cheese-gradient rounded-full transition-all duration-1000 ease-out shadow-lg shadow-cheese/50" style="width: 0%;"></div>
                     </div>
 
-                    <!-- Grille des Paliers -->
-                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
-                        <div id="tier-30" class="bg-dark/50 p-4 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-gold font-black text-2xl mb-1">30</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">IceGood Mini</div></div>
-                        <div id="tier-60" class="bg-dark/50 p-4 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-gold font-black text-2xl mb-1">60</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">IceGood 50cl</div></div>
-                        <div id="tier-90" class="bg-dark/50 p-4 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-gold font-black text-2xl mb-1">90</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Classic Burger</div></div>
-                        <div id="tier-120" class="bg-dark/50 p-4 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-gold font-black text-2xl mb-1">120</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Deluxe / -10%</div></div>
-                        <div id="tier-200" class="bg-dark/50 p-4 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-gold font-black text-2xl mb-1">200</div><div class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Festin / -25%</div></div>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center relative z-10">
+                        <div id="tier-30" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">30</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">IceGood Mini</div></div>
+                        <div id="tier-60" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">60</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">IceGood 50cl</div></div>
+                        <div id="tier-90" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">90</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">Classic Burger</div></div>
+                        <div id="tier-120" class="bg-dark p-6 rounded-2xl border border-white/5 transition-all duration-500 opacity-40"><div class="text-cheese font-black text-3xl mb-2">120</div><div class="text-[11px] font-black uppercase tracking-widest text-gray-400">Deluxe / -10%</div></div>
+                        <div id="tier-200" class="bg-dark p-6 rounded-2xl border border-cheese/50 transition-all duration-500 opacity-40 bg-cheese/5"><div class="text-cheese font-black text-3xl mb-2">200</div><div class="text-[11px] font-black uppercase tracking-widest text-cheese">Festin / -25%</div></div>
                     </div>
                 </div>
 
                 <!-- COMMANDES -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-2 space-y-8">
                     <div class="bg-card p-8 rounded-3xl border border-white/5 shadow-xl">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-sm font-bold text-gray-300 uppercase tracking-widest flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> En Préparation</h3>
-                            <button onclick="loadOrders()" class="text-xs font-bold text-gray-400 hover:text-white uppercase transition-colors bg-white/5 px-4 py-2 rounded-lg border border-white/5">Actualiser</button>
+                        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                            <h3 class="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-brand animate-pulse"></span> En Cuisine 🔥</h3>
+                            <button onclick="loadOrders()" class="text-xs font-black text-gray-400 hover:text-white uppercase transition-colors bg-white/10 px-4 py-2 rounded-xl">Actualiser</button>
                         </div>
-                        <div id="orders-encours" class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                        <div id="orders-encours" class="space-y-4 max-h-[400px] overflow-y-auto pr-2"></div>
                     </div>
                     
-                    <div class="bg-card p-8 rounded-3xl border border-white/5 shadow-xl">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-6">Historique</h3>
-                        <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    <div class="bg-card p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Historique des festins</h3>
+                        <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2"></div>
                     </div>
                 </div>
 
                 <!-- CODES PROMO -->
-                <div class="space-y-6">
-                    <div class="bg-brand/10 p-8 rounded-3xl border border-brand/20 shadow-xl">
-                        <h3 class="text-sm font-black text-brand uppercase tracking-widest mb-6">Ajouter un Code</h3>
+                <div class="space-y-8">
+                    <div class="bg-cheese-gradient p-8 rounded-3xl shadow-xl text-dark">
+                        <h3 class="text-lg font-black uppercase tracking-widest mb-6 flex items-center gap-2">🎟️ Ajouter un Code</h3>
                         <div class="flex flex-col gap-4">
-                            <input type="text" id="promo-input" placeholder="CODE PROMO" class="w-full bg-dark border border-brand/30 px-5 py-4 rounded-xl outline-none uppercase font-bold text-white focus:border-brand transition-colors text-center tracking-widest">
-                            <button onclick="savePromo()" class="w-full bg-brand text-white font-black py-4 rounded-xl uppercase tracking-widest hover:bg-white hover:text-dark transition-colors shadow-lg shadow-brand/20">Valider</button>
+                            <input type="text" id="promo-input" placeholder="CODE SECRET" class="w-full bg-white border-2 border-dark/10 px-5 py-4 rounded-xl outline-none uppercase font-black text-dark focus:border-dark transition-colors text-center text-xl placeholder-gray-400">
+                            <button onclick="savePromo()" class="w-full bg-dark text-cheese font-black py-4 rounded-xl uppercase tracking-widest hover:opacity-90 transition-opacity text-lg">Activer</button>
                         </div>
-                        <p id="promo-msg" class="text-sm mt-4 font-bold h-5 text-center"></p>
+                        <p id="promo-msg" class="text-sm mt-4 font-black h-5 text-center"></p>
                     </div>
-                    <div class="bg-card p-8 rounded-3xl border border-white/5 shadow-xl">
-                        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Vos Codes Disponibles</h3>
-                        <div id="my-promos" class="flex flex-wrap gap-2 text-sm font-bold"></div>
+                    <div class="bg-card p-8 rounded-3xl border border-white/5">
+                        <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Vos Coupons</h3>
+                        <div id="my-promos" class="flex flex-wrap gap-3"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- CARTE ORGANISÉE -->
-        <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 border-b border-white/10 pb-8">
+        <!-- CARTE ORGANISÉE AVEC IMAGES -->
+        <div id="menu-section" class="max-w-7xl mx-auto px-4 py-24 relative z-20">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 bg-card p-8 rounded-3xl border border-white/5">
                 <div>
-                    <h2 class="text-5xl font-black uppercase tracking-tighter mb-2">La Carte.</h2>
-                    <p class="text-gray-400 font-medium">L'essentiel, exécuté à la perfection.</p>
+                    <h2 class="text-6xl font-black uppercase tracking-tighter mb-2 text-transparent bg-clip-text bg-cheese-gradient">La Carte.</h2>
+                    <p class="text-white font-bold uppercase tracking-widest">Food Porn Premium.</p>
                 </div>
                 
-                <!-- SÉLECTEUR DE RESTAURANT POUR LE CLIENT -->
-                <select id="client-resto-select" onchange="loadMenu()" class="bg-card border border-white/10 text-white px-6 py-4 rounded-xl outline-none font-bold uppercase tracking-widest text-xs focus:border-brand transition-colors w-full md:w-auto shadow-lg">
-                    <option value="">-- Choisir un restaurant --</option>
-                </select>
+                <div class="w-full md:w-auto">
+                    <p class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-widest">Choisir le restaurant :</p>
+                    <select id="client-resto-select" onchange="loadMenu()" class="bg-dark border-2 border-cheese/50 text-white px-6 py-4 rounded-xl outline-none font-black uppercase tracking-widest text-sm focus:border-cheese transition-colors w-full md:w-auto cheese-shadow">
+                        <option value="">-- Choisir --</option>
+                    </select>
+                </div>
             </div>
             
-            <div id="menu-container" class="space-y-16">
-                <div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold bg-card rounded-3xl border border-white/5">Veuillez sélectionner un établissement pour afficher le menu.</div>
+            <div id="menu-container" class="space-y-20">
+                <div class="col-span-full text-center py-32 bg-card rounded-3xl border border-white/5">
+                    <span class="text-7xl block mb-6 animate-pulse">🍔</span>
+                    <span class="text-gray-400 uppercase tracking-widest font-black text-xl">Veuillez sélectionner un établissement pour afficher le menu.</span>
+                </div>
             </div>
         </div>
 
-        <footer class="border-t border-white/5 py-12 text-center bg-card mt-12">
-            <div class="text-2xl font-black tracking-tighter text-white mb-2">FAST<span class="text-brand">GOOD</span></div>
-            <p class="text-gray-500 text-xs font-bold uppercase tracking-widest">© 2026. L'excellence n'attend pas.</p>
+        <!-- FOOTER -->
+        <footer class="border-t-4 border-cheese bg-dark py-16 text-center mt-12 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/food.png')]"></div>
+            <div class="relative z-10">
+                <div class="text-4xl font-black tracking-tighter text-white mb-4">FAST<span class="text-brand">GOOD</span></div>
+                <p class="text-cheese font-black uppercase tracking-widest">© 2026. L'excellence fondante.</p>
+            </div>
         </footer>
     </div>
 
-    <!-- SCRIPT (Logique Supabase inchangée) -->
+    <!-- SCRIPT (Logique intacte) -->
     <script type="module">
         import { supabase } from './db.js';
         let authMode = 'login'; let userId = null;
 
-        // VERIFICATION MAINTENANCE
         async function checkMaintenance() {
             const { data } = await supabase.from('settings').select('maintenance_mode').eq('id', 1).single();
             document.getElementById('initial-loader').classList.add('hidden');
@@ -253,13 +284,13 @@
                         let el = document.getElementById(`tier-${tier}`);
                         if(pts >= tier) { 
                             el.classList.remove('opacity-40'); 
-                            el.classList.add('opacity-100', 'bg-gold/10', 'border-gold/30', 'scale-105', 'shadow-[0_0_15px_rgba(255,199,0,0.1)]'); 
-                            el.querySelector('div:last-child').classList.replace('text-gray-400', 'text-gold'); 
+                            el.classList.add('opacity-100', 'bg-cheese/10', 'border-cheese/50', 'scale-105', 'cheese-shadow'); 
+                            el.querySelector('div:last-child').classList.replace('text-gray-400', 'text-cheese'); 
                         } 
                         else { 
                             el.classList.add('opacity-40'); 
-                            el.classList.remove('opacity-100', 'bg-gold/10', 'border-gold/30', 'scale-105', 'shadow-[0_0_15px_rgba(255,199,0,0.1)]'); 
-                            el.querySelector('div:last-child').classList.replace('text-gold', 'text-gray-400'); 
+                            el.classList.remove('opacity-100', 'bg-cheese/10', 'border-cheese/50', 'scale-105', 'cheese-shadow'); 
+                            el.querySelector('div:last-child').classList.replace('text-cheese', 'text-gray-400'); 
                         }
                     });
                 }
@@ -274,22 +305,22 @@
             
             const renderEncours = (o) => {
                 const isReady = o.status === 'prete';
-                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/5 border border-white/10 px-3 py-1 rounded-lg text-xs font-bold text-gray-300">${i.name}</span>`).join(' ') : '<span class="text-xs text-gray-500 uppercase tracking-widest font-bold">Détails indisponibles</span>';
+                const items = (o.items && o.items.length > 0) ? o.items.map(i=> `<span class="bg-white/10 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-white border border-white/5">${i.name}</span>`).join(' ') : '<span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Détails indisponibles</span>';
                 
                 return `
-                <div class="bg-dark p-6 rounded-2xl border ${isReady ? 'border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.15)]' : 'border-white/5'} transition-colors">
+                <div class="bg-dark p-6 rounded-2xl border-2 ${isReady ? 'border-brand bg-brand/5 neon-shadow' : 'border-white/5'} transition-all mb-4">
                     <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <div class="text-white font-black text-lg mb-3 tracking-wide">#${o.id.substring(0,6).toUpperCase()}</div>
+                        <div class="flex-1 pr-4">
+                            <div class="text-white font-black text-xl mb-3">#${o.id.substring(0,6).toUpperCase()}</div>
                             <div class="flex flex-wrap gap-2">${items}</div>
                         </div>
-                        <div class="text-right ml-4">
-                            <span class="${isReady ? 'bg-green-500/20 text-green-400 border-green-500/30' : 'bg-gray-800 text-gray-400 border-gray-700'} border px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest inline-block">${o.status.replace('_', ' ')}</span>
+                        <div class="text-right">
+                            <span class="${isReady ? 'bg-brand text-white' : 'bg-gray-800 text-gray-400 border border-gray-700'} px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-lg">${o.status.replace('_', ' ')}</span>
                         </div>
                     </div>
-                    <div class="flex justify-between items-end border-t border-white/5 pt-4 mt-4">
-                        <span class="text-xs text-gray-500 font-bold uppercase tracking-widest">Attente: ${o.estimated_time}s</span>
-                        <span class="font-black text-2xl">${o.total_price.toFixed(2)} €</span>
+                    <div class="flex justify-between items-end border-t border-white/10 pt-4 mt-4">
+                        <span class="text-[10px] text-gray-500 font-black uppercase tracking-widest">Attente: ${o.estimated_time}s</span>
+                        <span class="font-black text-2xl text-cheese">${o.total_price.toFixed(2)} €</span>
                     </div>
                 </div>`;
             };
@@ -297,56 +328,56 @@
             const renderHisto = (o) => {
                 const items = (o.items && o.items.length > 0) ? o.items.map(i=> i.name).join(' • ') : 'Ancienne commande';
                 return `
-                <div class="flex justify-between items-center bg-dark p-4 rounded-2xl border border-white/5 hover:border-white/20 transition-colors">
+                <div class="flex justify-between items-center bg-dark p-5 rounded-2xl border border-white/5 hover:border-white/20 transition-colors">
                     <div class="flex-1 pr-4">
-                        <div class="font-bold text-sm tracking-widest uppercase mb-1 text-white">#${o.id.substring(0,6).toUpperCase()}</div>
-                        <div class="text-xs text-gray-500 font-medium truncate">${items}</div>
+                        <div class="font-black text-sm uppercase tracking-widest mb-1 text-white">#${o.id.substring(0,6).toUpperCase()}</div>
+                        <div class="text-xs text-gray-500 font-bold truncate">${items}</div>
                     </div>
                     <div class="text-right">
-                        <div class="font-black text-lg text-white">${o.total_price.toFixed(2)} €</div>
-                        <div class="text-[10px] text-gray-600 font-bold uppercase tracking-widest mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
+                        <div class="font-black text-xl text-white">${o.total_price.toFixed(2)} €</div>
+                        <div class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">${new Date(o.created_at).toLocaleDateString('fr-FR')}</div>
                     </div>
                 </div>`;
             };
             const encours = data.filter(o => o.status !== 'terminee'), histo = data.filter(o => o.status === 'terminee');
-            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest py-6 text-center bg-dark rounded-2xl border border-white/5">Aucune commande en cours.</div>';
-            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-xs font-bold uppercase tracking-widest py-6 text-center bg-dark rounded-2xl border border-white/5">Aucun historique.</div>';
+            document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Rien sur le grill.</div>';
+            document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Aucun historique.</div>';
         };
 
         window.savePromo = async function() {
             const code = document.getElementById('promo-input').value.toUpperCase(); const msg = document.getElementById('promo-msg');
             if(!code) return;
             const { data: promo } = await supabase.from('promocodes').select('*').eq('code', code).single();
-            if(!promo) { msg.innerText = "Code introuvable."; msg.className = "text-xs mt-4 font-bold text-brand uppercase tracking-widest text-center"; return; }
+            if(!promo) { msg.innerText = "❌ Code Invalide."; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center"; return; }
             const { data: exist } = await supabase.from('user_promocodes').select('*').eq('client_id', userId).eq('code', code).single();
-            if(exist) { msg.innerText = "Code déjà utilisé."; msg.className = "text-xs mt-4 font-bold text-gray-400 uppercase tracking-widest text-center"; return; }
+            if(exist) { msg.innerText = "⚠️ Code déjà utilisé."; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center"; return; }
             
             if (promo.discount_type === 'points') {
                 const { data: prof } = await supabase.from('profiles').select('fidgood_points').eq('id', userId).single();
                 await supabase.from('profiles').update({ fidgood_points: prof.fidgood_points + promo.discount_value }).eq('id', userId);
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: true }]);
-                msg.innerText = `+${promo.discount_value} couronnes 👑`; msg.className = "text-xs mt-4 font-black text-gold uppercase tracking-widest text-center";
+                msg.innerText = `🔥 +${promo.discount_value} couronnes !`; msg.className = "text-sm mt-4 font-black text-dark uppercase tracking-widest text-center";
             } else {
                 await supabase.from('user_promocodes').insert([{ client_id: userId, code: promo.code, is_used: false }]);
-                msg.innerText = "Code enregistré."; msg.className = "text-xs mt-4 font-bold text-green-400 uppercase tracking-widest text-center";
+                msg.innerText = "✅ Code enregistré (Borne)."; msg.className = "text-sm mt-4 font-black text-green-800 uppercase tracking-widest text-center";
             }
             document.getElementById('promo-input').value = ""; checkUser();
         };
 
         async function loadPromos() {
             const { data } = await supabase.from('user_promocodes').select('code, is_used').eq('client_id', userId);
-            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through bg-dark':'text-brand bg-brand/10 border-brand/20'} border border-white/5 px-4 py-2 rounded-lg text-xs uppercase tracking-widest">${p.code}</span>`).join('') : '<span class="text-xs font-normal text-gray-500">Aucun code.</span>';
+            document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through bg-dark border-white/5':'text-dark bg-cheese border-cheese cheese-shadow'} border px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest">${p.code}</span>`).join('') : '<span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Aucun coupon.</span>';
         }
 
         async function loadRestosForClient() {
             const { data } = await supabase.from('restaurants').select('*');
-            document.getElementById('client-resto-select').innerHTML = '<option value="">-- Choisir un restaurant --</option>' + (data || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            document.getElementById('client-resto-select').innerHTML = '<option value="">-- Sélection --</option>' + (data || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
         }
 
         window.loadMenu = async function() {
             const activeRestoId = document.getElementById('client-resto-select').value;
             if(!activeRestoId) {
-                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold bg-card rounded-3xl border border-white/5">Veuillez sélectionner un établissement pour afficher le menu.</div>';
+                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-32 bg-card rounded-3xl border border-white/5"><span class="text-7xl block mb-6 animate-pulse">🍔</span><span class="text-gray-400 uppercase tracking-widest font-black text-xl">Veuillez sélectionner un établissement pour afficher le menu.</span></div>';
                 return;
             }
 
@@ -360,30 +391,37 @@
                     let prods = products.filter(p => p.category_id === c.id);
                     if(prods.length > 0) {
                         htmlMenu += `
-                        <div class="mb-12">
-                            <h3 class="text-2xl font-black uppercase tracking-widest text-white mb-6 pl-2">${c.name}</h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <div class="mb-16">
+                            <div class="inline-block bg-cheese text-dark px-6 py-2 rounded-xl mb-8 font-black uppercase tracking-widest text-xl cheese-shadow">${c.name}</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                 ${prods.map(p => {
                                     let stockInfo = (stocks||[]).find(s => s.product_id === p.id);
                                     let isOOS = stockInfo ? !stockInfo.in_stock : false;
 
-                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-500 text-white font-black px-3 py-1 rounded-lg text-[10px] uppercase tracking-widest z-20 shadow-lg">RUPTURE</div>` : '';
-                                    const cls = isOOS ? 'grayscale opacity-50' : 'hover:border-brand/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand/5';
+                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-widest z-20 shadow-xl border border-red-400">RUPTURE</div>` : '';
+                                    const cls = isOOS ? 'grayscale opacity-60' : 'hover:-translate-y-2 hover:border-cheese hover:shadow-[0_20px_40px_-10px_rgba(255,184,0,0.3)]';
 
-                                    // L'immense lettre en filigrane derrière la carte
-                                    const watermark = `<div class="absolute -right-6 -bottom-6 text-[120px] font-black text-white/[0.03] transition-colors duration-500 pointer-events-none leading-none select-none">${p.name.substring(0,1).toUpperCase()}</div>`;
+                                    // L'IMAGE EST DE RETOUR : Si pas d'image, affiche un gros émoji fromage/burger sympa.
+                                    const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-7xl bg-gradient-to-br from-cheese to-melt">🧀</div>`;
 
                                     return `
-                                    <div class="bg-card border border-white/5 p-8 rounded-3xl transition-all duration-300 flex flex-col h-full relative overflow-hidden group ${cls}">
-                                        ${watermark}
+                                    <div class="bg-card border-2 border-white/5 rounded-3xl transition-all duration-300 flex flex-col h-full relative overflow-hidden group ${cls}">
                                         ${badge}
-                                        <div class="flex-1 z-10">
-                                            <h3 class="text-xl font-black mb-3 uppercase tracking-wide leading-tight">${p.name}</h3>
-                                            <div class="w-8 h-1 ${isOOS?'bg-gray-600':'bg-brand'} rounded-full mb-6"></div>
+                                        
+                                        <!-- Zone Image -->
+                                        <div class="h-56 w-full bg-dark overflow-hidden relative">
+                                            ${visuel}
+                                            <div class="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-80 z-10"></div>
                                         </div>
-                                        <div class="flex justify-between items-end pt-8 mt-auto z-10 border-t border-white/5">
-                                            <span class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Prix</span>
-                                            <span class="text-3xl font-black ${isOOS?'text-gray-500':'text-white'}">${p.price.toFixed(2)} €</span>
+
+                                        <div class="flex-1 p-6 relative z-20 -mt-10">
+                                            <h3 class="text-2xl font-black mb-3 uppercase tracking-wide leading-tight drop-shadow-lg">${p.name}</h3>
+                                            <div class="w-12 h-1.5 ${isOOS?'bg-gray-600':'bg-cheese'} rounded-full mb-6"></div>
+                                        </div>
+                                        
+                                        <div class="flex justify-between items-end p-6 pt-0 mt-auto z-20">
+                                            <span class="text-gray-400 text-xs font-black uppercase tracking-widest bg-dark px-3 py-1.5 rounded-lg border border-white/5">PRIX</span>
+                                            <span class="text-3xl font-black ${isOOS?'text-gray-500':'text-cheese'}">${p.price.toFixed(2)} €</span>
                                         </div>
                                     </div>
                                 `}).join('')}
@@ -392,7 +430,7 @@
                     }
                 });
             }
-            document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm bg-card rounded-3xl">Menu indisponible</div>';
+            document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-center py-20 text-gray-500 font-bold uppercase tracking-widest text-sm bg-card rounded-3xl">Menu en cours de préparation</div>';
         }
     </script>
 </body>
