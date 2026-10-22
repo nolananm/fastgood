@@ -133,8 +133,13 @@
     <div id="menu-section" class="max-w-7xl mx-auto px-4 py-32 relative">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-white/10 pb-8">
             <div><h2 class="text-6xl font-black uppercase tracking-tighter mb-4">La Carte.</h2><p class="text-gray-500 font-bold tracking-widest uppercase text-xs">L'essentiel, exécuté à la perfection.</p></div>
+            
+            <!-- SÉLECTEUR DE RESTAURANT POUR LE CLIENT -->
+            <select id="client-resto-select" onchange="loadMenu()" class="mt-6 md:mt-0 bg-darker border border-neon/50 text-neon px-6 py-3 outline-none font-bold uppercase tracking-widest text-xs">
+                <option value="">Sélectionnez un restaurant</option>
+            </select>
         </div>
-        <div id="menu-container" class="space-y-16"><div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Chargement...</div></div>
+        <div id="menu-container" class="space-y-16"><div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Veuillez sélectionner un restaurant.</div></div>
     </div>
 
     <footer class="bg-darker border-t border-white/5 py-12 text-center"><div class="text-2xl font-black tracking-tighter text-white mb-4">FAST<span class="text-neon">GOOD</span></div><p class="text-gray-600 text-[10px] font-bold uppercase tracking-widest">© 2026 FastGood. L'excellence n'attend pas.</p></footer>
@@ -226,9 +231,21 @@
             document.getElementById('my-promos').innerHTML = data?.length ? data.map(p => `<span class="${p.is_used?'text-gray-600 line-through border-gray-800':'text-neon border-neon/30 bg-neon/10'} border px-3 py-1 mr-2 mb-2 inline-block font-bold text-[10px] uppercase tracking-widest rounded">${p.code}</span>`).join('') : "Aucun code enregistré.";
         }
 
-        async function loadMenu() {
+        async function loadRestosForClient() {
+            const { data } = await supabase.from('restaurants').select('*');
+            document.getElementById('client-resto-select').innerHTML = '<option value="">Sélectionnez un restaurant</option>' + (data || []).map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+        }
+
+        window.loadMenu = async function() {
+            const activeRestoId = document.getElementById('client-resto-select').value;
+            if(!activeRestoId) {
+                document.getElementById('menu-container').innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 uppercase tracking-widest text-sm font-bold">Veuillez sélectionner un restaurant.</div>';
+                return;
+            }
+
             const { data: categories } = await supabase.from('categories').select('*');
             const { data: products } = await supabase.from('products').select('*').order('order_index', { ascending: true }).order('created_at', { ascending: false });
+            const { data: stocks } = await supabase.from('restaurant_stock').select('*').eq('restaurant_id', activeRestoId);
             
             let htmlMenu = '';
             if(categories && products) {
@@ -240,16 +257,19 @@
                             <h3 class="text-2xl font-black uppercase tracking-widest text-neon mb-8">${c.name}</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 ${prods.map(p => {
-                                    const isOOS = p.in_stock === false;
+                                    let stockInfo = (stocks||[]).find(s => s.product_id === p.id);
+                                    let isOOS = stockInfo ? !stockInfo.in_stock : false;
+
                                     const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-500 text-white font-black px-3 py-1 text-[10px] uppercase tracking-widest z-20 shadow-lg">RUPTURE</div>` : '';
                                     const cls = isOOS ? 'grayscale opacity-50' : '';
+
                                     return `
                                     <div class="bg-premium border border-white/5 p-8 ${!isOOS?'hover:border-neon':''} transition-all duration-500 group flex flex-col h-full relative overflow-hidden">
                                         ${badge}
                                         <div class="absolute -right-6 -bottom-6 text-[150px] font-black text-white/[0.02] ${!isOOS?'group-hover:text-neon/[0.05]':''} transition-colors duration-500 pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
                                         <div class="flex-1 z-10 ${cls}">
                                             <h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3>
-                                            <div class="w-10 h-1 ${isOOS?'bg-gray-600':'bg-neon/50'} mb-6${!isOOS?'group-hover:w-full':''} transition-all duration-500"></div>
+                                            <div class="w-10 h-1 ${isOOS?'bg-gray-600':'bg-neon/50'} mb-6 ${!isOOS?'group-hover:w-full':''} transition-all duration-500"></div>
                                         </div>
                                         <div class="flex justify-between items-end pt-8 mt-auto z-10 ${cls}"><span class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Prix</span><span class="text-3xl font-black ${isOOS?'text-gray-500':'text-white'}">${p.price.toFixed(2)} €</span></div>
                                     </div>
@@ -261,7 +281,9 @@
             }
             document.getElementById('menu-container').innerHTML = htmlMenu || '<div class="text-gray-500">Menu indisponible</div>';
         }
-        checkUser(); loadMenu();
+        
+        checkUser(); 
+        loadRestosForClient(); // On charge juste les restos. Le menu chargera quand on en choisira un.
     </script>
 </body>
 </html>
