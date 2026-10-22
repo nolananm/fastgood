@@ -1,3 +1,12 @@
+C'est le piège classique ! L'écran noir est dû à **l'écran de chargement invisible qui bloquait tout le site**.
+
+Le code disait au site : *"Cache-toi entièrement tant que la base de données n'a pas confirmé si on est en maintenance ou non"*. Sauf que si ta base de données met 1 seconde de trop à répondre, ou s'il y a un micro-bug réseau, le site restait caché pour toujours, d'où la fameuse page noire sans aucune erreur visible.
+
+**La solution :** J'ai supprimé ce blocage. Le site s'affiche désormais **instantanément** par défaut. Si le mode maintenance est réellement activé, le panneau de blocage viendra se superposer par-dessus, c'est beaucoup plus sûr et rapide.
+
+Voici ton **`index.html`** corrigé et ultra-robuste, avec le même design "Food Porn Premium" :
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -42,7 +51,7 @@
 </head>
 <body class="font-sans antialiased relative overflow-x-hidden selection:bg-cheese selection:text-dark">
 
-    <!-- ÉCRAN DE MAINTENANCE -->
+    <!-- ÉCRAN DE MAINTENANCE (Superposé uniquement si activé) -->
     <div id="maintenance-screen" class="hidden fixed inset-0 bg-dark z-[100] flex flex-col items-center justify-center text-center px-6">
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&q=80&w=2000')] bg-cover bg-center opacity-20"></div>
         <div class="relative z-10">
@@ -52,8 +61,8 @@
         </div>
     </div>
 
-    <!-- LE SITE PRINCIPAL -->
-    <div id="main-site-content" class="hidden relative">
+    <!-- LE SITE PRINCIPAL (S'affiche instantanément) -->
+    <div id="main-site-content" class="relative">
 
         <!-- NAVBAR -->
         <nav class="fixed w-full glass-nav z-50 transition-all duration-300">
@@ -171,12 +180,12 @@
                             <h3 class="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3"><span class="w-3 h-3 rounded-full bg-brand animate-pulse"></span> En Cuisine 🔥</h3>
                             <button onclick="loadOrders()" class="text-xs font-black text-gray-400 hover:text-white uppercase transition-colors bg-white/10 px-4 py-2 rounded-xl">Actualiser</button>
                         </div>
-                        <div id="orders-encours" class="space-y-4 max-h-[400px] overflow-y-auto pr-2"></div>
+                        <div id="orders-encours" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
                     </div>
                     
                     <div class="bg-card p-8 rounded-3xl border border-white/5">
                         <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-6">Historique des festins</h3>
-                        <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2"></div>
+                        <div id="orders-historique" class="space-y-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar"></div>
                     </div>
                 </div>
 
@@ -232,23 +241,28 @@
         </footer>
     </div>
 
-    <!-- SCRIPT (Logique intacte) -->
+    <!-- SCRIPT -->
     <script type="module">
         import { supabase } from './db.js';
         let authMode = 'login'; let userId = null;
 
+        // VÉRIFICATION DE LA MAINTENANCE ROBUSTE
         async function checkMaintenance() {
-            const { data } = await supabase.from('settings').select('maintenance_mode').eq('id', 1).single();
-            document.getElementById('initial-loader').classList.add('hidden');
-
-            if(data && data.maintenance_mode) {
-                document.getElementById('maintenance-screen').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.getElementById('main-site-content').classList.remove('hidden');
-                checkUser(); loadRestosForClient();
+            try {
+                const { data } = await supabase.from('settings').select('maintenance_mode').eq('id', 1).single();
+                if(data && data.maintenance_mode) {
+                    document.getElementById('maintenance-screen').classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+            } catch (err) {
+                console.error("Impossible de lire les réglages", err);
             }
+            
+            // Le site s'affiche toujours s'il n'y a pas de maintenance bloquante
+            checkUser(); 
+            loadRestosForClient();
         }
+        
         checkMaintenance();
 
         window.toggleAuthModal = function(mode) {
@@ -339,7 +353,8 @@
                     </div>
                 </div>`;
             };
-            const encours = data.filter(o => o.status !== 'terminee'), histo = data.filter(o => o.status === 'terminee');
+            const encours = (data||[]).filter(o => o.status !== 'terminee');
+            const histo = (data||[]).filter(o => o.status === 'terminee');
             document.getElementById('orders-encours').innerHTML = encours.length ? encours.map(renderEncours).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Rien sur le grill.</div>';
             document.getElementById('orders-historique').innerHTML = histo.length ? histo.map(renderHisto).join('') : '<div class="text-gray-500 text-sm font-bold uppercase tracking-widest text-center py-10 bg-dark rounded-2xl border border-white/5">Aucun historique.</div>';
         };
@@ -401,7 +416,6 @@
                                     const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-600 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-widest z-20 shadow-xl border border-red-400">RUPTURE</div>` : '';
                                     const cls = isOOS ? 'grayscale opacity-60' : 'hover:-translate-y-2 hover:border-cheese hover:shadow-[0_20px_40px_-10px_rgba(255,184,0,0.3)]';
 
-                                    // L'IMAGE EST DE RETOUR : Si pas d'image, affiche un gros émoji fromage/burger sympa.
                                     const visuel = p.image_url ? `<img src="${p.image_url}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="${p.name}">` : `<div class="w-full h-full flex items-center justify-center text-7xl bg-gradient-to-br from-cheese to-melt">🧀</div>`;
 
                                     return `
@@ -409,7 +423,7 @@
                                         ${badge}
                                         
                                         <!-- Zone Image -->
-                                        <div class="h-56 w-full bg-dark overflow-hidden relative">
+                                        <div class="h-56 w-full bg-dark overflow-hidden relative border-b border-white/5">
                                             ${visuel}
                                             <div class="absolute inset-0 bg-gradient-to-t from-card to-transparent opacity-80 z-10"></div>
                                         </div>
@@ -435,3 +449,5 @@
     </script>
 </body>
 </html>
+
+```
