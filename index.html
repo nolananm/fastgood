@@ -20,6 +20,7 @@
 </head>
 <body class="bg-dark text-white font-sans antialiased relative overflow-x-hidden">
 
+    <!-- NAVBAR -->
     <nav class="fixed w-full glass-panel z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
@@ -43,6 +44,7 @@
         </div>
     </nav>
 
+    <!-- MODAL AUTH -->
     <div id="auth-modal" class="hidden fixed inset-0 bg-darker/95 backdrop-blur-md z-[60] flex items-center justify-center p-4">
         <div class="bg-premium border border-white/5 p-10 w-full max-w-md relative shadow-2xl">
             <button onclick="toggleAuthModal()" class="absolute top-6 right-6 text-gray-600 hover:text-white font-black text-xl transition">X</button>
@@ -78,7 +80,7 @@
         </div>
     </div>
 
-    <!-- ESPACE CLIENT -->
+    <!-- ESPACE CLIENT FIDGOOD VIP -->
     <div id="fidgood-section" class="hidden relative max-w-7xl mx-auto px-4 py-24">
         <div class="mb-16 border-b border-white/5 pb-8 flex justify-between items-end">
             <div><h2 class="text-5xl font-black uppercase tracking-tighter">Club <span class="text-neon">FidGood</span></h2><p class="text-gray-500 mt-2 font-bold tracking-widest uppercase text-xs">Client <span id="client-number" class="text-white">...</span></p></div>
@@ -237,16 +239,21 @@
                         <div class="mb-12">
                             <h3 class="text-2xl font-black uppercase tracking-widest text-neon mb-8">${c.name}</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                ${prods.map(p => `
-                                    <div class="bg-premium border border-white/5 p-8 hover:border-neon transition-all duration-500 group flex flex-col h-full relative overflow-hidden">
-                                        <div class="absolute -right-6 -bottom-6 text-[150px] font-black text-white/[0.02] group-hover:text-neon/[0.05] transition-colors duration-500 pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
-                                        <div class="flex-1 z-10">
+                                ${prods.map(p => {
+                                    const isOOS = p.in_stock === false;
+                                    const badge = isOOS ? `<div class="absolute top-4 right-4 bg-red-500 text-white font-black px-3 py-1 text-[10px] uppercase tracking-widest z-20 shadow-lg">RUPTURE</div>` : '';
+                                    const cls = isOOS ? 'grayscale opacity-50' : '';
+                                    return `
+                                    <div class="bg-premium border border-white/5 p-8 ${!isOOS?'hover:border-neon':''} transition-all duration-500 group flex flex-col h-full relative overflow-hidden">
+                                        ${badge}
+                                        <div class="absolute -right-6 -bottom-6 text-[150px] font-black text-white/[0.02] ${!isOOS?'group-hover:text-neon/[0.05]':''} transition-colors duration-500 pointer-events-none leading-none">${p.name.substring(0,1).toUpperCase()}</div>
+                                        <div class="flex-1 z-10 ${cls}">
                                             <h3 class="text-xl font-black mb-2 uppercase tracking-wide">${p.name}</h3>
-                                            <div class="w-10 h-1 bg-neon/50 mb-6 group-hover:w-full transition-all duration-500"></div>
+                                            <div class="w-10 h-1 ${isOOS?'bg-gray-600':'bg-neon/50'} mb-6${!isOOS?'group-hover:w-full':''} transition-all duration-500"></div>
                                         </div>
-                                        <div class="flex justify-between items-end pt-8 mt-auto z-10"><span class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Prix</span><span class="text-3xl font-black text-white">${p.price.toFixed(2)} €</span></div>
+                                        <div class="flex justify-between items-end pt-8 mt-auto z-10 ${cls}"><span class="text-gray-500 text-[10px] font-bold uppercase tracking-widest">Prix</span><span class="text-3xl font-black ${isOOS?'text-gray-500':'text-white'}">${p.price.toFixed(2)} €</span></div>
                                     </div>
-                                `).join('')}
+                                `}).join('')}
                             </div>
                         </div>`;
                     }
